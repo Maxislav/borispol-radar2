@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 
 
 const Foo = { template: '<div>foo</div>' }
-const Bar = { template: '<div>booa</div>' }
+const Bar = { template: '<div>boo;;pa</div>' }
 
 const routes = [
 	{ path: '/foo', component: Foo },
