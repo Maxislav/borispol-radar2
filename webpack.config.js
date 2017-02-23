@@ -1,19 +1,19 @@
 "use strict";
-
+const NODE_PATH="/usr/local/lib/node_modules"
 const NODE_ENV = process.env.NODE_ENV || 'prod';
 const webpack = require('webpack');
 
 console.log(NODE_ENV)
 module.exports = {
   entry: {
-    init:"./src/init.js"
+    init:['webpack-dev-server/client',__dirname+"/src/init.js"]
   },
   output: {
-    path:  "./dist/",
+    path:  "/dist/",
     filename: "borispol-radar.min.js",
-    library: "vue",
-    publicPath: '/'
+    library: "vue"
   },
+ 
   watch: NODE_ENV == 'dev',
   watchOptions: {
     aggregateTimeout: 100
@@ -28,10 +28,7 @@ module.exports = {
     loaders:[
       {
         test: /\.js$/,
-       /* include: [
-          './src'
-          //path.resolve(__dirname, 'src')
-        ],*/
+        //include: __dirname ,
         loader: 'babel-loader',
         query: {
           presets: ['es2015']
@@ -47,6 +44,12 @@ module.exports = {
       'vue-router$': 'vue-router/dist/vue-router.js'
     }
   }
+  ,
+  devServer: { 
+    inline: true 
+  }
+
+
 
 };
 
