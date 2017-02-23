@@ -2,6 +2,7 @@
 const NODE_PATH="/usr/local/lib/node_modules"
 const NODE_ENV = process.env.NODE_ENV || 'prod';
 const webpack = require('webpack');
+const path = require('path')
 
 console.log(NODE_ENV)
 module.exports = {
@@ -45,7 +46,10 @@ module.exports = {
     }
   }
   ,
-  devServer: { 
+  devServer: {
+    contentBase: [path.join(__dirname), path.join(__dirname, 'node_modules')],
+
+   // contentBase: ,
     inline: true 
   }
 
