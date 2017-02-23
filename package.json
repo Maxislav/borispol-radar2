@@ -1,0 +1,8 @@
+{
+  "name": "borispol-radar-2",
+  "version": "0.0.1",
+  "dependencies": {
+    "vue": "^2.1.10",
+    "webpack": "^2.2.1"
+  }
+}
