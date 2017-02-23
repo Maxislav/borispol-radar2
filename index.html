@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="src/img/icon.ico" type="image/png">
     <title>Borispol rain</title>
 
 </head>
@@ -17,7 +18,9 @@
     </p>
     <!-- route outlet -->
     <!-- component matched by the route will render here -->
-    <router-view></router-view>
+    <transition name="fade">
+        <router-view></router-view>
+    </transition>
 </div>
 
 </body>
