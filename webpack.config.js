@@ -18,11 +18,37 @@ module.exports = {
   watchOptions: {
     aggregateTimeout: 100
   },
-  devtool: NODE_ENV == 'development' ? 'source-map' : false,
+  devtool: NODE_ENV == 'dev' ? 'source-map' : false,
   plugins: [
       new webpack.DefinePlugin({
         NODE_ENV: JSON.stringify(NODE_ENV)
       })
-  ]
+  ],
+  module: {
+    loaders:[
+      {
+        test: /\.js$/,
+       /* include: [
+          './src'
+          //path.resolve(__dirname, 'src')
+        ],*/
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015']
+        }
+      },
+      { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' }
+    ]
+  }
 
 };
+
+if(NODE_ENV!='dev'){
+  module.exports.plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    })
+  )
+}

@@ -2,7 +2,20 @@
   "name": "borispol-radar-2",
   "version": "0.0.1",
   "dependencies": {
-    "vue": "^2.1.10",
+    "babel": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "vue": "^2.1.10"
+  },
+  "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-es2015": "^6.22.0",
+    "css-loader": "^0.26.1",
+    "node-sass": "^4.5.0",
+    "style-loader": "^0.13.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^2.5.0",
     "webpack": "^2.2.1"
   }
 }
