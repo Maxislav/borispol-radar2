@@ -39,6 +39,13 @@ module.exports = {
       },
       { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' }
     ]
+  },
+  resolve: {
+    extensions: ['.js'],
+    alias: {
+      'vue$': 'vue/dist/vue.js',
+      'vue-router$': 'vue-router/dist/vue-router.js'
+    }
   }
 
 };
