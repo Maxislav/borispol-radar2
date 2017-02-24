@@ -1,7 +1,9 @@
 import Vue from 'vue';
+import template from './forecast-component.jade';
+import './forecast-component.styl'
 
 const forecastComponent = Vue.component('forecast-component', {
-	template: '<div>Forecast</div>'
+	template: template()
 });
 
 export default forecastComponent

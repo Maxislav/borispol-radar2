@@ -9,12 +9,12 @@ head
         }
     script(src='borispol.radar.min.js')
 body
+    h4(name='app-name') Borispol radar
     #app
 
         div
-            div(name='forecast')
-                forecast-component
-            h4 Borispol radar!
+            forecast-component
+
             .bookmark
                 router-link(to='/home') Home
                 router-link(to='/ired') Ired
