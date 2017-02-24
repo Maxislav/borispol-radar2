@@ -8,6 +8,7 @@ import IredComponent from './component/ired-component/ired-component'
 import VisibleComponent from './component/visible-component/visible-component'
 import UkbbComponent from './component/ukbb-component/ukbb-component'
 import BookmarkComponent from './component/bookmark-component/bookmark-component'
+import './directive/directive-img'
 Vue.use(VueRouter);
 
 
@@ -27,6 +28,7 @@ const routes = [
 const router = new VueRouter({
 	routes // short for routes: routes
 });
+
 
 // 4. Create and mount the root instance.
 // Make sure to inject the router with the router option to make the

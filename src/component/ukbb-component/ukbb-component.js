@@ -5,11 +5,11 @@ import './ukbb-component.styl';
 const UkbbComponent = Vue.component('ukbb-component',{
 	template:  template(),
 	compiled: function () {
-		console.log(this)
+		//console.log(this)
 	},
 	mounted: function () {
 
-		console.log(this.$el)
+		//console.log(this.$el)
 	}
 
 });
