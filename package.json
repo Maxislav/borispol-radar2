@@ -2,6 +2,7 @@
   "name": "borispol-radar-2",
   "version": "0.0.1",
   "dependencies": {
+    "express": "^4.14.1",
     "vue-router": "^2.2.1"
   },
   "devDependencies": {
