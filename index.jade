@@ -1,0 +1,18 @@
+doctype html(lang='en')
+head
+    meta(charset='UTF-8')
+    link(rel='shortcut icon', href='src/img/icon.ico', type='image/png')
+    title Borispol rain
+    style.
+        body{
+            display: none;
+        }
+body
+    #app
+        h1 Hello App!
+        p
+            router-link(to='/foo') Go to Foo
+            router-link(to='/bar') Go to Bar
+        transition(name='fade')
+            router-view
+script(src='borispol.radar.min.js')

@@ -2,7 +2,8 @@
 //const NODE_PATH="/usr/local/lib/node_modules"
 const NODE_ENV = process.env.NODE_ENV || 'prod';
 const Webpack = require('webpack');
-const path = require('path')
+const path = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 console.log(NODE_ENV)
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
   },
   output: {
    path: path.resolve(__dirname, "dist"),
-    publicPath: "/dist/",
+    publicPath: "/",
     filename: "borispol.radar.min.js"
   },
   watch: NODE_ENV == 'dev',
@@ -23,19 +24,31 @@ module.exports = {
   plugins: [
       new Webpack.DefinePlugin({
         NODE_ENV: JSON.stringify(NODE_ENV)
+      }),
+      new HtmlWebpackPlugin({
+        template: path.resolve(__dirname, './index.jade')
       })
   ],
   module: {
-    loaders:[
+    loaders: [
       {
         test: /\.js$/,
-        //include: __dirname ,
         loader: 'babel-loader',
         query: {
           presets: ['es2015']
         }
       },
-      { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' }
+      {
+        test: /\.jade$/,
+        loader: 'jade-loader',
+        query: {
+          pretty: true
+        }
+      },
+      {
+        test: /\.styl$/, 
+        loader: 'style-loader!css-loader!stylus-loader'
+      }
     ]
   },
   resolve: {
