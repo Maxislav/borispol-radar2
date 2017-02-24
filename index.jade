@@ -7,12 +7,17 @@ head
         body{
             display: none;
         }
+    script(src='borispol.radar.min.js')
 body
     #app
-        h1 Hello App!
-        p
-            router-link(to='/foo') Go to Foo
-            router-link(to='/bar') Go to Bar
-        transition(name='fade')
-            router-view
-script(src='borispol.radar.min.js')
+
+        div
+            div(name='forecast')
+            h4 Borispol radar!
+            .bookmark
+                router-link(to='/home') Home
+                router-link(to='/ired') Ired
+                router-link(to='/visible') Visible
+            transition(name='fade')
+                router-view
+
