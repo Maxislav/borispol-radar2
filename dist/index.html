@@ -1,24 +1,30 @@
-<!DOCTYPE html(lang='en')>
+<!DOCTYPE html>
 <head>
-  <meta charset="UTF-8"/>
-  <link rel="shortcut icon" href="src/img/icon.ico" type="image/png"/>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="src/img/icon.ico" type="image/png">
   <title>Borispol rain</title>
   <style>
     body{
         display: none;
     }
   </style>
+  <script src="borispol.radar.min.js"></script>
 </head>
 <body>
   <div id="app">
-    <h1>Hello App!</h1>
-    <p>
-      <router-link to="/foo">Go to Foo</router-link>
-      <router-link to="/bar">Go to Bar</router-link>
-    </p>
-    <transition name="fade">
-      <router-view></router-view>
-    </transition>
+    <div>
+      <div name="forecast">
+        <forecast-component></forecast-component>
+      </div>
+      <h4>Borispol radar!</h4>
+      <div class="bookmark">
+        <router-link to="/home">Home</router-link>
+        <router-link to="/ired">Ired</router-link>
+        <router-link to="/visible">Visible</router-link>
+      </div>
+      <transition name="fade">
+        <router-view></router-view>
+      </transition>
+    </div>
   </div>
-<script type="text/javascript" src="/dist/borispol.radar.min.js"></script></body>
-<script src="dist/borispol.radar.min.js"></script>
+<script type="text/javascript" src="borispol.radar.min.js"></script></body>

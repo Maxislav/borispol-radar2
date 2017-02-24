@@ -13,7 +13,7 @@ module.exports = {
   },
   output: {
    path: path.resolve(__dirname, "dist"),
-    publicPath: "/",
+    publicPath: "",
     filename: "borispol.radar.min.js"
   },
   watch: NODE_ENV == 'dev',

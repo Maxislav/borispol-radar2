@@ -2,6 +2,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router';
 const css = require('./styl/index.styl');
+import forecastComponent from './component/forecast-component';
+
 Vue.use(VueRouter);
 
 
