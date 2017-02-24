@@ -15,10 +15,9 @@ body
         div
             forecast-component
 
-            .bookmark
-                router-link(to='/home') Home
-                router-link(to='/ired') Ired
-                router-link(to='/visible') Visible
-            transition(name='fade')
-                router-view
+            bookmark-component
+
+            .router
+                transition(name='fade')
+                    router-view
 

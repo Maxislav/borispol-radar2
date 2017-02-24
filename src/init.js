@@ -5,6 +5,8 @@ const css = require('./styl/index.styl');
 import forecastComponent from './component/forecast-component/forecast-component';
 import HomeComponent from './component/home-component/home-component'
 import IredComponent from './component/ired-component/ired-component'
+import VisibleComponent from './component/visible-component/visible-component'
+import BookmarkComponent from './component/bookmark-component/bookmark-component'
 Vue.use(VueRouter);
 
 
@@ -14,6 +16,7 @@ const Bar = { template: '<div>booa</div>' };
 const routes = [
 	{ path: '/home', component: HomeComponent },
 	{ path: '/ired', component: IredComponent },
+	{ path: '/visible', component: VisibleComponent },
 	{ path: '/foo', component: Foo },
 	{ path: '/bar', component: Bar }
 ];

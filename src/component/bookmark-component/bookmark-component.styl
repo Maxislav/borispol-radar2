@@ -1,0 +1,16 @@
+@import "../../styl/constant.styl"
+.bookmark-component
+  margin  10px 0
+  a
+    padding 8px 15px
+    color $color-border-text
+    text-decoration none
+    border-bottom  2px solid transparent
+    transition 0.5s
+    &.router-link-active
+      color $color-bookmark-active
+      border-bottom  2px solid $color-bookmark-active
+      text-decoration none
+    &:hover
+      color $color-bookmark-hover
+      background-color $color-bookmark-bacggound-hover
