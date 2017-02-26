@@ -6,7 +6,14 @@ import './directive-img.styl'
 //console.log(loaderComponent.$el)
 
 
-
+/**
+ *
+ * @param {number}from
+ * @param {number}to
+ * @param {number}delay
+ * @param {Function?}callback
+ * @returns {Promise.<Node>}
+ */
 Node.prototype.$fadeTo = function (from, to, delay, callback) {
 
     this.style.opacity = from + '';
@@ -30,12 +37,10 @@ export default Vue.directive('img', {
 
         const loaderDiv = document.createElement('div');
         loaderDiv.innerHTML = templateLoader({loader:img64loader});
-        console.log(loaderDiv.children[0]);
 
         el.style.position = 'relative';
         const imgLoader = loaderDiv.children[0];
         el.$fadeTo();
-       // imgLoader.src = img64loader;
         imgLoader.style.opacity = '0';
         imgLoader.style.position = 'absolute';
         imgLoader.style.top = '0'
@@ -59,7 +64,7 @@ export default Vue.directive('img', {
             imgNeeded.$fadeTo(0, 1, 222)
                 .then(d=>{
                     imgLoader.$fadeTo(1, 0, 222)
-                        .then(d => {
+                        .then(imgLoader => {
                             el.removeChild(imgLoader)
                         });
                 })
