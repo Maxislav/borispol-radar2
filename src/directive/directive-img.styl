@@ -1,0 +1,22 @@
+.loader-component
+  display flex
+  width 100%
+  height 100%
+  align-items center
+  justify-content center
+  background-color rgba(0,0,0,0.4)
+  img
+    width 60px !important
+    height 60px !important
+    animation-name: spin;
+    animation-duration: 3000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

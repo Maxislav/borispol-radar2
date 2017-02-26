@@ -1,5 +1,11 @@
 import Vue from 'vue';
-import  img64loader from "base64-image-loader!../img/loader.png"
+import  img64loader from "base64-image-loader!../img/loader.png";
+import templateLoader from "./loader.jade";
+import './directive-img.styl'
+//import loaderComponent from "../component/loader-component/loader-component"
+//console.log(loaderComponent.$el)
+
+
 
 Node.prototype.$fadeTo = function (from, to, delay, callback) {
 
@@ -20,10 +26,16 @@ Node.prototype.$fadeTo = function (from, to, delay, callback) {
 
 export default Vue.directive('img', {
     inserted: function (el, binding) {
+
+
+        const loaderDiv = document.createElement('div');
+        loaderDiv.innerHTML = templateLoader({loader:img64loader});
+        console.log(loaderDiv.children[0]);
+
         el.style.position = 'relative';
-        const imgLoader = new Image();
+        const imgLoader = loaderDiv.children[0];
         el.$fadeTo();
-        imgLoader.src = img64loader;
+       // imgLoader.src = img64loader;
         imgLoader.style.opacity = '0';
         imgLoader.style.position = 'absolute';
         imgLoader.style.top = '0'
