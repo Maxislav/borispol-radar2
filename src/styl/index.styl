@@ -44,17 +44,18 @@ body
 
 *
   box-sizing border-box
+.border-hidden
+  border-top 1px solid transparent
+  margin-top -1px
 #app
   max-width 1000px
   min-width 1000px
   margin 0 auto
-  height 600px
-  background-color rgba(255,255,255,0.8)
-  box-shadow 0 0 2px rgba(0,0,0,0.2);
+  height 650px
   &>div
     height 100%
     .router
-      height:calc(100% - 67px);
+      height:calc(100% - 136px);
 
 @media screen and (max-width: 1000px)
   #app

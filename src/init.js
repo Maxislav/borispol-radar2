@@ -16,6 +16,7 @@ const Foo = { template: '<div>foo</div>' };
 const Bar = { template: '<div>booa</div>' };
 
 const routes = [
+	//{path:'/', component: {template: '<div>foo</div>' }},
 	{ path: '/home', component: HomeComponent },
 	{ path: '/radar', component: UkbbComponent },
 	{ path: '/ired', component: IredComponent },
@@ -27,12 +28,16 @@ const routes = [
 
 const router = new VueRouter({
 	routes // short for routes: routes
+
+
+});
+router.beforeEach ((to, from, next) => {
+	next()
 });
 
+router.replace('/home', ()=>{
 
-// 4. Create and mount the root instance.
-// Make sure to inject the router with the router option to make the
-// whole app router-aware.
+});
 window.onload = function () {
 	const app = new Vue({
 		router

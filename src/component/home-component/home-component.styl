@@ -1,12 +1,19 @@
 .home-component
-
-  height 100%
-  &>div
-    height 100%
+  background white
+  width 100%
+  box-shadow 0 0 5px rgba(0,0,0,0.2)
   .flex
     display flex
   .ukbb-component
-    width 650px
-  .ired-visible
-    .ired-component, .visible-component
-      height 50%
+    margin 0 auto
+  .ired-component
+    height 50%
+    min-width 324px
+  @media screen and (max-width: 1000px)
+    .ukbb-component
+      width 100%
+      margin 0 auto
+      .img-container
+          margin  0 auto
+    .flex
+      display block
