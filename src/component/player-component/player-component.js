@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import template from './player-component.jade';
-//import '../../font-awesome/css/font-awesome.css'
+import './player-component.styl'
 import '../../font-awesome/scss/font-awesome.scss'
 const dataComponent = {
 	template: template(),
