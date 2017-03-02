@@ -5,10 +5,25 @@ import player from '../player-component/player-component'
 
 //.img-ukbb(v-img="'http://localhost:8081/borisbolukbb'")
 
+
+/*
+player.play = ()=>{
+    console.log('play')
+}
+player.stepBackward = ()=>{
+    console.log('Назад')
+}
+player.stepForward = ()=>{
+    console.log('vpered')
+}*/
+
 const componentData ={
     template:  template(),
+    data: function () {
+      return{}
+    },
     compiled: function () {
-        //console.log(this)
+        console.log(this)
     },
     mounted: function () {
 

@@ -1,7 +1,8 @@
 .player-component
-    i.fa.fa-step-backward( aria-hidden="true")
-    i.fa.fa-play( aria-hidden="true")
-    i.fa.fa-step-forward( aria-hidden="true")
+    i.fa.fa-step-backward( aria-hidden="true", v-on:click="stepBackward")
+    i.fa.fa-play( aria-hidden="true", @click="play" )
+    i.fa.fa-step-forward( aria-hidden="true", @click="stepForward" )
+
 
 
 
