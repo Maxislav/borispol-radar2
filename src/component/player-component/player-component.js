@@ -8,7 +8,9 @@ import '../../font-awesome/scss/font-awesome.scss'
 
 const dataComponent = {
 	template: template(),
-	data: function(){
+	props: ['subject'],
+	data: function(e,a){
+		console.log(this)
 		let count =  1
 		return {
 			message: '',

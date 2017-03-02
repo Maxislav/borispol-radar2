@@ -20,7 +20,9 @@ player.stepForward = ()=>{
 const componentData ={
     template:  template(),
     data: function () {
-      return{}
+      return {
+          urls: [1,2,3]
+      }
     },
     compiled: function () {
         console.log(this)

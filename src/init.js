@@ -9,10 +9,12 @@ import VisibleComponent from './component/visible-component/visible-component'
 import UkbbComponent from './component/ukbb-component/ukbb-component'
 import BookmarkComponent from './component/bookmark-component/bookmark-component'
 import './directive/directive-img';
-//import './font-awesome/css/font-awesome.css'
-import Player from './component/player-component/player-component'
-Vue.use(VueRouter);
+const VueResource = require('vue-resource');
 
+
+import './component/player-component/player-component'
+Vue.use(VueRouter);
+Vue.use(VueResource);
 
 const Foo = { template: '<div>foo</div>' };
 const Bar = { template: '<div>booa</div>' };
@@ -37,6 +39,11 @@ router.beforeEach ((to, from, next) => {
 	next()
 });
 
+/*Vue.directive('player-component', {
+	inserted: function (el, binding) {
+		console.log(binding.value);
+	}
+});*/
 router.replace('/home', ()=>{
 
 });
