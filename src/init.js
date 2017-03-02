@@ -8,7 +8,9 @@ import IredComponent from './component/ired-component/ired-component'
 import VisibleComponent from './component/visible-component/visible-component'
 import UkbbComponent from './component/ukbb-component/ukbb-component'
 import BookmarkComponent from './component/bookmark-component/bookmark-component'
-import './directive/directive-img'
+import './directive/directive-img';
+//import './font-awesome/css/font-awesome.css'
+import Player from './component/player-component/player-component'
 Vue.use(VueRouter);
 
 
