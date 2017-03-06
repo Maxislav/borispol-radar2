@@ -1,5 +1,6 @@
 .forecast-3h-component
-    div
+    div(v-bind:style="{background:color}")
+        .time
+            | {{date | date('HH:MM')}}
         .img
-        .t
-            | {{temp}}
+        .t(v-html="temp")
