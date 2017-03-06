@@ -15,6 +15,8 @@ import VueResource from 'vue-resource'
 import './filter/date'
 
 import './component/player-component/player-component'
+import './component/forecast-component/forecast-day-component/forecast-3h-component/forecast-3h-component';
+
 Vue.use(VueRouter);
 Vue.use(VueResource);
 
