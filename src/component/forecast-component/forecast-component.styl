@@ -1,14 +1,91 @@
 @import "../../styl/constant.styl"
 .forecast-component
-  padding 5px
+  padding 0 2px
   height 100px
-  overflow-x auto
+  //overflow-x auto
   border 1px solid $color-border
   ul li
     list-style-type none
     height 100%
-    border 1px solid $color-border
-    margin 0 1px
+
   ul
     height 100%
     display flex
+/* scrollbar2 */
+.forecast-component
+{
+  //width:251px;
+  //margin:0 0 10px;
+}
+
+.forecast-component .viewport
+{
+  height:89px;
+  overflow:hidden;
+  position:relative;
+}
+
+.forecast-component .overview
+{
+  list-style:none;
+  //width:2500px;
+  padding:0;
+  height 100%
+  margin:0;
+  position:absolute;
+  left:0;
+  top:0;
+}
+
+.forecast-component .overview img
+{
+  float:left;
+}
+
+.forecast-component .scrollbar
+{
+  background: transparent;
+  position:relative;
+  //margin:1px;
+  clear:both;
+  height:8px;
+}
+
+.forecast-component .track
+{
+  background:transparent;
+  width:100%;
+  height:10px;
+  position:relative;
+}
+
+.forecast-component .thumb
+{
+  background:#728598;
+  height:6px;
+  cursor:pointer;
+  overflow:hidden;
+  position:absolute;
+  left:0;
+  top:1px;
+  border-radius 5px
+}
+
+.forecast-component .thumb .end
+{
+
+}
+
+.forecast-component .disable
+{
+  display:none;
+}
+
+.noSelect
+{
+  user-select:none;
+  -o-user-select:none;
+  -moz-user-select:none;
+  -khtml-user-select:none;
+  -webkit-user-select:none;
+}

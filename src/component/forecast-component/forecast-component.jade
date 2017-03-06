@@ -1,4 +1,10 @@
 .forecast-component
-    ul.forecast
-        li(v-for="day in list")
-            forecast-day-component(:day="day")
+    .scrollbar
+        .track
+            .thumb
+                .end
+    .viewport
+        .overview
+            ul.forecast
+                li(v-for="day in list")
+                    forecast-day-component(:day="day")

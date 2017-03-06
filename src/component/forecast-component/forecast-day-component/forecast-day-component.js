@@ -5,8 +5,8 @@ export default  Vue.component('forecast-day-component',{
 	template: template(),
 	props: ['day'],
 	data: function () {
-		//console.log(this.day)
-		const dt = new Date(this.$options.propsData.day[0].dt * 1000)
+		const dateLong = this.day[0].dt * 1000
+		const dt = new Date(dateLong);
 		return {
 			dt
 		}

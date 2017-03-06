@@ -1,6 +1,6 @@
 .forecast-day-component
     .date
-        |{{day[0].dt | date('d ddd')}}
+        |{{dt | date('d ddd')}}
     .day
         .hour(v-for="hh in day")
             forecast-3h-component(:hh="hh")

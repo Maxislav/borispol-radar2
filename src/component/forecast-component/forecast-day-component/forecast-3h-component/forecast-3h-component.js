@@ -6,7 +6,7 @@ export default  Vue.component('forecast-3h-component', {
 	props: ['hh'],
 	template: template(),
 	data: function () {
-		console.log(this.hh)
+		//console.log(this.hh)
 		return{
 			temp: this.hh.main.temp
 		}

@@ -2,6 +2,10 @@ import Vue from 'vue';
 
 import template from './forecast-component.jade';
 import './forecast-component.styl'
+import tinyscrollbar from '../../lib/tinyscrollbar.js';
+import $ from 'jquery-lite';
+
+let scrollEl;
 
 export const dataComponent = {
 
@@ -22,10 +26,20 @@ export const dataComponent = {
 					}
 					day.push(l)
 				});
+				const el = $(this.$el);
+				const forecast = 	el.find('.forecast')
+				setTimeout(()=>{
+					forecast[0].parentNode.style.width = forecast[0].clientWidth+'px'
+					scrollEl.update()
+				}, 1)
 			});
 		return{
 			list
 		}
+	},
+	mounted: function () {
+		const el = $(this.$el)//.tinyscrollbar()
+	  scrollEl = 	tinyscrollbar(this.$el,{ axis: "x"})
 	}
 };
 const forecastComponent = Vue.component('forecast-component',dataComponent);
