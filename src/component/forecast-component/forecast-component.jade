@@ -1,4 +1,4 @@
 .forecast-component
     ul.forecast
         li(v-for="day in list")
-            | day
+            forecast-day-component(:day="day")

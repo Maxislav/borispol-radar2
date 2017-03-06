@@ -19,6 +19,7 @@
     "base64-image-loader": "^1.2.0",
     "concurrently": "^3.3.0",
     "css-loader": "^0.9.1",
+    "dateformat": "^2.0.0",
     "file-loader": "^0.8.5",
     "font-awesome": "^4.7.0",
     "font-awesome-webpack": "0.0.5-beta.2",
@@ -35,6 +36,7 @@
     "url": "^0.11.0",
     "url-loader": "^0.5.8",
     "vue": "^2.1.10",
+    "vue-date-filter": "^1.0.1",
     "vue-resource": "^1.2.1",
     "webpack": "^2.2.1"
   }
