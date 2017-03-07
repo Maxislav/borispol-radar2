@@ -3,7 +3,8 @@
 const NODE_ENV = process.env.NODE_ENV || 'prod';
 const Webpack = require('webpack');
 const path = require('path');
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 console.log(NODE_ENV)
 module.exports = {
@@ -27,7 +28,13 @@ module.exports = {
       }),
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, './index.jade')
-      })
+      }),
+      new CopyWebpackPlugin([
+        {
+          from:'./src/img',
+          to:'./img'
+        }
+      ])
   ],
   module: {
     loaders: [

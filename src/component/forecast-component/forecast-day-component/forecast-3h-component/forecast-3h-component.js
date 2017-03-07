@@ -21,13 +21,15 @@ export default  Vue.component('forecast-3h-component', {
 		};
 
 		const date = new Date(this.hh['dt_txt']);
-		const temp = Math.round(this.hh.main.temp)
+		const temp = Math.round(this.hh.main.temp);
 
 		const HH ='hh'+ dateFormat(date, 'HH');
+		const icon = 'img/weather-ico/i'+this.hh.weather[0].icon+'.png';
 		return{
 			date,
 			temp: (temp<0 ? '-'+temp : '+'+temp)  +'&deg;C',
-			color: R.color[HH]
+			color: R.color[HH],
+			icon
 		}
 	}
 	
