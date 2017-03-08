@@ -24,11 +24,18 @@ export default  Vue.component('forecast-3h-component', {
 		const temp = Math.round(this.hh.main.temp);
 
 		const HH ='hh'+ dateFormat(date, 'HH');
-		const icon = 'img/weather-ico/i'+this.hh.weather[0].icon+'.png';
+		const icon = 'img/weather-ico/i01'+this.hh.weather[0].icon.match(/\D{1}$/)[0]+'.png';
+		console.log(this.hh.clouds.all);
+		const style = {
+			transform: 'scale('+this.hh.clouds.all/100+')'
+		}
+		//const scale = 'transform\: scale ('+this.hh.clouds.all/100+','+this.hh.clouds.all/100+');';
+		const scale = this.hh.clouds.all/100+'';
 		return{
 			date,
 			temp: (temp<0 ? '-'+temp : '+'+temp)  +'&deg;C',
 			color: R.color[HH],
+			style,
 			icon
 		}
 	}
