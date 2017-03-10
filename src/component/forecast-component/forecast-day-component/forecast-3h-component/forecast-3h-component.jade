@@ -5,4 +5,6 @@
         .img
             img(:src="icon")
             img.clouds(src="img/weather-ico/clouds.png", v-bind:style="style")
+         .water-container
+             img(src="img/waterdrop.png", v-for="d in rain")
         .t(v-html="temp")
