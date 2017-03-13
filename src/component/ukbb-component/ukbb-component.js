@@ -2,26 +2,43 @@ import Vue from 'vue';
 import template from './ukbb-component.jade';
 import './ukbb-component.styl';
 import player from '../player-component/player-component'
+//import { enumerable } from 'core-decorators';
+import { readonly } from 'core-decorators';
 
-//.img-ukbb(v-img="'http://localhost:8081/borisbolukbb'")
+
+class Ukbb {
+    urls = [];
+
+    constructor(){
+
+    }
 
 
-/*
-player.play = ()=>{
-    console.log('play')
+    loadHistory(){
+		  return Vue.http.get('php/loadUkbbHistory.php')
+    }
+    play(){
+
+    }
+    back(){
+
+    }
+    forward(){
+
+    }
+
 }
-player.stepBackward = ()=>{
-    console.log('Назад')
-}
-player.stepForward = ()=>{
-    console.log('vpered')
-}*/
 
 const componentData ={
     template:  template(),
     data: function () {
+
+      const ukbb = new Ukbb();
+
       return {
-          urls: [1,2,3]
+          play: ukbb.play,
+	        back: ukbb.back,
+	        forward: ukbb.forward
       }
     },
     compiled: function () {
@@ -31,8 +48,7 @@ const componentData ={
 
         //console.log(this.$el)
     }
-
-}
+};
 
 
 //export const UkbbComponent = Vue.component('ukbb-component',componentData);

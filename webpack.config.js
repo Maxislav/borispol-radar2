@@ -23,6 +23,7 @@ module.exports = {
   },
   devtool: NODE_ENV == 'dev' ? 'source-map' : false,
   plugins: [
+
       new Webpack.DefinePlugin({
         NODE_ENV: JSON.stringify(NODE_ENV)
       }),
@@ -33,7 +34,12 @@ module.exports = {
         {
           from:'./src/img',
           to:'./img'
-        }
+        },
+        {
+          from:'./php',
+          to:'./'
+        },
+
       ])
   ],
   module: {
@@ -42,8 +48,12 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015']
+          presets: ['es2015', 'stage-1'],
+	        cacheDirectory: true,
+	        plugins: ['transform-decorators-legacy' ],
         }
+
+
       },
       {
         test: /\.jade$/,
@@ -85,7 +95,7 @@ if(NODE_ENV=='prod'){
     new Webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
-        drop_console: true,
+        drop_console: false,
         unsafe: true
         
       }

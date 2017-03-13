@@ -22,6 +22,7 @@ Vue.use(VueResource);
 
 
 
+
 const Foo = { template: '<div>foo</div>' };
 const Bar = { template: '<div>booa</div>' };
 

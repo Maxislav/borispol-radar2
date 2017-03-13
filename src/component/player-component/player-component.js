@@ -1,26 +1,24 @@
 import Vue from 'vue';
 import template from './player-component.jade';
 import './player-component.styl'
-import '../../font-awesome/scss/font-awesome.scss'
-
-
+import '../../font-awesome/scss/font-awesome.scss';
 
 
 const dataComponent = {
 	template: template(),
-	props: ['subject'],
-	data: function(e,a){
-		//console.log(this)
-		let count =  1
+	props: ['play', 'back', 'forward'],
+	data: function (e, a) {
+
+		//console.log(this._play)
+
 		return {
-			message: '',
-			count: 0,
-			play: function (e) {
-				console.log(count++)
+			onPlay: (e) => {
+				//console.log( this._play)
 			},
-			stepBackward: function () {
+			"onBack": ()=>{
+				console.log('olds')
 			},
-			stepForward: function () {
+			onForward: () => {
 			}
 		}
 	}
