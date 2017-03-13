@@ -9,16 +9,18 @@ const dataComponent = {
 	props: ['play', 'back', 'forward'],
 	data: function (e, a) {
 
-		//console.log(this._play)
+		const back = this.back;
+		const play = this.play;
 
 		return {
 			onPlay: (e) => {
-				//console.log( this._play)
+				this.play(e)
 			},
-			"onBack": ()=>{
-				console.log('olds')
+			onBack: (e)=>{
+				back(e)
 			},
-			onForward: () => {
+			onForward: (e) => {
+				this.forward(e)
 			}
 		}
 	}
