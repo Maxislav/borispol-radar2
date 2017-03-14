@@ -1,6 +1,13 @@
-export const	urlCron = {
-	//ir:'img/ir/',
-	//vi:'img/vis/',
-	ir:'../img/sat/',
-	vi:'../img/vis/',
-}
+
+let url = {
+	dev: {
+		ir:'http://localhost/allborispol.radar/img/sat/',
+		vi:'http://localhost/allborispol.radar/img/vis/',
+	},
+	prod: {
+		ir:'http://borispol.hol.es/img/sat/',
+		vi:'http://borispol.hol.es/img/vis/',
+	}
+};
+
+export const	urlCron = url[NODE_ENV]

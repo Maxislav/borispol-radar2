@@ -70,7 +70,7 @@ export default Vue.directive('img', {
                 })
 
         };
-        console.log(binding.value);
+        //console.log(binding.value);
         imgNeeded.src = binding.value
 
     }
