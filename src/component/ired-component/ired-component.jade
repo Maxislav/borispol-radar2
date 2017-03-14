@@ -1,5 +1,6 @@
 .ired-component
-    |Картинка иред
-    div
-        player-component
+    .img-container
+        .relative
+            .img-sat(v-img="url")
+            player-component(:play="play", :back="back", :forward="forward")
 

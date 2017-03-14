@@ -37,7 +37,7 @@ module.exports = {
         },
         {
           from:'./php',
-          to:'./'
+          to:'./php'
         },
 
       ])

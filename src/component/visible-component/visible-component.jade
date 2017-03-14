@@ -1,2 +1,6 @@
 .visible-component
-    | Visible
+    .img-container
+        .relative
+            .img-sat(v-img="url")
+            player-component(:play="play", :back="back", :forward="forward")
+

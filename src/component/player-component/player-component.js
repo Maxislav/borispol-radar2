@@ -26,5 +26,16 @@ const dataComponent = {
 	}
 };
 
+export class Player{
+	play(){
+
+	}
+	back(){
+
+	}
+	forward(){
+
+	}
+}
 
 export default Vue.component('player-component', dataComponent)

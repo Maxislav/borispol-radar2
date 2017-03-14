@@ -43,17 +43,26 @@ const router = new VueRouter({
 
 });
 router.beforeEach ((to, from, next) => {
+	if(to.path == '/'){
+		router.replace('/home', ()=>{
+		})
+	}
 	next()
 });
+
+Date.prototype.toUtc = function () {
+	const offset = new Date().getTimezoneOffset()*60000;
+	return new Date(Date.now() + offset)
+}
 
 /*Vue.directive('player-component', {
 	inserted: function (el, binding) {
 		console.log(binding.value);
 	}
 });*/
-router.replace('/home', ()=>{
+/*router.replace('/home', ()=>{
 
-});
+});*/
 window.onload = function () {
 	const app = new Vue({
 		router
