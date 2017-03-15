@@ -8,7 +8,19 @@ const VisibleComponent = Vue.component('visible-component',{
 	template:  template(),
 	data: function () {
 		const url = urlCron.vi + dateFormat(new Date().toUtc(), 'yyyymmddHH00')+'.gif';
-		const player = new Player();
+
+		const variableUrls = [];
+				for (let i = 0; i<10; i++){
+			variableUrls.push(dateFormat(new Date().toUtc().getTime() - (i*3600*1000), 'yyyymmddHH00'))
+		}
+		const player = new Player({
+			prefix : urlCron.vi,
+			variables: variableUrls,
+			suffix : '.gif',
+		});
+
+
+		//const player = new Player();
 		return {
 			url,
 			play: player.play,

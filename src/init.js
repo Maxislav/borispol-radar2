@@ -49,11 +49,11 @@ router.beforeEach ((to, from, next) => {
 	}
 	next()
 });
-
+/*
 Date.prototype.toUtc = function () {
 	const offset = new Date().getTimezoneOffset()*60000;
 	return new Date(Date.now() + offset)
-}
+};*/
 console.log(NODE_ENV)
 /*Vue.directive('player-component', {
 	inserted: function (el, binding) {

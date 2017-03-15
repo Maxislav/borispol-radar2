@@ -6,10 +6,15 @@ const path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
-console.log(NODE_ENV)
+//console.log('dddddddddddddddddddddddd',__dirname)
+//return;
+
+const ExtendDate = require('./src/plugin/DateExtendPlugin');
+
+console.log(NODE_ENV);
 module.exports = {
   entry: {
-	 app: ["./src/init.js"]
+	 app: ["./src/extend/DateExtend.js","./src/init.js"]
     //init:['webpack-dev-server/client',__dirname+"/src/init.js"]
   },
   output: {
@@ -24,6 +29,7 @@ module.exports = {
   devtool: NODE_ENV == 'dev' ? 'source-map' : false,
   plugins: [
 
+      new ExtendDate({}),
       new Webpack.DefinePlugin({
         NODE_ENV: JSON.stringify(NODE_ENV)
       }),

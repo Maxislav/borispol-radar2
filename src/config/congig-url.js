@@ -1,8 +1,8 @@
 
 let url = {
 	dev: {
-		ir:'http://localhost/allborispol.radar/img/sat/',
-		vi:'http://localhost/allborispol.radar/img/vis/',
+		ir:'http://localhost/all/borispol.radar/img/sat/',
+		vi:'http://localhost/all/borispol.radar/img/vis/',
 	},
 	prod: {
 		ir:'http://borispol.hol.es/img/sat/',

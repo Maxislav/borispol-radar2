@@ -3,21 +3,35 @@ import './ired-component.styl'
 import template from './ired-component.jade';
 import dateFormat from 'dateformat';
 import {urlCron} from '../../config/congig-url';
+import {autobind} from 'core-decorators';
 
-import {Player} from '../player-component/player-component'
+import {Player} from '../player-component/player-component';
+const variableUrls = [];
+for (let i = 0; i<10; i++){
+	variableUrls.push(dateFormat(new Date().toUtc().getTime() - (i*3600*1000), 'yyyymmddHH00'))
+}
+const player = new Player({
+	prefix : urlCron.ir,
+	variables: variableUrls,
+	suffix : '.gif',
+});
 
 const IredComponent = Vue.component('ired-component',{
 	template:  template(),
 	data: function () {
 		const url = urlCron.ir + dateFormat(new Date().toUtc(), 'yyyymmddHH00')+'.gif';
-		const player = new Player()
+
 		return {
 			url,
 			play: player.play,
 			back: player.back,
 			forward: player.forward
 		}
+	},
+	mounted: function (){
+		console.log(this.$el);
 	}
+
 });
 //const UkbbComponent ={template:  template()}
 
