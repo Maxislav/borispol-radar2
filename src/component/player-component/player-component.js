@@ -3,31 +3,35 @@ import template from './player-component.jade';
 import './player-component.styl'
 import '../../font-awesome/scss/font-awesome.scss';
 import {Deferred} from '../../util/deferred';
-import {autobind} from 'core-decorators';
+import {autobind, enumerable, extendDescriptor, lazyInitialize} from 'core-decorators';
 
-
-const dataComponent = {
-	template: template(),
-	props: ['play', 'back', 'forward'],
-	data: function (e, a) {
-
-		const back = this.back;
-		const play = this.play;
-
-		return {
-			onPlay: (e) => {
-				this.play(e)
-			},
-			onBack: (e)=>{
-				back(e)
-			},
-			onForward: (e) => {
-				this.forward(e)
-			}
+function kk(target, key, descriptor) {
+	descriptor.configurable = true;
+	descriptor.writable = true;
+	descriptor.enumerable = true;
+	const value = target[key]
+	target[key] = value
+	Object.defineProperty(target, key, {
+		enumerable: true,
+		value: function () {
+			
 		}
+	})
+	for(let key in target){
+		console.log(key)
 	}
-};
+	return descriptor;
+}
 
+function keys() {
+	return function decorator(target) {
+
+
+
+		return target
+	}
+}
+@keys
 export class Player{
 
 	/**
@@ -58,7 +62,13 @@ export class Player{
 
 	/**
 	 *
-	 * @param {{prefix: string, suffix: string, variables: Array.<string>}} d
+	 * @type {string}
+	 */
+	initSrc = '';
+
+	/**
+	 *
+	 * @param {{prefix: string, suffix: string, variables: Array.<string>, initSrc: string}} d
 	 */
 	constructor(d){
 		this.prefix = d ? d.prefix : '';
@@ -66,6 +76,7 @@ export class Player{
 		if(d && d.variables){
 			d.variables.forEach(i=>this.variables.push(i))
 		}
+		this.initSrc = d.initSrc;
 	}
 
 	/**
@@ -105,6 +116,8 @@ export class Player{
 	}
 
 	@autobind
+	@enumerable
+	@kk
 	play(){
 		if(!this.images){
 			this.images = [];
@@ -125,5 +138,22 @@ export class Player{
 
 	}
 }
+const dataComponent = {
+	template: template(),
+	props: ['play', 'back', 'forward'],
+	data: function (e, a) {
+		console.log(this.play)
+		return {
+			onPlay: this.play,
+			onBack: this.back,
+			onForward: this.forward
+		}
+	},
+	mounted: function () {
+		const container  = this.$el.parentNode
+		console.log(container)
+	}
+};
+
 
 export default Vue.component('player-component', dataComponent)
