@@ -3,8 +3,8 @@
 const NODE_ENV = process.env.NODE_ENV || 'prod';
 const Webpack = require('webpack');
 const path = require('path');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 //console.log('dddddddddddddddddddddddd',__dirname)
 //return;
@@ -14,7 +14,7 @@ const ExtendDate = require('./src/plugin/DateExtendPlugin');
 console.log(NODE_ENV);
 module.exports = {
   entry: {
-	 app: ["./src/extend/DateExtend.js","./src/init.js"]
+	 app: ["./src/extend/NodeFade.js", "./src/extend/DateExtend.js","./src/init.js"]
     //init:['webpack-dev-server/client',__dirname+"/src/init.js"]
   },
   output: {
