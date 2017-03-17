@@ -6,7 +6,7 @@ import dateFormat from 'dateformat';
 
 
 const variableUrls = [];
-for (let i = 0; i<10; i++){
+for (let i = 0; i<24; i++){
 	variableUrls.push(dateFormat(new Date().toUtc().getTime() - (i*3600*1000), 'yyyymmddHH00'))
 }
 const VisibleComponent = Vue.component('visible-component',{

@@ -8,6 +8,12 @@ import {autobind, enumerable, extendDescriptor, lazyInitialize} from 'core-decor
 
 export class Player {
 	/**
+	 *
+	 * @type {boolean}
+	 */
+	process = false
+
+	/**
 	 * @type {Node}
 	 */
 	stage;
@@ -28,15 +34,28 @@ export class Player {
 
 	/**
 	 *
-	 * @type {Array.<Image>}
+	 * @type {Array.<HTMLElement>}
 	 */
-	images;
+	images = [];
 
 	/**
 	 *
 	 * @type {Deferred}
 	 */
 	deferImages = new Deferred();
+
+	/**
+	 *
+	 * @type {number}
+	 */
+	k = 0;
+
+	/**
+	 *
+	 * @type {Array.<string>}
+	 */
+	urls = []
+
 
 
 	/**
@@ -49,30 +68,60 @@ export class Player {
 		if (d && d.variables) {
 			d.variables.forEach(i => this.variables.push(i))
 		}
+		this.urls = this.variables.map(it => this.prefix + it + this.suffix);
 	}
 
-
 	@autobind
-	play() {
-		if (!this.images) {
-			this.images = [];
-			const urls = this.variables.map(it => this.prefix + it + this.suffix);
-			this._loadImages(urls)
+	play(e) {
+		if(this.process) return;
+		this.process = true;
+		if (this.images.length<this.urls.length) {
+
+			this._loadImages(this.urls)
+			return this.deferImages.promise
+				.then(d => {
+					console.log(this.images)
+					this.process = false;
+					this.play(e)
+				})
+		}else{
+			this.images.map(img=>img.$fadeTo(0,1, 222));
+			this.k = this.images.length-1;
+			this.process = true;
+			this.forward(e,true)
 		}
-		return this.deferImages.promise
-			.then(d => {
-				console.log(d)
-			})
 	}
 
 	@autobind
 	back() {
 
+		if (this.images && this.images[this.k+1]) {
+			this.k++;
+			this.images[this.k].$fadeTo(0, 1, 500)
+		} else if(this.k<this.variables.length){
+			this._loadImage(this.urls[this.k+1], this.k+1)
+				.then(d=>{
+					this.back()
+				})
+
+		}
 	}
 
 	@autobind
-	forward() {
-
+	forward(e,play) {
+		if(this.images[this.k]){
+			this.images[this.k].$fadeTo(1,0,500,0.5)
+				.then(d=>{
+					this.k--
+					if(this.k && play){
+						this.forward(e,play)
+					}else {
+						this.process = false
+					}
+				})
+		}else{
+			this.k++
+		}
 	}
 
 	/**
@@ -87,7 +136,6 @@ export class Player {
 			const img = new Image();
 			img.style.display = 'none';
 			img.onload = () => {
-
 				const styleImg = {
 					position: 'absolute',
 					top: 0,
@@ -104,9 +152,10 @@ export class Player {
 						styleImg
 					}
 				}).$el;
-
+				this.images = this.images || []
+				this.images[i] = vueEl;
+				this.stage.appendChild(vueEl)
 				resolve(vueEl);
-				//document.body.removeChild(img);
 			};
 			img.onerror = () => {
 				resolve(null)
@@ -123,8 +172,9 @@ export class Player {
 	 * @private
 	 */
 	_loadImages(urls) {
-		return Promise.all(urls.map((url, i) => this._loadImage(url)))
+		return Promise.all(urls.map((url, i) => this._loadImage(url,i)))
 			.then(arr => {
+				//arr.map((img, i) => this.images[i] =img)
 				return this._applyToStage(arr)
 			})
 			.then(arr => {
@@ -143,12 +193,7 @@ export class Player {
 		return new Promise(resolve => {
 			if (this.stage) {
 				arr.forEach((img, i) => {
-
-
-					img.$fadeTo(0, 1, 222);
-
-
-					this.stage.appendChild(img)
+					//this.stage.appendChild(img)
 				})
 			}
 			resolve(arr)
