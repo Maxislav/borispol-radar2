@@ -99,6 +99,7 @@ export class Player {
 	/**
 	 *
 	 * @param {Vue} component
+	 * @param {Function} component.onload
 	 * @param {{prefix: string, suffix: string, variables: Array.<string>}} d
 	 */
 
@@ -120,16 +121,14 @@ export class Player {
 		this.process = true;
 		if (this.images.length<this.urls.length) {
 
-			this._loadImages(this.urls)
+			this._loadImages(this.urls).then(d=>{});
 			return this.deferImages.promise
 				.then(d => {
-					//console.log(this.images)
 					this.process = false;
 					this.play(e)
 				})
 		}else{
 			this.images.map(img=>{
-				img.style.display = 'block'
 				img.$fadeTo(0,1, 222)
             });
 			this.k = this.images.length-1;
@@ -141,7 +140,7 @@ export class Player {
 	back() {
 		if (this.images && this.images[this.k+1]) {
 			this.k++;
-			this.images[this.k].style.display = 'block'
+			//this.images[this.k].style.display = 'block'
 			this.images[this.k].$fadeTo(0, 1, 500)
 		} else if(this.k<this.variables.length){
 			this._loadImage(this.urls[this.k+1], this.k+1)
@@ -159,7 +158,7 @@ export class Player {
 
 			this.images[this.k].$fadeTo(1,0,500,0.5)
 				.then(d=>{
-					this.k--
+					this.k--;
 					if(this.k && play){
 						this.forward(e,play)
 					}else {
@@ -182,35 +181,26 @@ export class Player {
 		return new Promise((resolve, reject) => {
 			const img = new Image();
             img.setAttribute('v-bind:style', "styleImg");
-            /**
-			 *
-             * @type {{position: string, top: number, display: string, left: number, opacity: number, z-index: number}}
-             */
-            const styleImg = {
-                position: 'absolute',
-                top: 0,
-                display: 'block',
-                left: 0,
-                opacity: 0,
-                'z-index': i + 1
+            const vueEl = Player._getEl(img, i)
+
+            const onload = (i, display)=>{
+                this.images = this.images || [];
+
+                this.images[i] = vueEl;
+                this.images[i].style.display = display
+                this.stage.appendChild(vueEl)
+                resolve(vueEl);
+                this.load++;
+            }
+
+            vueEl.onerror = ()=>{
+                onload(i, 'none')
+            }
+            vueEl.onload = ()=>{
+                onload(i, 'block')
             };
-            /**
-             * @type {HTMLElement}
-             */
-            const vueEl = new Vue({
-                el: img,
-                data: {
-                    styleImg
-                }
-            }).$el;
-            vueEl.style.display = 'none';
-            vueEl.onload = vueEl.onerror = () => {
-				this.images = this.images || []
-				this.images[i] = vueEl;
-				this.stage.appendChild(vueEl)
-				resolve(vueEl);
-				this.load++;
-			};
+
+
             vueEl.src = url;
 		})
 	}
@@ -218,15 +208,11 @@ export class Player {
 	/**
 	 *
 	 * @param {Array.<string>}urls
-	 * @returns {Promise.<*>}
+	 * @returns {Promise.<Array.<HTMLElement>>}
 	 * @private
 	 */
 	_loadImages(urls) {
 		return Promise.all(urls.map((url, i) => this._loadImage(url,i)))
-			/*.then(arr => {
-				//arr.map((img, i) => this.images[i] =img)
-				return this._applyToStage(arr)
-			})*/
 			.then(arr => {
 				console.log(arr)
 				this.deferImages.resolve(arr);
@@ -234,36 +220,30 @@ export class Player {
 			})
 	}
 
-	/**
-	 *
-	 * @param {Array.<Image>} arr
-	 * @returns {Promise}
-	 * @private
-	 */
-	_applyToStage(arr) {
-		return new Promise(resolve => {
-			if (this.stage) {
-				arr.forEach((img, i) => {
-					//this.stage.appendChild(img)
-				})
-			}
-			resolve(arr)
-		})
-	}
+    /**
+     *
+     * @param {Image}img
+     * @param {Number}i
+     * @returns {HTMLElement}
+     * @private
+     */
+	static _getEl(img, i) {
 
-	/**
-	 *
-	 * @param type
-	 * @returns {HTMLElement}
-	 * @private
-	 */
-	_getDiv(type) {
-		const node = document.createElement(type)
-		node.setAttribute('class', 'img-sat')
-		node.style.position = 'relative';
-		return new Vue({
-			el: node
-		}).$el
+        const styleImg = {
+            position: 'absolute',
+            top: 0,
+            display: 'none',
+            left: 0,
+            opacity: 0,
+            'z-index': i + 1
+        };
+        return new Vue({
+            el: img,
+            data: {
+                styleImg
+            }
+        }).$el;
+
 	}
 
 }
@@ -278,6 +258,7 @@ const dataComponent = {
 			suffix: this.suffix,
 			variables: this.variables,
 		});
+
 		return {
 			process: player.process,
 			onPlay: player.play,
@@ -297,7 +278,7 @@ const dataComponent = {
 	},
 	watch: {
         process: function(){
-        	console.log(this.process)
+        	//console.log(this.process)
 
 		}
 	}
