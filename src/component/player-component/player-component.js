@@ -7,11 +7,7 @@ import {autobind, enumerable, extendDescriptor, lazyInitialize} from 'core-decor
 
 
 export class Player {
-	/**
-	 *
-	 * @type {boolean}
-	 */
-	process = false
+
 
 	/**
 	 * @type {Node}
@@ -57,12 +53,22 @@ export class Player {
 	urls = []
 
 
+	set process(val){
+        this._component.process = val
+        this._process = val
+	}
+	get process(){
+		return this._process
+	}
 
 	/**
 	 *
 	 * @param {{prefix: string, suffix: string, variables: Array.<string>}} d
 	 */
-	constructor(d) {
+	constructor(component, d) {
+		this._component = component;
+
+		this._process = false;
 		this.prefix = d ? d.prefix : '';
 		this.suffix = d ? d.suffix : '';
 		if (d && d.variables) {
@@ -80,23 +86,25 @@ export class Player {
 			this._loadImages(this.urls)
 			return this.deferImages.promise
 				.then(d => {
-					console.log(this.images)
+					//console.log(this.images)
 					this.process = false;
 					this.play(e)
 				})
 		}else{
-			this.images.map(img=>img.$fadeTo(0,1, 222));
+			this.images.map(img=>{
+				img.style.display = 'block'
+				img.$fadeTo(0,1, 222)
+            });
 			this.k = this.images.length-1;
-			this.process = true;
 			this.forward(e,true)
 		}
 	}
 
 	@autobind
 	back() {
-
 		if (this.images && this.images[this.k+1]) {
 			this.k++;
+			this.images[this.k].style.display = 'block'
 			this.images[this.k].$fadeTo(0, 1, 500)
 		} else if(this.k<this.variables.length){
 			this._loadImage(this.urls[this.k+1], this.k+1)
@@ -108,8 +116,10 @@ export class Player {
 	}
 
 	@autobind
-	forward(e,play) {
+	forward(e, play) {
+		console.log(this.k)
 		if(this.images[this.k]){
+
 			this.images[this.k].$fadeTo(1,0,500,0.5)
 				.then(d=>{
 					this.k--
@@ -134,34 +144,29 @@ export class Player {
 	_loadImage(url, i) {
 		return new Promise((resolve, reject) => {
 			const img = new Image();
-			img.style.display = 'none';
-			img.onload = () => {
-				const styleImg = {
-					position: 'absolute',
-					top: 0,
-					display: 'block',
-					left: 0,
-					opacity: 0,
-					'z-index': i + 1
-				};
-
-				img.setAttribute('v-bind:style', "styleImg");
-				const vueEl = new Vue({
-					el: img,
-					data: {
-						styleImg
-					}
-				}).$el;
+            img.setAttribute('v-bind:style', "styleImg");
+            const styleImg = {
+                position: 'absolute',
+                top: 0,
+                display: 'block',
+                left: 0,
+                opacity: 0,
+                'z-index': i + 1
+            };
+            const vueEl = new Vue({
+                el: img,
+                data: {
+                    styleImg
+                }
+            }).$el;
+            vueEl.style.display = 'none';
+            vueEl.onload = vueEl.onerror = () => {
 				this.images = this.images || []
 				this.images[i] = vueEl;
 				this.stage.appendChild(vueEl)
 				resolve(vueEl);
 			};
-			img.onerror = () => {
-				resolve(null)
-			};
-			img.src = url;
-			document.body.appendChild(img)
+            vueEl.src = url;
 		})
 	}
 
@@ -173,11 +178,12 @@ export class Player {
 	 */
 	_loadImages(urls) {
 		return Promise.all(urls.map((url, i) => this._loadImage(url,i)))
-			.then(arr => {
+			/*.then(arr => {
 				//arr.map((img, i) => this.images[i] =img)
 				return this._applyToStage(arr)
-			})
+			})*/
 			.then(arr => {
+				console.log(arr)
 				this.deferImages.resolve(arr);
 				return arr;
 			})
@@ -222,22 +228,33 @@ const dataComponent = {
 	data: function (e, a) {
 
 
-		const player = this.player = new Player({
+		const player = this.player = new Player(this, {
 			prefix: this.prefix,
 			suffix: this.suffix,
 			variables: this.variables,
 		});
-
 		return {
+			process: player.process,
 			onPlay: player.play,
 			onBack: player.back,
 			onForward: player.forward
 		}
 	},
 	mounted: function () {
-		const container = this.$el.parentNode.children[0];
+		this.player.stage = this.$el.parentNode.children[0];
+	},
+	computed: {
+        processColor: {
+        	get: function () {
+				return this.process ? 'gray' :'black'
+            }
+		}
+	},
+	watch: {
+        process: function(){
+        	console.log(this.process)
 
-		this.player.stage = container
+		}
 	}
 };
 
