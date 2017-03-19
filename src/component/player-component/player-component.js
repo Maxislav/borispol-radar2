@@ -5,7 +5,9 @@ import '../../font-awesome/scss/font-awesome.scss';
 import {Deferred} from '../../util/deferred';
 import {autobind, enumerable, extendDescriptor, lazyInitialize} from 'core-decorators';
 
-
+/**
+ *  @class
+ */
 export class Player {
 
 
@@ -77,18 +79,29 @@ export class Player {
 		return this._k
 	}
 
+    /**
+	 *
+     * @param {Number}val
+     */
 	set load(val){
 		this._component.onload(100*(this._load+1)/this.variables.length);
 		this._load = val
 	}
+
+    /**
+	 *
+     * @returns {Number}
+     */
 	get load(){
 		return this._load
 	}
 
 	/**
 	 *
+	 * @param {Vue} component
 	 * @param {{prefix: string, suffix: string, variables: Array.<string>}} d
 	 */
+
 	constructor(component, d) {
 		this._component = component;
         this._k = 0;
@@ -169,6 +182,10 @@ export class Player {
 		return new Promise((resolve, reject) => {
 			const img = new Image();
             img.setAttribute('v-bind:style', "styleImg");
+            /**
+			 *
+             * @type {{position: string, top: number, display: string, left: number, opacity: number, z-index: number}}
+             */
             const styleImg = {
                 position: 'absolute',
                 top: 0,
@@ -177,6 +194,9 @@ export class Player {
                 opacity: 0,
                 'z-index': i + 1
             };
+            /**
+             * @type {HTMLElement}
+             */
             const vueEl = new Vue({
                 el: img,
                 data: {
