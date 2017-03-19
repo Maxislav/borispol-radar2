@@ -17,18 +17,21 @@ const IredComponent = Vue.component('ired-component',{
 	data: function () {
 		const initSrc = urlCron.ir + dateFormat(new Date().toUtc(), 'yyyymmddHH00')+'.gif';
 
-
 		return {
 			initSrc,
+			load: 0,
+            onload: (val) =>{
+                this.load = val
+            },
 			prefix : urlCron.ir,
 			variables: variableUrls,
 			suffix : '.gif',
 		}
 	},
-
 	mounted: function (){
 		//console.log(this.$el);
 	}
+
 
 });
 //const UkbbComponent ={template:  template()}

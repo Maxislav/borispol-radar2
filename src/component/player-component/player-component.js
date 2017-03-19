@@ -40,11 +40,7 @@ export class Player {
 	 */
 	deferImages = new Deferred();
 
-	/**
-	 *
-	 * @type {number}
-	 */
-	k = 0;
+
 
 	/**
 	 *
@@ -52,13 +48,41 @@ export class Player {
 	 */
 	urls = []
 
-
+    /**
+     *
+     * @type {boolean}
+     * @private
+     */
+    _process = false;
+    /**
+	 *
+     * @param {boolean}val
+     */
 	set process(val){
-        this._component.process = val
+        this._component.process = val;
         this._process = val
 	}
+
+    /**
+     * @returns {boolean}
+     */
 	get process(){
 		return this._process
+	}
+
+	set k(val){
+		this._k = val
+	}
+	get k(){
+		return this._k
+	}
+
+	set load(val){
+		this._component.onload(100*(this._load+1)/this.variables.length);
+		this._load = val
+	}
+	get load(){
+		return this._load
 	}
 
 	/**
@@ -67,8 +91,8 @@ export class Player {
 	 */
 	constructor(component, d) {
 		this._component = component;
-
-		this._process = false;
+        this._k = 0;
+        this._load = 0
 		this.prefix = d ? d.prefix : '';
 		this.suffix = d ? d.suffix : '';
 		if (d && d.variables) {
@@ -165,6 +189,7 @@ export class Player {
 				this.images[i] = vueEl;
 				this.stage.appendChild(vueEl)
 				resolve(vueEl);
+				this.load++;
 			};
             vueEl.src = url;
 		})
@@ -224,7 +249,7 @@ export class Player {
 }
 const dataComponent = {
 	template: template(),
-	props: ['prefix', 'suffix', 'variables'],
+	props: ['prefix', 'suffix', 'variables', 'onload'],
 	data: function (e, a) {
 
 

@@ -13,7 +13,7 @@ import './directive/directive-img';
 import './component/forecast-component/forecast-day-component/forecast-day-component';
 import VueResource from 'vue-resource'
 import './filter/date'
-
+import './component/strip-loader/strip-loader';
 import './component/player-component/player-component'
 import './component/forecast-component/forecast-day-component/forecast-3h-component/forecast-3h-component';
 

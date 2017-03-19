@@ -1,5 +1,6 @@
 .visible-component
     .img-container.relative
         .img-sat(v-img="initSrc")
-        player-component(:prefix="prefix", :suffix="suffix", :variables="variables")
+        strip-loader(:load="load")
+        player-component(:prefix="prefix", :suffix="suffix", :variables="variables", :onload="onload")
 

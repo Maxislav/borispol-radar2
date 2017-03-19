@@ -15,7 +15,11 @@ const VisibleComponent = Vue.component('visible-component',{
 		const initSrc = urlCron.vi + dateFormat(new Date().toUtc(), 'yyyymmddHH00')+'.gif';
 
 		return {
-			initSrc,
+			initSrc,load: 0,
+            onload: (val) =>{
+                this.load = val
+            },
+
 			prefix : urlCron.vi,
 			variables: variableUrls,
 			suffix : '.gif',
