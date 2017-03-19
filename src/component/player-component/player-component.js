@@ -156,7 +156,7 @@ export class Player {
 		console.log(this.k)
 		if(this.images[this.k]){
 
-			this.images[this.k].$fadeTo(1,0,500,0.5)
+			this.images[this.k].$fadeTo(1,0,1600,0.2)
 				.then(d=>{
 					this.k--;
 					if(this.k && play){

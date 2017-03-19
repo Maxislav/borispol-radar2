@@ -7,7 +7,7 @@ export default  Vue.component('forecast-3h-component', {
 	props: ['hh'],
 	template: template(),
 	data: function () {
-		var R = {
+		const R = {
 			color: {
 				hh00: '#99BCFF',
 				hh03: '#CCDDFF',
