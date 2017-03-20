@@ -15,6 +15,7 @@ import './component/player-component/player-component'
 import './component/forecast-component/forecast-day-component/forecast-3h-component/forecast-3h-component';
 import HomeComponent from './component/home-component/home-component'
 import IredComponent from './component/ired-component/ired-component'
+import MeteosatComponent from './component/meteosat-component/meteosat-component'
 import VisibleComponent from './component/visible-component/visible-component'
 import UkbbComponent from './component/ukbb-component/ukbb-component'
 import VueResource from 'vue-resource'
@@ -29,6 +30,7 @@ const routes = [
 	{ path: '/radar', component: UkbbComponent },
 	{ path: '/ired', component: IredComponent },
 	{ path: '/visible', component: VisibleComponent },
+	{ path: '/meteosat', component: MeteosatComponent },
 ];
 
 

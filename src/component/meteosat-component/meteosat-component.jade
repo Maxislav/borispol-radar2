@@ -1,0 +1,6 @@
+.meteosat-component
+    .img-container.relative
+        .img-sat(v-img="initSrc")
+        strip-loader(:load="load")
+        player-component(:prefix="prefix", :suffix="suffix", :variables="variables", :onload="onload")
+
