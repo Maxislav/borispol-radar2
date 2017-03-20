@@ -13,17 +13,15 @@ import {autobind, enumerable, extendDescriptor} from 'core-decorators';
 var variableUrls = [];
 let namePrefix = "Sputn-";
 for (let i = 1; i <= 24; i++){
-    variableUrls.push(i < 10 ? namePrefix + "0" + i : namePrefix + i);
-}
+    variableUrls.unshift(i < 10 ? namePrefix + "0" + i : namePrefix + i);
 
-    //variableUrls.push(.tdateFormat(new Date()oUtc().getTime() - (i*3600*1000), 'yyyymmddHH00'))
+}
 
 console.log(variableUrls)
 
 const MeteosatComponent = Vue.component('meteosat-component',{
     template:  template(),
     data: function () {
-     //  const initSrc = urlCron.ir + dateFormat(new Date().toUtc(), 'yyyymmddHH00')+'.gif';
 
         return {
             initSrc: 'http://meteo.gov.ua/sputnik_map/Sputn-24.jpg',
