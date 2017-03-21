@@ -88,11 +88,20 @@ module.exports = {
       'vue$': 'vue/dist/vue.js',
       'vue-router$': 'vue-router/dist/vue-router.js'
     }
-  }
-  ,
-  devServer: {
-  
-  }
+  },
+    devServer: {
+        proxy: {
+            '/ppp/**': {
+                target: 'http://localhost:8000/borispol-radar2/php/',
+                secure: false,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/ppp': ''
+                }
+            }
+        }
+
+    }
 
 };
 

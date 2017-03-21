@@ -128,11 +128,14 @@ export class Player {
 					this.play(e)
 				})
 		}else{
-			this.images.map(img=>{
-				img.$fadeTo(0,1, 222)
-            });
-			this.k = this.images.length-1;
-			this.forward(e,true)
+			Promise.all(this.images.map(img=>{
+				return img.$fadeTo(0,1, 1000)
+            }))
+				.then(d=>{
+                    this.k = this.images.length-1;
+                    this.forward(e,true)
+				})
+
 		}
 	}
 
@@ -179,9 +182,8 @@ export class Player {
 	 */
 	_loadImage(url, i) {
 		return new Promise((resolve, reject) => {
-			const img = new Image();
-            img.setAttribute('v-bind:style', "styleImg");
-            const vueEl = Player._getEl(img, i)
+
+            const vueEl = Player._getEl(i)
 
             const onload = (i, display)=>{
                 this.images = this.images || [];
@@ -221,14 +223,13 @@ export class Player {
 	}
 
     /**
-     *
-     * @param {Image}img
      * @param {Number}i
      * @returns {HTMLElement}
      * @private
      */
-	static _getEl(img, i) {
-
+	static _getEl(i) {
+        const img = new Image();
+        img.setAttribute('v-bind:style', "styleImg");
         const styleImg = {
             position: 'absolute',
             top: 0,
