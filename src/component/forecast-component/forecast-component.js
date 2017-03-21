@@ -6,12 +6,11 @@ import tinyscrollbar from '../../lib/tinyscrollbar.js';
 import $ from 'jquery-lite';
 
 let scrollEl;
-
-export const dataComponent = {
-
+export const list = [];
+export const forecastData = {
 	template: template(),
 	data: function () {
-		const list = [];
+
 		this.$http.jsonp('http://api.openweathermap.org/data/2.5/forecast?id=703448&units=metric&mode=json&APPID=19e738728f18421f2074f369bdb54e81')
 			.then(({data})=>{
 				let k;
@@ -26,12 +25,7 @@ export const dataComponent = {
 					}
 					day.push(l)
 				});
-				const el = $(this.$el);
-				const forecast = 	el.find('.forecast')
-				setTimeout(()=>{
-					forecast[0].parentNode.style.width = forecast[0].clientWidth+'px'
-					scrollEl.update()
-				}, 1)
+
 			});
 		return{
 			list
@@ -40,8 +34,16 @@ export const dataComponent = {
 	mounted: function () {
 		const el = $(this.$el)//.tinyscrollbar()
 	  scrollEl = 	tinyscrollbar(this.$el,{ axis: "x"})
+	},
+	updated: function () {
+		const el = $(this.$el);
+		const forecast = 	el.find('.forecast')
+		forecast[0].parentNode.style.width = forecast[0].clientWidth+'px'
+		scrollEl.update()
+	},
+	watch: {
+
 	}
 };
-const forecastComponent = Vue.component('forecast-component',dataComponent);
 
-export default forecastComponent
+export default Vue.component('forecast-component',forecastData)

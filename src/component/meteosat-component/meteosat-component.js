@@ -17,7 +17,6 @@ for (let i = 1; i <= 24; i++){
 
 }
 
-console.log(variableUrls)
 
 const MeteosatComponent = Vue.component('meteosat-component',{
     template:  template(),

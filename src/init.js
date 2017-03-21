@@ -3,7 +3,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router';
 
 import './styl/index.styl'
-import './component/forecast-component/forecast-component';
+import ForecastComponent from './component/forecast-component/forecast-component';
+import {list} from './component/forecast-component/forecast-component';
 
 import './component/bookmark-component/bookmark-component'
 import './directive/directive-img';
@@ -31,6 +32,22 @@ const routes = [
 	{ path: '/ired', component: IredComponent },
 	{ path: '/visible', component: VisibleComponent },
 	{ path: '/meteosat', component: MeteosatComponent },
+	{ path: '/forecast-hour/:index', component: {
+			template: '<div>{{hh  }}</div>',
+			data: function () {
+
+				return {
+					list: list,
+					hh: {}
+				}
+			},
+			watch: {
+				list: function () {
+					console.log(this.list);
+					this.hh = this.list[this.$route.params['index']]
+				}
+			}
+	} },
 ];
 
 
