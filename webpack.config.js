@@ -92,7 +92,7 @@ module.exports = {
     devServer: {
         proxy: {
             '/ppp/**': {
-                target: 'http://localhost:8000/borispol-radar2/php/',
+                target: 'http://meteoinfo.by/radar/UKBB/',
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
