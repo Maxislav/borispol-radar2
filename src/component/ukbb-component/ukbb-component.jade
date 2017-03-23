@@ -2,5 +2,6 @@
     .img-container
         .relative
             .img-ukbb(v-img="staticUrl")
-            //player-component(:play="play", :back="back", :forward="forward")
+            strip-loader(:load="load")
+            player-component(:prefix="prefix", :suffix="suffix", :onload="onload", :type="2")
 

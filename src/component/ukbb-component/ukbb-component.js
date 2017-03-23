@@ -16,7 +16,13 @@ const componentData = {
 
 
 		return {
-			staticUrl: urlCron.ukbb
+			staticUrl: urlCron.ukbb,
+			prefix: 'http://meteoinfo.by/radar/UKBB/',
+			load: 0,
+			onload: (val) => {
+				this.load = val
+			},
+			suffix: '',
 		}
 	},
 	compiled: function () {

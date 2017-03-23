@@ -3,7 +3,7 @@ import template from './player-component.jade';
 import './player-component.styl'
 import {Deferred} from '../../util/deferred';
 import {autobind, enumerable, extendDescriptor, lazyInitialize} from 'core-decorators';
-
+import {urlCron} from '../../config/congig-url'
 /**
  *  @class
  */
@@ -27,7 +27,7 @@ export class Player {
 	/**
 	 * @type {Array.<string>}
 	 */
-	variables = [];
+	variables;
 
 	/**
 	 *
@@ -47,7 +47,7 @@ export class Player {
 	 *
 	 * @type {Array.<string>}
 	 */
-	urls = []
+	urls;
 
     /**
      *
@@ -105,19 +105,24 @@ export class Player {
 	constructor(component, d) {
 		this._component = component;
         this._k = 0;
-        this._load = 0
+        this._load = 0;
 		this.prefix = d ? d.prefix : '';
 		this.suffix = d ? d.suffix : '';
 		if (d && d.variables) {
-			d.variables.forEach(i => this.variables.push(i))
+			this.variables = d.variables
 		}
-		this.urls = this.variables.map(it => this.prefix + it + this.suffix);
+		//this.urls = this.variables.map(it => this.prefix + it + this.suffix);
 	}
+
+
 
 	@autobind
 	play(e) {
 		if(this.process) return;
 		this.process = true;
+		this._fillUrls();
+
+
 		if (this.images.length<this.urls.length) {
 
 			this._loadImages(this.urls).then(d=>{});
@@ -127,24 +132,18 @@ export class Player {
 					this.play(e)
 				})
 		}else{
-			Promise.all(this.images.map(img => {
-				return img.$fadeTo(0, 1, 1000)
-			}))
-				.then(d => {
-					return new Promise(resolve=>{
-						setTimeout(()=>{
-							this.k = this.images.length - 1;
-							this.forward(e, true)
-							resolve(d)
-						}, 500)
-					})
-
-				})
+			this._fadeAll().then(d=>{
+				this.k = this.images.length - 1;
+				this.forward(e, true)
+			})
 		}
 	}
 
+
+
 	@autobind
 	back() {
+		this._fillUrls();
 		if (this.images && this.images[this.k+1]) {
 			this.k++;
 			//this.images[this.k].style.display = 'block'
@@ -160,7 +159,7 @@ export class Player {
 
 	@autobind
 	forward(e, play) {
-		console.log(this.k)
+		this._fillUrls();
 		if(this.images[this.k]){
 
 			this.images[this.k].$fadeTo(1,0,1600,0.2)
@@ -177,6 +176,30 @@ export class Player {
 		}
 	}
 
+	_fillUrls(){
+		if(!this.urls){
+			this.urls = this.variables.map(it => this.prefix + it + this.suffix);
+		}
+	}
+
+
+	/**
+	 *
+	 * @returns {Promise.<Array.<HTMLElement>>}
+	 * @private
+	 */
+	_fadeAll(){
+		return Promise.all(this.images.map(img => {
+			return img.$fadeTo(0, 1, 1000)
+		}))
+			.then(d => {
+				return new Promise(resolve=>{
+					setTimeout(()=>{
+						resolve(d)
+					}, 500)
+				})
+			})
+	}
 	/**
 	 *
 	 * @param {string} url
@@ -197,11 +220,11 @@ export class Player {
                 this.stage.appendChild(vueEl)
                 resolve(vueEl);
                 this.load++;
-            }
+            };
 
             vueEl.onerror = ()=>{
                 onload(i, 'none')
-            }
+            };
             vueEl.onload = ()=>{
                 onload(i, 'block')
             };
@@ -252,17 +275,99 @@ export class Player {
 	}
 
 }
+
+class Player2 extends Player{
+
+	/**
+	 *
+	 * @type {Deferred}
+	 * @private
+	 */
+	_deferHistory;
+
+	constructor(...args){
+		super(...args);
+
+
+	}
+	@autobind
+	play(e){
+		if(this.process) return;
+		this.process = true;
+		this._loadHistory()
+			.then(d=>{
+				this.process = false;
+				super.play(e);
+			})
+
+	}
+	@autobind
+	back(e){
+		this._loadHistory()
+			.then(d=>{
+				super.back(e)
+			})
+	}
+	@autobind
+	forward(e, auto){
+		this._loadHistory()
+			.then(d=>{
+				super.forward(e, auto)
+			})
+	}
+
+	_loadHistory(){
+		if(!this._deferHistory){
+			this._deferHistory = new Deferred();
+			this._component.onload(10);
+			Vue.http.get(urlCron['ukbb-history'])
+				.then(d=>{
+					this.variables = d.body;
+					this._deferHistory.resolve( this.variables)
+				})
+		}
+		return this._deferHistory.promise
+	}
+
+
+}
+
+
+
 const dataComponent = {
 	template: template(),
-	props: ['prefix', 'suffix', 'variables', 'onload'],
+	props: {
+		'prefix': String,
+		'suffix': String,
+		'variables': Array,
+		'onload': Function,
+		'type': {
+			type: Number,
+			default: 1
+		}
+	},
 	data: function (e, a) {
 
+		//console.log(this.type)
+		switch (this.type){
+			case 2:
 
-		const player = this.player = new Player(this, {
-			prefix: this.prefix,
-			suffix: this.suffix,
-			variables: this.variables,
-		});
+				this.player = new Player2(this, {
+					prefix: this.prefix,
+					suffix: this.suffix
+				});
+
+				break;
+			default :
+				this.player = new Player(this, {
+				prefix: this.prefix,
+				suffix: this.suffix,
+				variables: this.variables,
+			});
+
+		}
+
+		const player = this.player;
 
 		return {
 			process: player.process,

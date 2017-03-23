@@ -20,12 +20,12 @@ const IredComponent = Vue.component('ired-component',{
 		return {
 			initSrc,
 			load: 0,
-            onload: (val) =>{
-                this.load = val
-            },
-			prefix : urlCron.ir,
+			onload: (val) => {
+				this.load = val
+			},
+			prefix: urlCron.ir,
 			variables: variableUrls,
-			suffix : '.gif',
+			suffix: '.gif',
 		}
 	},
 	mounted: function (){

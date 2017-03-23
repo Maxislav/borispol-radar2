@@ -98,6 +98,14 @@ module.exports = {
                 pathRewrite: {
                     '^/ppp': ''
                 }
+            },
+            '/proxy-history/**': {
+                target: 'http://localhost/allborispol-radar2/dist/php/',
+                secure: false,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/proxy\-history': ''
+                }
             }
         }
 
