@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import template from './player-component.jade';
 import './player-component.styl'
-import '../../font-awesome/scss/font-awesome.scss';
 import {Deferred} from '../../util/deferred';
 import {autobind, enumerable, extendDescriptor, lazyInitialize} from 'core-decorators';
 
@@ -128,14 +127,19 @@ export class Player {
 					this.play(e)
 				})
 		}else{
-			Promise.all(this.images.map(img=>{
-				return img.$fadeTo(0,1, 1000)
-            }))
-				.then(d=>{
-                    this.k = this.images.length-1;
-                    this.forward(e,true)
-				})
+			Promise.all(this.images.map(img => {
+				return img.$fadeTo(0, 1, 1000)
+			}))
+				.then(d => {
+					return new Promise(resolve=>{
+						setTimeout(()=>{
+							this.k = this.images.length - 1;
+							this.forward(e, true)
+							resolve(d)
+						}, 500)
+					})
 
+				})
 		}
 	}
 
