@@ -147,7 +147,7 @@ export class Player {
 		if (this.images && this.images[this.k+1]) {
 			this.k++;
 			//this.images[this.k].style.display = 'block'
-			this.images[this.k].$fadeTo(0, 1, 500)
+			this.images[this.k].$fadeTo(0, 1, 1600)
 		} else if(this.k<this.variables.length){
 			this._loadImage(this.urls[this.k+1], this.k+1)
 				.then(d=>{

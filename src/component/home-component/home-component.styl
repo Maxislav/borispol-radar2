@@ -2,13 +2,19 @@
   background white
   width 100%
   height 100%
-  box-shadow 0 0 5px rgba(0,0,0,0.2)
+  //box-shadow 0 0 5px rgba(0,0,0,0.2)
   .flex
     display flex
   .ukbb-component
     margin 0 auto
-  .ired-component, .visible-component
+  .container-ir-vi
     height 50%
+    .title
+      padding 5px
+      height 20px
+      text-align center
+  .ired-component, .visible-component
+    height 220px
     min-width 324px
   @media screen and (max-width: 1000px)
     .ukbb-component
@@ -17,6 +23,8 @@
       .img-container
         margin 0 auto
         width 100%
+    .title
+      display none
     .ired-visible
       height 100%
       width 100%
