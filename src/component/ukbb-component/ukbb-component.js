@@ -35,7 +35,7 @@ const UkbbComponent = Vue.component('ukbb-component',	{
 
 			//console.log(this.$el)
 		}
-	})
+	});
 
 
 //export const UkbbComponent = Vue.component('ukbb-component',componentData);
