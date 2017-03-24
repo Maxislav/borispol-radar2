@@ -5,9 +5,6 @@ import IredComponent from '../ired-component/ired-component';
 import './home-component.styl'
 const HomeComponent = {
 	template: template(),
-	components:  {
-		'ukbb-component': UkbbComponent,
-		'ired-component': IredComponent
-	}
+
 };
 export default HomeComponent;

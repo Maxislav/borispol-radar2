@@ -69,6 +69,13 @@ module.exports = {
         }
       },
       {
+        test: /\.pug/,
+        loader: 'pug-loader',
+        query: {
+          pretty: true
+        }
+      },
+      {
         test: /\.styl$/, 
         loader: 'style-loader!css-loader!stylus-loader'
       },

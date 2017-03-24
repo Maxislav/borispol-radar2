@@ -1,7 +1,7 @@
 .ukbb-component
     .img-container
         .relative
-            .img-ukbb(v-img="staticUrl")
+            .img-ukbb(v-img="{src:staticUrl, callback:staticLoad}")
             strip-loader(:load="load")
             player-component(:prefix="prefix", :suffix="suffix", :onload="onload", :type="2")
 

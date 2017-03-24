@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import './ired-component.styl'
-import template from './ired-component.jade';
+import template from './ired-component.pug';
 import dateFormat from 'dateformat';
 import {urlCron} from '../../config/congig-url';
 //import {autobind} from 'core-decorators';
@@ -16,7 +16,6 @@ const IredComponent = Vue.component('ired-component',{
 	template:  template(),
 	data: function () {
 		const initSrc = urlCron.ir + dateFormat(new Date().toUtc(), 'yyyymmddHH00')+'.gif';
-
 		return {
 			initSrc,
 			load: 0,
@@ -34,6 +33,4 @@ const IredComponent = Vue.component('ired-component',{
 
 
 });
-//const UkbbComponent ={template:  template()}
-
 export default IredComponent;

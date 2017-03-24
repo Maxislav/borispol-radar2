@@ -35,6 +35,9 @@ export default Vue.directive('img', {
         imgNeeded.onload = () => {
             el.appendChild(imgNeeded)
 
+            if(binding.value && binding.value.callback){
+	            binding.value.callback(imgNeeded)
+            }
             
             imgNeeded.$fadeTo(0, 1, 222)
                 .then(d=>{
@@ -45,8 +48,12 @@ export default Vue.directive('img', {
                 })
 
         };
-        //console.log(binding.value);
-        imgNeeded.src = binding.value
+
+      if(typeof binding.value === 'object'){
+	      imgNeeded.src = binding.value.src;
+      }else{
+	      imgNeeded.src = binding.value;
+      }
 
     }
 

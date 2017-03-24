@@ -19,6 +19,7 @@ import IredComponent from './component/ired-component/ired-component'
 import MeteosatComponent from './component/meteosat-component/meteosat-component'
 import VisibleComponent from './component/visible-component/visible-component'
 import UkbbComponent from './component/ukbb-component/ukbb-component'
+import UkbbCalcComponent from './component/ukbb-calc-component/ukbb-calc-component'
 import VueResource from 'vue-resource'
 
 Vue.use(VueRouter);
@@ -28,7 +29,7 @@ Vue.use(VueResource);
 
 const routes = [
 	{ path: '/home', component: HomeComponent },
-	{ path: '/radar', component: UkbbComponent },
+	{ path: '/radar', component: UkbbCalcComponent },
 	{ path: '/ired', component: IredComponent },
 	{ path: '/visible', component: VisibleComponent },
 	{ path: '/meteosat', component: MeteosatComponent },

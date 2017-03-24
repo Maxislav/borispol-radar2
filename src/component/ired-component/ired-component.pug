@@ -1,6 +1,6 @@
 .ired-component
     .img-container.relative
         .img-sat(v-img="initSrc")
-        strip-loader(:load="load")
+        strip-loader(v-bind:load="load")
         player-component(:prefix="prefix", :suffix="suffix", :variables="variables", :onload="onload")
 
