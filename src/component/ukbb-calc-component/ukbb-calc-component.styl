@@ -2,16 +2,23 @@
   height 100%
   position relative
   background white
+  .calc
+    padding-top 80px
+    float right
+    width 32%
   .marker
+    cursor pointer
     position absolute
-    width 0px
-    height 0px
+    width 0
+    height 0
     background red
+    &:active
+      cursor move
     .wind-flag
       width 100px
       height 70px
       background: url("../../img/wind-flag.png");
       background-size 100%
       position absolute
-      left -9px
-      bottom 0
+      //left -9px
+      top 0

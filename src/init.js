@@ -1,6 +1,7 @@
 
 import Vue from 'vue'
 import VueRouter from 'vue-router';
+import LocalStorage from './plugin/LocalStorage'
 
 import './styl/index.styl'
 import ForecastComponent from './component/forecast-component/forecast-component';
@@ -24,6 +25,7 @@ import VueResource from 'vue-resource'
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
+Vue.use(LocalStorage, {prefix: 'radar'});
 
 
 
