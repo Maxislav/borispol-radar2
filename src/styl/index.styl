@@ -14,12 +14,13 @@ body
   height: 100%;
 
 .fade-enter-active
-  transition: opacity .50s
+  transition: opacity 0.7s
   opacity 0
-  //position absolute
-  //top 0
+  position absolute
+  top 0
+  width 100%
 .fade-leave-active
-  transition: opacity .50s
+  transition: opacity 0.7s
   width 100%
   position absolute
   top 0
@@ -59,6 +60,8 @@ body
       height:calc(100% - 136px);
 .relative
   position relative
+.flex
+  display flex
 @media screen and (max-width: 1000px)
   body
     display block

@@ -79,6 +79,13 @@ module.exports = {
         test: /\.styl$/, 
         loader: 'style-loader!css-loader!stylus-loader'
       },
+	    {
+		    test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+		    loader: 'url-loader',
+		    options: {
+			    limit: 10000
+		    }
+	    },
       {test: /\.scss?$/, loaders: ['style-loader', 'css-loader', 'sass-loader']},
       {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader?mimetype=image/svg+xml'},
       {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},

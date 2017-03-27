@@ -1,3 +1,7 @@
 .ukbb-calc-component
-    ukbb-component(:staticLoad="onload")
-    .marker(:style="{top:iam.y+'px', left:iam.x+'px'}")
+    .flex
+        .relative.drawable-container(v-on:mousemove = "mousemove")
+            ukbb-component()
+            .marker(:style="{top:iam.y+'px', left:iam.x+'px'}")
+                .wind-flag
+        .calc
