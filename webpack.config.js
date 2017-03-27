@@ -80,18 +80,18 @@ module.exports = {
         loader: 'style-loader!css-loader!stylus-loader'
       },
 	    {
-		    test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+		    test: /[^loader]\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
 		    loader: 'url-loader',
 		    options: {
-			    limit: 10000
+			    //limit: 10000
 		    }
 	    },
-      {test: /\.scss?$/, loaders: ['style-loader', 'css-loader', 'sass-loader']},
+     /* {test: /\.scss?$/, loaders: ['style-loader', 'css-loader', 'sass-loader']},
       {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader?mimetype=image/svg+xml'},
       {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
       {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
       {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/octet-stream"},
-      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader"},
+      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader"},*/
      
 
     ]

@@ -2,8 +2,6 @@ import Vue from 'vue';
 import  img64loader from "base64-image-loader!../img/loader.png";
 import templateLoader from "./loader.jade";
 import './directive-img.styl'
-//import loaderComponent from "../component/loader-component/loader-component"
-//console.log(loaderComponent.$el)
 
 
 export default Vue.directive('img', {
