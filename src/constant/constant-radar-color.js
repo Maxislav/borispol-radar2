@@ -28,11 +28,11 @@ class Color extends Array{
                 text: 'Остадки сильные'
             },
             {
-                hex: '9ce1ff',
+                hex: '9be1ff',
                 text: 'Конвективная облачность'
             },
             {
-                hex: '4894f7',
+                hex: '4793f8',
                 text: 'Конвективная осадки слабые'
             },
             {
@@ -44,7 +44,7 @@ class Color extends Array{
                 text: 'Конвективная осадки сильные'
             },
             {
-                hex: 'ff94a2',
+                hex: 'ff8c9b',
                 text: 'Гроза вероятность 30-70%'
             },
             {

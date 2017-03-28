@@ -62,11 +62,22 @@ class Rain{
 
 }
 const calc = (rain, original)=>{
-    rain.forEach(r => {
+
+    const afterFilt = rain.filter((item)=>{
+        return constantRadarColor.find((val)=>{
+        	const find =  Math.abs(item.colorDec - val.colorDec) < 1000
+        	if(find){
+        		item.text = val.text
+			}
+            return find
+        });
+    });
+
+    afterFilt.forEach(r => {
         r.distFrom(original.x, original.y)
     });
 
-    rain.sort((a, b) => {
+    afterFilt.sort((a, b) => {
         if (a.dist < b.dist) {
             return -1
         }
@@ -80,23 +91,14 @@ const calc = (rain, original)=>{
 
     const colors = [];
 
-    const afterFilt = rain.filter((item)=>{
-        return constantRadarColor.find((val)=>{
-            return Math.abs(item.colorDec - val.colorDec) < 4500
-		});
-	})
-    afterFilt
-    console.log(afterFilt)
+
+
     return afterFilt.filter(function (value, index, arr) {
         const find = colors.find((val) => {
             return Math.abs(value.colorDec - val) < 10
         });
         if (!find && (100<value.r || 100<value.g || 100<value.b )) {
             colors.push(value.colorDec);
-            const f =constantRadarColor.find((val)=>{
-                return Math.abs(value.colorDec - val.colorDec) <4500
-            })
-            value.text = f ? f.text : 'ololo'
 
             return true
         }

@@ -1,12 +1,12 @@
 .ukbb-calc-component
     .relative.drawable-container(@mousemove = "mousemove")
         .calc
-            //div lng {{lngLat.lng | toFixed(2)}}
-            //div lat {{lngLat.lat| toFixed(2)}}
+            .set-flag(v-if="iam.y==0") {{iam.y==0 ? 'Установить флаг': 'lng:' + lngLat.lng}}
+            .lng-lat(v-if="iam.y!=0") lng {{lngLat.lng | toFixed(2)}} lat {{lngLat.lat | toFixed(2)}}
             .dist
                 .flex(v-for="r in rain")
                     .d(:style="{'background-color': r.colorHex}")
-                    div(style="clear: right") {{r.dist | toFixed(2)}} km {{r.text}}
+                    div(style="clear: right" ) {{r.dist | toFixed(2)}} km {{r.text}}
 
         ukbb-component(:staticLoad="onload")
         .marker(:style="{top:iam.y+'px', left:iam.x+'px'}", @mousedown="mousedown")
