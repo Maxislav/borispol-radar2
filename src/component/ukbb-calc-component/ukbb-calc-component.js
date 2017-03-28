@@ -1,10 +1,12 @@
 import Vue from 'vue';
 import template from './ukbb-calc-component.pug';
 import './ukbb-calc-component.styl';
+import constantRadarColor from '../../constant/constant-radar-color'
 //import $ from 'jquery-lite';
 import $ from 'jquery-lite/src/event';
 import {position} from  '../../util/position';
 
+console.log(constantRadarColor)
 
 const toLngLat = {
 	lng: (x)=>{
@@ -15,37 +17,7 @@ const toLngLat = {
 	}
 };
 
-const calc = (rain, original)=>{
-	rain.forEach(r => {
-		r.distFrom(original.x, original.y)
-	});
 
-	rain.sort((a, b) => {
-		if (a.dist < b.dist) {
-			return -1
-		}
-		if (b.dist < a.dist) {
-			return 1
-		}
-		if (a.dist == b.dist) {
-			return 0
-		}
-	});
-
-	const colors = [];
-	return rain.filter(function (value, index, arr) {
-		//colors.find()
-		const find = colors.find((val) => {
-			return Math.abs(value.colorDec - val) < 1000000
-		});
-		if (!find && (100<value.r || 100<value.g || 100<value.b )) {
-			colors.push(value.colorDec);
-			return true
-		}
-		return false
-	});
-
-};
 
 
 class Rain{
@@ -60,6 +32,8 @@ class Rain{
 		this.hex = this._rgbToHex();
 		this.colorHex = '#'+ this.hex;
 		this.colorDec = parseInt(this.hex, 16)
+
+
 
 	}
 
@@ -84,7 +58,51 @@ class Rain{
 		return this.dist
 	}
 
+
+
 }
+const calc = (rain, original)=>{
+    rain.forEach(r => {
+        r.distFrom(original.x, original.y)
+    });
+
+    rain.sort((a, b) => {
+        if (a.dist < b.dist) {
+            return -1
+        }
+        if (b.dist < a.dist) {
+            return 1
+        }
+        if (a.dist == b.dist) {
+            return 0
+        }
+    });
+
+    const colors = [];
+
+    const afterFilt = rain.filter((item)=>{
+        const find = constantRadarColor.find((val)=>{
+            return Math.abs(item.colorDec - val.colorDec) < 5000
+		});
+        if (find){
+        	return true
+
+		}
+		return false
+	})
+    afterFilt
+    return afterFilt.filter(function (value, index, arr) {
+        const find = colors.find((val) => {
+            return Math.abs(value.colorDec - val) < 1
+        });
+        if (!find && (100<value.r || 100<value.g || 100<value.b )) {
+            colors.push(value.colorDec);
+            return true
+        }
+        return false
+    });
+
+};
 
 
 export default {
