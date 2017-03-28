@@ -6,7 +6,7 @@
             .dist
                 .flex(v-for="r in rain")
                     .d(:style="{'background-color': r.colorHex}")
-                    div(style="clear: right") {{r.dist | toFixed(2)}} km
+                    div(style="clear: right") {{r.dist | toFixed(2)}} km {{r.text}}
 
         ukbb-component(:staticLoad="onload")
         .marker(:style="{top:iam.y+'px', left:iam.x+'px'}", @mousedown="mousedown")

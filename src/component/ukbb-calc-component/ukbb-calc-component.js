@@ -81,22 +81,23 @@ const calc = (rain, original)=>{
     const colors = [];
 
     const afterFilt = rain.filter((item)=>{
-        const find = constantRadarColor.find((val)=>{
-            return Math.abs(item.colorDec - val.colorDec) < 5000
+        return constantRadarColor.find((val)=>{
+            return Math.abs(item.colorDec - val.colorDec) < 4500
 		});
-        if (find){
-        	return true
-
-		}
-		return false
 	})
     afterFilt
+    console.log(afterFilt)
     return afterFilt.filter(function (value, index, arr) {
         const find = colors.find((val) => {
-            return Math.abs(value.colorDec - val) < 1
+            return Math.abs(value.colorDec - val) < 10
         });
         if (!find && (100<value.r || 100<value.g || 100<value.b )) {
             colors.push(value.colorDec);
+            const f =constantRadarColor.find((val)=>{
+                return Math.abs(value.colorDec - val.colorDec) <3000
+            })
+            value.text = f ? f.text : 'ololo'
+
             return true
         }
         return false
