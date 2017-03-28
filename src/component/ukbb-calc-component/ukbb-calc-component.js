@@ -94,7 +94,7 @@ const calc = (rain, original)=>{
         if (!find && (100<value.r || 100<value.g || 100<value.b )) {
             colors.push(value.colorDec);
             const f =constantRadarColor.find((val)=>{
-                return Math.abs(value.colorDec - val.colorDec) <3000
+                return Math.abs(value.colorDec - val.colorDec) <4500
             })
             value.text = f ? f.text : 'ololo'
 
