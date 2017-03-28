@@ -1,8 +1,8 @@
 .ukbb-calc-component
     .relative.drawable-container(@mousemove = "mousemove")
         .calc
-            div lng {{iam.x}}
-            div lat {{iam.y}}
-        ukbb-component()
+            div lng {{lngLat.lng | toFixed(2)}}
+            div lat {{lngLat.lat| toFixed(2)}}
+        ukbb-component(:staticLoad="onload")
         .marker(:style="{top:iam.y+'px', left:iam.x+'px'}", @mousedown="mousedown")
             .wind-flag

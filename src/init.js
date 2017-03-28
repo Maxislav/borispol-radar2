@@ -12,6 +12,7 @@ import './directive/directive-img';
 import './component/forecast-component/forecast-day-component/forecast-day-component';
 
 import './filter/date'
+import './filter/to-fixed'
 import './component/strip-loader/strip-loader';
 import './component/player-component/player-component'
 import './component/forecast-component/forecast-day-component/forecast-3h-component/forecast-3h-component';
