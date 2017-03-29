@@ -1,3 +1,4 @@
+@import "../../styl/constant.styl"
 .ukbb-calc-component
   height 100%
   position relative
@@ -6,6 +7,11 @@
     padding-top 20px
     float right
     width 32%
+    .no-meteo-phenomena
+      margin-top 20px
+      padding 10px
+      font-size 16px
+      color $color-blue
     .set-flag
         margin-left 80px
     .lng-lat
@@ -36,5 +42,6 @@
       background-size 100%
       position absolute
       top 0
+      z-index 100
       &:hover
         opacity 1

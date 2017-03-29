@@ -2,11 +2,12 @@
     .relative.drawable-container(@mousemove = "mousemove")
         .calc
             .set-flag(v-if="iam.y==0") {{iam.y==0 ? 'Установить флаг': 'lng:' + lngLat.lng}}
-            .lng-lat(v-if="iam.y!=0") lng {{lngLat.lng | toFixed(2)}} lat {{lngLat.lat | toFixed(2)}}
-            .dist
+            .lng-lat(v-else) lng {{lngLat.lng | toFixed(2)}} lat {{lngLat.lat | toFixed(2)}}
+            .dist(v-if="rain.length")
                 .flex(v-for="r in rain")
                     .d(:style="{'background-color': r.colorHex}")
                     div(style="clear: right" ) {{r.dist | toFixed(2)}} km {{r.text}}
+            .no-meteo-phenomena(v-else) Нет метеоявлений
 
         ukbb-component(:staticLoad="onload")
         .marker(:style="{top:iam.y+'px', left:iam.x+'px'}", @mousedown="mousedown")

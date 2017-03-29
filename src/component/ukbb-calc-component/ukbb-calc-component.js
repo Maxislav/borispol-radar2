@@ -206,8 +206,11 @@ export default {
 
 		},
 		mousedown: function (e) {
-			this.layer.x = e.layerX;
-			this.layer.y = e.layerY;
+
+
+			this.layer.x = e.layerX-(document.body.scrollLeft||0);
+			this.layer.y = e.layerY-(document.body.scrollTop||0);
+
 			this.drag = true;
 		}
 	},
@@ -218,6 +221,8 @@ export default {
 		this.container = $(this.$el).find('.drawable-container');
 		this.container.x = position(this.container[0]).x;
 		this.container.y = position(this.container[0]).y;
+
+		console.log(this.container.y)
 		this._mouseup = (e)=>{
 			this.drag = false;
 
