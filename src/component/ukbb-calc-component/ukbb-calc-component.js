@@ -6,7 +6,10 @@ import constantRadarColor from '../../constant/constant-radar-color'
 import $ from 'jquery-lite/src/event';
 import {position} from  '../../util/position';
 import {CanvasDirection} from  './canvas-direction';
-import {getDirection} from './get-direction'
+import {getDirection} from './get-direction';
+import {PixelData, pixelArray, toRain} from './pixel-data';
+
+import {clip, Clip} from './clip';
 
 
 
@@ -24,52 +27,34 @@ const toLngLat = {
 };
 
 
+const calc = (rain, original, a)=>{
+	console.log(rain.length)
 
+	if(a){
+		//if(360<a) a = 360 -a;
 
-class Rain{
-	constructor(x,y, rgba){
-		this.x = x;
-		this.y = y;
-		this.rgba = rgba;
-		for(let opt in rgba){
-			this[opt] = rgba[opt]
-		}
-		this.dist = null;
-		this.hex = this._rgbToHex();
-		this.colorHex = '#'+ this.hex;
-		this.colorDec = parseInt(this.hex, 16)
-
-
-
-	}
-
-
-	_rgbToHex(){
-		let hex = '';
-		for(let opt in this.rgba){
-			if(opt!='a'){
-				let c = this.rgba[opt].toString(16);
-				if (c.length<2) c = '0'+c;
-				hex+=c
+		const {x, y} = original;
+        rain = rain.filter(p=>{
+        	let _a;
+        	if(x<p.x && p.y<y){
+				_a = (Math.atan((p.x - x)/(y-p.y)))
+			}else if(x<p.x && y<p.y ){
+        		_a = (Math.atan( (p.y - y)/(p.x - x) ))+Math.PI/2
+			}else if(p.x<x && y<p.y ){
+                _a = (Math.atan( (x-p.x)/(p.y-y) ))+Math.PI
+			}else {
+                _a = (Math.atan( (y - p.y )/(x-p.x) ))+3*Math.PI/2
 			}
-		}
-		return hex;
+			_a = Math.degrees(_a);
+			//console.log(_a)
+
+			return Math.abs(a-_a)<15
+
+
+		})
 	}
 
-	distFrom(x, y){
-		const X = Math.abs(x-this.x);
-		const Y = Math.abs(y-this.y);
-		this.dist = Math.pow( Math.pow(X, 2)+ Math.pow(Y, 2), 1/2)*(200/470);
-
-		return this.dist
-	}
-
-
-
-}
-const calc = (rain, original)=>{
-
-    const afterFilt = rain.filter((item)=>{
+    const filterByColor = rain.filter((item)=>{
         return constantRadarColor.find((val)=>{
         	const find =  Math.abs(item.colorDec - val.colorDec) < 1000
         	if(find){
@@ -79,11 +64,11 @@ const calc = (rain, original)=>{
         });
     });
 
-    afterFilt.forEach(r => {
+    filterByColor.forEach(r => {
         r.distFrom(original.x, original.y)
     });
 
-    afterFilt.sort((a, b) => {
+    filterByColor.sort((a, b) => {
         if (a.dist < b.dist) {
             return -1
         }
@@ -99,7 +84,7 @@ const calc = (rain, original)=>{
 
 
 
-    return afterFilt.filter(function (value, index, arr) {
+    return filterByColor.filter(function (value, index, arr) {
         const find = colors.find((val) => {
             return Math.abs(value.colorDec - val) < 10
         });
@@ -164,48 +149,20 @@ export default {
 				const context = canvas.getContext("2d");
 				context.drawImage(image, 0, 0);
 				const imageData = context.getImageData(0, 0, 500, canvas.height );
-
-
-
 				context.clearRect(0,0, canvas.width , canvas.height);
 				context.putImageData(imageData,0,0);
-				const data = [];
-				const width = 500 ;
-				for(let i = 0; i<imageData.data.length; i+=4){
-					const d = imageData.data;
-					const y = Math.floor(i/(width*4));
-					const x = i/4 - (y)*width;
-					if(!data[x] ){
-						data.push([])
-					}
-					try{
-						data[x].push({
-							r:d[i],
-							g:d[i+1],
-							b:d[i+2],
-							a:d[i+3]
-						})
-					}catch (err){
-						console.log(x, data)
-					}
-				}
-				this.windDirection = getDirection(data)
-
+				const data = pixelArray(imageData);
+				this.windDirection = getDirection(data);
 				const rain = this._rain =  [];
-				data.forEach((d, x)=>{
-					d.forEach((obj, y)=>{
-						if(obj.r!=obj.g){
-							rain.push(new Rain(x,y,obj))
-						}
-					})
-				});
 				if(this.iam.x<500){
 					const origin = this.toOriginal();
 					this.original.x = origin.x;
 					this.original.y =origin.y;
-					if(this.windDirection!=null)
-						this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
-					calc(this._rain, this.original).forEach(r=>this.rain.push(r))
+                    toRain(data, rain);
+					if(this.windDirection!=null){
+                        this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
+					}
+					calc(this._rain, this.original, this.windDirection !==null ? this.windDirection+180 : null).forEach(r=>this.rain.push(r))
 				}
 			};
 
@@ -224,9 +181,6 @@ export default {
 			this.lngLat.lng = this.iam.x*(33.89 - 27.9)/515 + 27.9;
 			this.lngLat.lat = toLngLat.lat(this.iam.y);
 
-		//	this.original.y = (this.iam.y+55)*(this.image.naturalHeight/this.image.height);
-		//	this.original.x = (this.iam.x+5)*(this.image.naturalWidth/this.image.width);
-
 			const origin = this.toOriginal();
 			this.original.x = origin.x;
 			this.original.y =origin.y;
@@ -235,9 +189,8 @@ export default {
 				this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
 
 			this.rain.length = 0;
-
 			if(this.iam.x<500)
-				calc(this._rain, this.original).forEach(r=>this.rain.push(r))
+				calc(this._rain, this.original,this.windDirection !==null ? this.windDirection+180 : null).forEach(r=>this.rain.push(r))
 
 		},
 		mousedown: function (e) {

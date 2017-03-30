@@ -51,7 +51,6 @@ export class CanvasDirection{
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = 'rgba(0,0,255,0.4)';
 		ctx.stroke();
-		//ctx.fill();
 
 
 	}
@@ -75,17 +74,6 @@ export class CanvasDirection{
 	 */
 	_xy(x, y, a){
 		const R = 600;
-		/*const p = {
-			x:0,
-			y:0
-		};
-		switch (true){
-			case a<90:
-				p.x = x + R*Math.sign(Math.radians(a));
-				p.y = y-R*Math.cos(Math.radians(a));
-				break;
-
-		}*/
 		return xy({
 			x,y,R
 		}, a)
