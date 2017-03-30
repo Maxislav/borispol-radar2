@@ -5,8 +5,11 @@ import constantRadarColor from '../../constant/constant-radar-color'
 //import $ from 'jquery-lite';
 import $ from 'jquery-lite/src/event';
 import {position} from  '../../util/position';
+import {CanvasDirection} from  './canvas-direction';
 
-console.log(constantRadarColor)
+
+
+
 
 const toLngLat = {
 	lng: (x)=>{
@@ -137,16 +140,22 @@ export default {
 
 		this._rain = null;
 
+		this.toOriginal = ()=>{
+			return {
+				x:(this.iam.x)*(this.image.naturalWidth/this.image.width),
+				y: (this.iam.y+30)*(this.image.naturalHeight/this.image.height)
+			}
+		};
 
-
-		return {
-			rain,
-			onload: (image) =>{
+		const onload = (image) =>{
 				this.image = image;
-
 				const canvas = document.createElement("canvas");
 				canvas.width = image.naturalWidth;
 				canvas.height = image.naturalHeight;
+
+				this.canvasDirection = new CanvasDirection(canvas);
+				image.parentNode.appendChild(this.canvasDirection.el);
+
 				const context = canvas.getContext("2d");
 				context.drawImage(image, 0, 0);
 				const imageData = context.getImageData(0, 0, 500, canvas.height );
@@ -155,9 +164,9 @@ export default {
 				const data = [];
 				const width = 500 ;
 				for(let i = 0; i<imageData.data.length; i+=4){
-						const d = imageData.data;
-						const y = Math.floor(i/(width*4));
-						const x = i/4 - (y)*width;
+					const d = imageData.data;
+					const y = Math.floor(i/(width*4));
+					const x = i/4 - (y)*width;
 					if(!data[x] ){
 						data.push([])
 					}
@@ -181,12 +190,18 @@ export default {
 					})
 				});
 				if(this.iam.x<500){
-					this.original.y = (this.iam.y+55)*(image.naturalHeight/image.height);
-					this.original.x = (this.iam.x+5)*(image.naturalWidth/image.width);
+					const origin = this.toOriginal();
+					this.original.x = origin.x;
+					this.original.y =origin.y;
+					this.canvasDirection.draw(this.original.x, this.original.y, 45)
 					calc(this._rain, this.original).forEach(r=>this.rain.push(r))
 				}
-			},
+			};
+
+		return {
+			onload,
 			lngLat,
+			rain,
 			iam
 		}
 	},
@@ -198,9 +213,16 @@ export default {
 			this.lngLat.lng = this.iam.x*(33.89 - 27.9)/515 + 27.9;
 			this.lngLat.lat = toLngLat.lat(this.iam.y);
 
-			this.original.y = (this.iam.y+55)*(this.image.naturalHeight/this.image.height);
-			this.original.x = (this.iam.x+5)*(this.image.naturalWidth/this.image.width);
+		//	this.original.y = (this.iam.y+55)*(this.image.naturalHeight/this.image.height);
+		//	this.original.x = (this.iam.x+5)*(this.image.naturalWidth/this.image.width);
+
+			const origin = this.toOriginal();
+			this.original.x = origin.x;
+			this.original.y =origin.y;
+			this.canvasDirection.draw(this.original.x, this.original.y, 45)
+
 			this.rain.length = 0;
+
 			if(this.iam.x<500)
 				calc(this._rain, this.original).forEach(r=>this.rain.push(r))
 

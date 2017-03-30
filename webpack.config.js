@@ -14,7 +14,7 @@ const ExtendDate = require('./src/plugin/DateExtendPlugin');
 console.log(NODE_ENV);
 module.exports = {
   entry: {
-	 app: ["./src/extend/NodeFade.js", "./src/extend/DateExtend.js","./src/init.js"]
+	 app: ["./src/extend/Math.js", "./src/extend/NodeFade.js", "./src/extend/DateExtend.js","./src/init.js"]
     //init:['webpack-dev-server/client',__dirname+"/src/init.js"]
   },
   output: {
