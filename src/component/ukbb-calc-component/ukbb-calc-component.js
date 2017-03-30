@@ -6,6 +6,9 @@ import constantRadarColor from '../../constant/constant-radar-color'
 import $ from 'jquery-lite/src/event';
 import {position} from  '../../util/position';
 import {CanvasDirection} from  './canvas-direction';
+import {getDirection} from './get-direction'
+
+
 
 
 
@@ -120,6 +123,8 @@ export default {
 			y:0
 		};
 
+		this.windDirection = null;
+
 		this.original = {
 			x: 0,
 			y:0
@@ -159,6 +164,9 @@ export default {
 				const context = canvas.getContext("2d");
 				context.drawImage(image, 0, 0);
 				const imageData = context.getImageData(0, 0, 500, canvas.height );
+
+
+
 				context.clearRect(0,0, canvas.width , canvas.height);
 				context.putImageData(imageData,0,0);
 				const data = [];
@@ -181,6 +189,8 @@ export default {
 						console.log(x, data)
 					}
 				}
+				this.windDirection = getDirection(data)
+
 				const rain = this._rain =  [];
 				data.forEach((d, x)=>{
 					d.forEach((obj, y)=>{
@@ -193,7 +203,8 @@ export default {
 					const origin = this.toOriginal();
 					this.original.x = origin.x;
 					this.original.y =origin.y;
-					this.canvasDirection.draw(this.original.x, this.original.y, 45)
+					if(this.windDirection!=null)
+						this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
 					calc(this._rain, this.original).forEach(r=>this.rain.push(r))
 				}
 			};
@@ -219,7 +230,9 @@ export default {
 			const origin = this.toOriginal();
 			this.original.x = origin.x;
 			this.original.y =origin.y;
-			this.canvasDirection.draw(this.original.x, this.original.y, 45)
+
+			if(this.windDirection!=null)
+				this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
 
 			this.rain.length = 0;
 

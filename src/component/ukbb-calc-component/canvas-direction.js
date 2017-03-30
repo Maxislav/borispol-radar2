@@ -1,3 +1,6 @@
+import {center} from './radar-center'
+import {xy} from './get-direction';
+
 export class CanvasDirection{
 	/**
 	 *
@@ -28,8 +31,8 @@ export class CanvasDirection{
 	draw(x, y, a){
 		const ctx =this._context;
 
-		const p1 = this._xy(x,y, a-20);
-		const p2 = this._xy(x,y, a+20);
+		const p1 = this._xy(x,y, a-15);
+		const p2 = this._xy(x,y, a+15);
 
 
 
@@ -41,9 +44,28 @@ export class CanvasDirection{
 		ctx.lineTo(p2.x, p2.y);
 		ctx.closePath();
 
-		ctx.fill()
+		ctx.fill();
+
+		ctx.beginPath();
+		ctx.arc(center.x, center.y, center.R, 0, 2 * Math.PI, false);
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = 'rgba(0,0,255,0.4)';
+		ctx.stroke();
+		//ctx.fill();
+
 
 	}
+
+	drawCircle(center){
+		const ctx =this._context;
+		ctx.beginPath();
+		ctx.arc(center.x, center.y, 5, 0, 2 * Math.PI, false);
+		ctx.lineWidth = 1;
+		ctx.fillStyle = 'rgba(0,255,255,1)';
+		ctx.strokeStyle = 'rgba(0,255,255,1)';
+		ctx.fill();
+	}
+
 
 	/**
 	 *
@@ -53,7 +75,7 @@ export class CanvasDirection{
 	 */
 	_xy(x, y, a){
 		const R = 600;
-		const p = {
+		/*const p = {
 			x:0,
 			y:0
 		};
@@ -63,8 +85,10 @@ export class CanvasDirection{
 				p.y = y-R*Math.cos(Math.radians(a));
 				break;
 
-		}
-		return p
+		}*/
+		return xy({
+			x,y,R
+		}, a)
 	}
 
 
