@@ -154,11 +154,12 @@ export default {
 				const data = pixelArray(imageData);
 				this.windDirection = getDirection(data);
 				const rain = this._rain =  [];
+				toRain(data, rain);
 				if(this.iam.x<500){
 					const origin = this.toOriginal();
 					this.original.x = origin.x;
 					this.original.y =origin.y;
-                    toRain(data, rain);
+
 					if(this.windDirection!=null){
                         this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
 					}
