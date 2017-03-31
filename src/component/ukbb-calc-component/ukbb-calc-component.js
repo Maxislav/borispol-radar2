@@ -28,11 +28,8 @@ const toLngLat = {
 
 
 const calc = (rain, original, a)=>{
-	console.log(rain.length)
 
 	if(a){
-		//if(360<a) a = 360 -a;
-
 		const {x, y} = original;
         rain = rain.filter(p=>{
         	let _a;
@@ -46,11 +43,7 @@ const calc = (rain, original, a)=>{
                 _a = (Math.atan( (y - p.y )/(x-p.x) ))+3*Math.PI/2
 			}
 			_a = Math.degrees(_a);
-			//console.log(_a)
-
 			return Math.abs(a-_a)<15
-
-
 		})
 	}
 
@@ -210,8 +203,6 @@ export default {
 		this.container = $(this.$el).find('.drawable-container');
 		this.container.x = position(this.container[0]).x;
 		this.container.y = position(this.container[0]).y;
-
-		console.log(this.container.y)
 		this._mouseup = (e)=>{
 			this.drag = false;
 
