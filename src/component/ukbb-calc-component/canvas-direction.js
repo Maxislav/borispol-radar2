@@ -49,7 +49,7 @@ export class CanvasDirection{
 		ctx.beginPath();
 		ctx.arc(center.x, center.y, center.R, 0, 2 * Math.PI, false);
 		ctx.lineWidth = 1;
-		ctx.strokeStyle = 'rgba(0,0,255,0.4)';
+		ctx.strokeStyle = 'rgba(255,0,0,0.2)';
 		ctx.stroke();
 
 

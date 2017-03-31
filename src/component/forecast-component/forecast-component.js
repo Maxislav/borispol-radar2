@@ -12,38 +12,78 @@ export const forecastData = {
 	data: function () {
 
 		this.$http.jsonp('http://api.openweathermap.org/data/2.5/forecast?id=703448&units=metric&mode=json&APPID=19e738728f18421f2074f369bdb54e81')
-			.then(({data})=>{
+			.then(({data}) => {
 				let k;
 				let day;
-				data.list.forEach(l=>{
-					const date = new Date(l.dt*1000);
-					const d = date.getDate();
-					if(d!=k){
-						k = d;
-						day = [];
-						list.push(day)
+				data.list.forEach(
+					/**
+					 * @example
+					 {
+					   "dt":1490983200,
+					   "main":{
+					      "temp":9.78,
+					      "temp_min":9.78,
+					      "temp_max":10.03,
+					      "pressure":1018.05,
+					      "sea_level":1032.85,
+					      "grnd_level":1018.05,
+					      "humidity":87,
+					      "temp_kf":-0.25
+					   },
+					   "weather":[
+					      {
+					         "id":500,
+					         "main":"Rain",
+					         "description":"light rain",
+					         "icon":"10n"
+					      }
+					   ],
+					   "clouds":{
+					      "all":92
+					   },
+					   "wind":{
+					      "speed":6.87,
+					      "deg":264.502
+					   },
+					   "rain":{
+					      "3h":1.125
+					   },
+					   "sys":{
+					      "pod":"n"
+					   },
+					   "dt_txt":"2017-03-31 18:00:00"
 					}
-					day.push(l)
-				});
+
+					 @param {Object} l
+					 @param {string} l.dt_txt
+					 */
+					(l) => {
+						const date = new Date(l.dt_txt);
+						const d = date.getDate();
+						if (d != k) {
+							k = d;
+							day = [];
+							list.push(day)
+						}
+						day.push(l)
+					});
 
 			});
-		return{
+		return {
 			list
 		}
 	},
 	mounted: function () {
 		const el = $(this.$el)//.tinyscrollbar()
-	  scrollEl = 	tinyscrollbar(this.$el,{ axis: "x"})
+		scrollEl = tinyscrollbar(this.$el, {axis: "x"})
 	},
 	updated: function () {
 		const el = $(this.$el);
-		const forecast = 	el.find('.forecast')
-		forecast[0].parentNode.style.width = forecast[0].clientWidth+'px'
+		const forecast = el.find('.forecast')
+		forecast[0].parentNode.style.width = forecast[0].clientWidth + 'px'
 		scrollEl.update()
 	},
-	watch: {
-
-	}
+	watch: {}
 };
 
-export default Vue.component('forecast-component',forecastData)
+export default Vue.component('forecast-component', forecastData)
