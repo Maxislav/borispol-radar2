@@ -1,8 +1,8 @@
 @import "../../styl/constant.styl"
 .bookmark-component
-  //margin  10px 0
   display flex
-  background white
+  background linear-gradient(to bottom, #eaf1ff 0%,#ffffff 20%, #ffffff 100%)
+
   border-bottom 1px solid #eaf1ff
   a
     padding   8px 15px
@@ -12,6 +12,8 @@
     transition 0.5s
     display block
     &.router-link-active
+      background white
+      box-shadow 0 -2px 5px rgba(0,0,0,0.2)
       color $color-bookmark-active
       border-bottom  3px solid $color-bookmark-active
       text-decoration none

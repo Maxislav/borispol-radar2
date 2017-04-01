@@ -3,8 +3,8 @@ let url = {
 		//ir:'http://localhost/all/borispol.radar/img/sat/',
 		ir: 'http://borispol.hol.es/img/sat/',
 		vi: 'http://borispol.hol.es/img/vis/',
-		ukbb: '/ppp/UKBB_latest.png',
-		//ukbb: 'img/meteoradar_borispol.png',
+		//ukbb: '/ppp/UKBB_latest.png',
+		ukbb: 'img/meteoradar_borispol.png',
 		"ukbb-history": "/proxy-history/loadUkbbHistory.php"
 	},
 	production: {
