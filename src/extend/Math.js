@@ -7,3 +7,16 @@ Math.radians = function(degrees) {
 Math.degrees = function(radians) {
 	return radians * 180 / Math.PI;
 };
+/**
+ * @param {number} min
+ * @param {number}max
+ * @param {boolean}int
+ * @returns {number}
+ */
+Math.getRandom =  function(min, max, int) {
+    let rand = min + Math.random() * (max - min);
+    if(int){
+        rand = Math.round(rand)
+    }
+    return rand;
+};

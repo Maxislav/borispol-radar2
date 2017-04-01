@@ -1,6 +1,6 @@
 "use strict";
 //const NODE_PATH="/usr/local/lib/node_modules"
-const NODE_ENV = process.env.NODE_ENV || 'prod';
+const NODE_ENV = process.env.NODE_ENV || 'production';
 const Webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -34,7 +34,7 @@ module.exports = {
         NODE_ENV: JSON.stringify(NODE_ENV)
       }),
       new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, './index.jade')
+        template: path.resolve(__dirname, './index.pug')
       }),
       new CopyWebpackPlugin([
         {
@@ -127,7 +127,7 @@ module.exports = {
 
 };
 
-if(NODE_ENV=='prod'){
+if(NODE_ENV=='production'){
   module.exports.plugins.push(
     new Webpack.optimize.UglifyJsPlugin({
       compress: {

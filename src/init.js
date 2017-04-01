@@ -4,11 +4,12 @@ import VueRouter from 'vue-router';
 import LocalStorage from './plugin/LocalStorage'
 
 import './styl/index.styl'
-import ForecastComponent from './component/forecast-component/forecast-component';
+import './component/forecast-component/forecast-component';
 import {list} from './component/forecast-component/forecast-component';
 
 import './component/bookmark-component/bookmark-component'
 import './directive/directive-img';
+import './directive/directive-random-background';
 import './component/forecast-component/forecast-day-component/forecast-day-component';
 
 import './filter/date'

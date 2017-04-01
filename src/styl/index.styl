@@ -8,10 +8,12 @@ html
 body
   font-family: Arial,Helvetica,sans-serif;
   font-weight: bold;
+  position: relative
   color  $color-text
-  //background: radial-gradient(ellipse at center, #fff 0, #fff 60%, #f8ffe8 70%, #60c5c5 100%);
   background black
   height: 100%;
+  display block
+  background:radial-gradient(ellipse at center, #fff 0, #f4fded 70%, #e8f9b4 80%, #60d456 100%);
 
 .fade-enter-active
   transition: opacity 0.7s
@@ -34,22 +36,14 @@ body
 
 .router
   position relative
-body
-  position: relative
-  display flex
+.size-100
+  width 100%
+  height 100%
+.align-items-center
   align-items center
-[name='app-name']
-  position absolute
-  left 0
-  top 0
-  padding 5px 10px
-
-*
-  box-sizing border-box
-.border-hidden
-  border-top 1px solid transparent
-  margin-top -1px
-#app
+.app
+  z-index 1
+.app-container
   max-width 1000px
   min-width 1000px
   margin 0 auto
@@ -58,17 +52,30 @@ body
     height 100%
     .router
       height:calc(100% - 136px);
+
+[name='app-name']
+  position absolute
+  left 0
+  top 0
+  padding 5px 10px
+*
+  box-sizing border-box
+.border-hidden
+  border-top 1px solid transparent
+  margin-top -1px
 .relative
   position relative
+.absolute
+  position absolute
+  left 0
+  top 0
 .flex
   display flex
-/*@media screen and (max-width: 1000px)
-  body
-    display block
-  #app
-    max-width 670px
-    min-width 670px
-  [name='app-name']
-    display none */
+.random-background
+  position absolute
+  z-index 0
+  width 100%
+  height 100%
+
 
 

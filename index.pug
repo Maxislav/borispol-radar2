@@ -1,0 +1,22 @@
+doctype html
+head
+    meta( http-equiv="Content-type" content="text/html; charset=utf-8")
+    link(rel='shortcut icon', href='img/icon.png', type='image/png')
+    title Borispol rain
+    style.
+        body{
+            display: none;
+        }
+body
+    h4(name='app-name') Borispol radar
+    #app.size-100
+        .random-background(v-random-background='')
+        .app.absolute.size-100.flex.align-items-center
+            .app-container.size-100
+                div
+                    forecast-component
+                    bookmark-component
+                    .router
+                        transition(name='fade')
+                            router-view
+
