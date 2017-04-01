@@ -1,13 +1,21 @@
+##Borispol radar2 (Vue Webpack)
+![](https://github.com/Maxislav/borispol-radar2/blob/master/readme.png?raw=true?raw=true=400x200)
 
-![](https://github.com/Maxislav/bike-atlas/blob/master/ScreenShot.png?raw=true=400x200)
-
-Debug  //localhost:8080
+###install
 
 ```
-~$ npm start
-```
+~$ npm i -g webpack
 
-Prod
+```
+### Build Prod
 ```
 ~$ webpack
 ```
+
+### Debug  //localhost:8080
+
+```
+~$ npm i webpack-dev-server -g
+~$ npm start
+```
+
