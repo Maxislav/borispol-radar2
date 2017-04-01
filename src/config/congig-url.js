@@ -7,7 +7,7 @@ let url = {
 		//ukbb: 'img/meteoradar_borispol.png',
 		"ukbb-history": "/proxy-history/loadUkbbHistory.php"
 	},
-	prod: {
+	production: {
 		ir: 'http://borispol.hol.es/img/sat/',
 		vi: 'http://borispol.hol.es/img/vis/',
 		ukbb: 'php/ukbb-latest.php',
@@ -15,4 +15,4 @@ let url = {
 	}
 };
 
-export const urlCron = url[NODE_ENV];
+export const urlCron = url[NODE_ENV || 'production'];

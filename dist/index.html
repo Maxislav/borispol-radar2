@@ -11,14 +11,20 @@
 </head>
 <body>
   <h4 name="app-name">Borispol radar</h4>
-  <div id="app">
-    <div>
-      <forecast-component></forecast-component>
-      <bookmark-component></bookmark-component>
-      <div class="router">
-        <transition name="fade">
-          <router-view></router-view>
-        </transition>
+  <div class="size-100" id="app">
+    <ymetrica-component></ymetrica-component>
+    <div class="random-background" v-random-background=""></div>
+    <div class="app absolute size-100 flex align-items-center">
+      <div class="app-container size-100">
+        <div>
+          <forecast-component></forecast-component>
+          <bookmark-component></bookmark-component>
+          <div class="router">
+            <transition name="fade">
+              <router-view></router-view>
+            </transition>
+          </div>
+        </div>
       </div>
     </div>
   </div>

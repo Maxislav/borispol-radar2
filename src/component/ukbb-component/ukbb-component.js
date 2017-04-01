@@ -6,15 +6,13 @@ import player from '../player-component/player-component'
 import {Deferred} from '../../util/deferred'
 import {autobind} from 'core-decorators';
 import {urlCron} from  '../../config/congig-url'
-//console.log(Deferred);
-
-
 
 
 const UkbbComponent = Vue.component('ukbb-component',	{
 		template: template(),
 		props:['staticLoad'],
 		data: function () {
+
 
 
 

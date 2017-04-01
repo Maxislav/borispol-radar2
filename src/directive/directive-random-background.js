@@ -6,10 +6,10 @@ export  default  Vue.directive('random-background', {
         const img = new Image();
 
         const rand = Math.getRandom(1,8 , true);
-        img.style.opacity = 0
+        img.style.opacity = 0;
 
         img.onload = ()=>{
-            img.$fadeTo(0,1,500).then()
+            img.$fadeTo(0,1,500).then();
             el.appendChild(img)
         };
         img.src = './img/bg/'+rand+'.jpg';
