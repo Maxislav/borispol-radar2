@@ -1,15 +1,15 @@
 let url = {
 	dev: {
 		//ir:'http://localhost/all/borispol.radar/img/sat/',
-		ir: 'http://borispol.hol.es/img/sat/',
-		vi: 'http://borispol.hol.es/img/vis/',
-		//ukbb: '/ppp/UKBB_latest.png',
-		ukbb: 'img/meteoradar_borispol.png',
+		ir: 'http://borispol.hol.es/img/ir/',
+		vi: 'http://borispol.hol.es/img/vi/',
+		ukbb: '/ppp/UKBB_latest.png',
+		//ukbb: 'img/meteoradar_borispol.png',
 		"ukbb-history": "/proxy-history/loadUkbbHistory.php"
 	},
 	production: {
-		ir: 'http://borispol.hol.es/img/sat/',
-		vi: 'http://borispol.hol.es/img/vis/',
+		ir: 'http://borispol.hol.es/img/ir/',
+		vi: 'http://borispol.hol.es/img/vi/',
 		ukbb: 'php/ukbb-latest.php',
 		"ukbb-history": "php/loadUkbbHistory.php"
 	}
