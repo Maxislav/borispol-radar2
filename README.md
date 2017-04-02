@@ -5,6 +5,9 @@
 ***
 ## Setup
 
+### Required: any static server, php;
+***
+
 ### Copy
 Download files from ~/dist/* to you work dir
 
