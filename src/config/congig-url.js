@@ -8,8 +8,8 @@ let url = {
 		"ukbb-history": "/proxy-history/loadUkbbHistory.php"
 	},
 	production: {
-		ir: 'http://borispol.hol.es/img/ir/',
-		vi: 'http://borispol.hol.es/img/vi/',
+		ir: 'img/ir/',
+		vi: 'img/vi/',
 		ukbb: 'php/ukbb-latest.php',
 		"ukbb-history": "php/loadUkbbHistory.php"
 	}
