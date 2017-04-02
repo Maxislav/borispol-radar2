@@ -48,3 +48,11 @@ add line
 
 ```
 
+### Setup Ymetrika 
+
+file config.json
+```json
+{
+  "y-metrika":"{you_id}"
+}
+```
