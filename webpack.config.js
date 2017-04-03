@@ -45,6 +45,10 @@ module.exports = {
           from:'./php',
           to:'./php'
         },
+        {
+          from:'./cron.sh',
+          to:'./cron.sh'
+        },
 
       ])
   ],
