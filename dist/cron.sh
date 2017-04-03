@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-cd ~/www/borispol-radar2/dist/php
+cd /var/www/AsGuard/borispol-radar/php/
 php saveimgs.php

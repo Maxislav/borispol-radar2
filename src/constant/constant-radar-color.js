@@ -58,6 +58,22 @@ class Color extends Array{
             {
                 hex: 'ff9812',
                 text: 'Град умерянный'
+            },
+            {
+                hex: 'a84c06',
+                text: 'Град сильный'
+            },
+            {
+                hex: 'dda8ff',
+                text: 'Шквал слабый'
+            },
+            {
+                hex: 'e859ff',
+                text: 'Шквал умерянный'
+            },
+            {
+                hex: 'be1cff',
+                text: 'Шквал сильный'
             }
         ]
     }
