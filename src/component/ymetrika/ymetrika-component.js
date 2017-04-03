@@ -3,7 +3,7 @@ import template from './ymetrika-component.pug';
 import './ymetrika-component.styl';
 
 const YmetrikaComponent = Vue.component('ymetrika-component', {
-    template: NODE_ENV == 'dev' ? '<div class="ymetrika-component"></div>' : template(),
+    template: '<div class="ymetrika-component"></div>',
     mounted: function () {
 
 
@@ -20,7 +20,13 @@ const YmetrikaComponent = Vue.component('ymetrika-component', {
                     ]
                 };
 
-              this.$el.innerHTML = template({href: `http://metrika.yandex.ru/stat/?id=${permits.id}&amp;from=informer` });
+              this.$el.innerHTML = (template(
+                {
+                    href: `http://metrika.yandex.ru/stat/?id=${permits.id}&amp;from=informer`,
+                    src: `//bs.yandex.ru/informer/${permits.id}/3_1_FFFFFFFF_EFEFEFFF_0_pageviews`,
+	                  onclick: `try{Ya.Metrika.informer({i:this,id:${permits.id},lang:'ru'});return false}catch(e){}`
+                }
+                ));
 
                 ((d, w, c) => {
                     const rex = new RegExp(permits.allow.join('|'));
