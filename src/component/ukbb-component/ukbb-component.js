@@ -14,10 +14,20 @@ const UkbbComponent = Vue.component('ukbb-component',	{
 		data: function () {
 
 
+		 const vm = 	new Vue({
+				data: {
+					src:urlCron.ukbb, callback:this.staticLoad
+				}
+			});
 
+
+
+		 setInterval(()=>{
+		 	  vm.src = urlCron.ukbb+'?date=' + new Date().toISOString()
+		 }, 60000);
 
 			return {
-				staticUrl: urlCron.ukbb,
+				vm,
 				prefix: 'http://meteoinfo.by/radar/UKBB/',
 				load: 0,
 				onload: (val) => {

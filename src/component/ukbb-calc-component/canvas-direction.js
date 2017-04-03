@@ -21,7 +21,6 @@ export class CanvasDirection{
 	get context(){
 		return this._context;
 	}
-
 	/**
 	 *
 	 * @param {number}x
@@ -63,6 +62,10 @@ export class CanvasDirection{
 		ctx.fillStyle = 'rgba(0,255,255,1)';
 		ctx.strokeStyle = 'rgba(0,255,255,1)';
 		ctx.fill();
+	}
+
+	destroy(){
+		this.el.parentNode.removeChild(this.el)
 	}
 
 

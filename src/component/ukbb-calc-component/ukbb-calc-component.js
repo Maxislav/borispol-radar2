@@ -121,7 +121,7 @@ export default {
 
 		const rain = [];
 
-		this._rain = null;
+		this._rain = [];
 
 		this.toOriginal = ()=>{
 			return {
@@ -135,7 +135,7 @@ export default {
 				const canvas = document.createElement("canvas");
 				canvas.width = image.naturalWidth;
 				canvas.height = image.naturalHeight;
-
+				if (this.canvasDirection) this.canvasDirection.destroy()
 				this.canvasDirection = new CanvasDirection(canvas);
 				image.parentNode.appendChild(this.canvasDirection.el);
 
@@ -146,7 +146,8 @@ export default {
 				context.putImageData(imageData,0,0);
 				const data = pixelArray(imageData);
 				this.windDirection = getDirection(data);
-				const rain = this._rain =  [];
+				this._rain.length = 0;
+				const rain = this._rain;
 				toRain(data, rain);
 				if(this.iam.x<500){
 					const origin = this.toOriginal();
@@ -154,8 +155,9 @@ export default {
 					this.original.y =origin.y;
 
 					if(this.windDirection!=null){
-                        this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
+							this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
 					}
+					this.rain.length = 0
 					calc(this._rain, this.original, this.windDirection !==null ? this.windDirection+180 : null).forEach(r=>this.rain.push(r))
 				}
 			};

@@ -7,6 +7,8 @@ import './directive-img.styl'
 export default Vue.directive('img', {
     inserted: function (el, binding) {
 
+       //console.log(binding.value.$watch);
+
 
         const loaderDiv = document.createElement('div');
         loaderDiv.innerHTML = templateLoader({loader:img64loader});
@@ -30,28 +32,45 @@ export default Vue.directive('img', {
         imgNeeded.style.opacity = '0';
         imgNeeded.style.zIndex = '0';
 
-        imgNeeded.onload = () => {
-            el.appendChild(imgNeeded)
+        let isAppend = false;
 
+        imgNeeded.onload = () => {
+
+
+	          !isAppend  && el.appendChild(imgNeeded);
             if(binding.value && binding.value.callback){
 	            binding.value.callback(imgNeeded)
             }
-            
-            imgNeeded.$fadeTo(0, 1, 222)
+            if(!isAppend){
+	            imgNeeded.$fadeTo(0, 1, 222)
+		            .then(d=>{
+			            imgLoader.$fadeTo(1, 0, 222)
+				            .then(imgLoader => {
+					            el.removeChild(imgLoader)
+				            });
+		            });
+              isAppend = true
+            }else {
+	            /*imgNeeded.$fadeTo(1,0, 100)
                 .then(d=>{
-                    imgLoader.$fadeTo(1, 0, 222)
-                        .then(imgLoader => {
-                            el.removeChild(imgLoader)
-                        });
-                })
-
+	                imgNeeded.$fadeTo(0,1, 100).then()
+                })*/
+            }
         };
+
+
 
       if(typeof binding.value === 'object'){
 	      imgNeeded.src = binding.value.src;
+
+	      binding.value.$watch('src', (val)=>{
+		      imgNeeded.src  = val;
+        })
+
       }else{
 	      imgNeeded.src = binding.value;
       }
+	    //binding.
 
     }
 
