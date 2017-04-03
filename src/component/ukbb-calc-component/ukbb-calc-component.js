@@ -9,7 +9,6 @@ import {CanvasDirection} from  './canvas-direction';
 import {getDirection} from './get-direction';
 import {PixelData, pixelArray, toRain} from './pixel-data';
 
-import {clip, Clip} from './clip';
 
 
 
@@ -22,7 +21,7 @@ const toLngLat = {
 	 return	x*(33.89 - 27.9)/515 + 27.9
 	},
 	lat: (y)=>{
-		return (470 - (y+55))*(52.14-48.35)/470 + 48.35
+		return (470 - y)*(52.14-48.35)/470 + 48.35
 	}
 };
 
@@ -114,20 +113,20 @@ export default {
 			y: this.$storage.getItem('flag-y') ||  0
 		};
 
-		const lngLat = {
-			lng:toLngLat.lng(iam.x),
-			lat:toLngLat.lat(iam.y)
-		};
-
-		const rain = [];
 
 		this._rain = [];
 
 		this.toOriginal = ()=>{
 			return {
-				x:(this.iam.x)*(this.image.naturalWidth/this.image.width),
-				y: (this.iam.y+30)*(this.image.naturalHeight/this.image.height)
+				x:  (this.iam.x+5)*(this.image.naturalWidth/this.image.width),
+				y: (this.iam.y+22)*(this.image.naturalHeight/this.image.height)
 			}
+		};
+
+
+		const lngLat = {
+			lng:toLngLat.lng(iam.x+5),
+			lat:toLngLat.lat(iam.y+22)
 		};
 
 		const onload = (image) =>{
@@ -147,17 +146,15 @@ export default {
 				const data = pixelArray(imageData);
 				this.windDirection = getDirection(data);
 				this._rain.length = 0;
-				const rain = this._rain;
-				toRain(data, rain);
+				toRain(data, this._rain);
 				if(this.iam.x<500){
 					const origin = this.toOriginal();
 					this.original.x = origin.x;
-					this.original.y =origin.y;
-
+					this.original.y = origin.y;
 					if(this.windDirection!=null){
 							this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
 					}
-					this.rain.length = 0
+					this.rain.length = 0;
 					calc(this._rain, this.original, this.windDirection !==null ? this.windDirection+180 : null).forEach(r=>this.rain.push(r))
 				}
 			};
@@ -165,21 +162,29 @@ export default {
 		return {
 			onload,
 			lngLat,
-			rain,
+			rain: [],
 			iam
 		}
 	},
 	methods: {
 		mousemove: function (e) {
+
+			if(this.original.x<500){
+
+			}
+
 			if(!this.drag) return;
 			this.iam.x = e.x - this.container.x - this.layer.x;
 			this.iam.y = e.y - this.container.y - this.layer.y;
-			this.lngLat.lng = this.iam.x*(33.89 - 27.9)/515 + 27.9;
-			this.lngLat.lat = toLngLat.lat(this.iam.y);
+			//this.lngLat.lng = this.iam.x*(33.89 - 27.9)/515 + 27.9;
+			//this.lngLat.lat = toLngLat.lat(this.iam.y);
 
 			const origin = this.toOriginal();
 			this.original.x = origin.x;
-			this.original.y =origin.y;
+			this.original.y = origin.y;
+
+			this.lngLat.lat = toLngLat.lat(this.original.y)
+			this.lngLat.lng = toLngLat.lng(this.original.x)
 
 			if(this.windDirection!=null)
 				this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection+180);
