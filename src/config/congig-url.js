@@ -1,8 +1,8 @@
 let url = {
 	dev: {
 		//ir:'http://localhost/all/borispol.radar/img/sat/',
-		ir: 'http://borispol.hol.es/img/ir/',
-		vi: 'http://borispol.hol.es/img/vi/',
+		ir: 'img/ir/',
+		vi: 'img/vi/',
 		ukbb: '/ppp/UKBB_latest.png',
 		//ukbb: 'img/meteoradar_borispol.png',
 		"ukbb-history": "/proxy-history/loadUkbbHistory.php"

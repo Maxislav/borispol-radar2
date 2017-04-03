@@ -42,7 +42,7 @@ module.exports = {
           to:'./img'
         },
         {
-          from:'./php',
+          from:'./src/php',
           to:'./php'
         },
         {
