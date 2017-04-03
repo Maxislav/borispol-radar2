@@ -11,7 +11,7 @@ export const forecastData = {
 	template: template(),
 	data: function () {
 
-		this.$http.jsonp('http://api.openweathermap.org/data/2.5/forecast?id=703448&units=metric&mode=json&APPID=19e738728f18421f2074f369bdb54e81')
+		this.$http.jsonp('https://api.openweathermap.org/data/2.5/forecast?id=703448&units=metric&mode=json&APPID=19e738728f18421f2074f369bdb54e81')
 			.then(({data}) => {
 				let k;
 				let day;
