@@ -29,6 +29,9 @@ const toLngLat = {
 const calc = (rain, original, a)=>{
 
 	if(a){
+		if(360<a){
+			a=a-360
+		}
 		const {x, y} = original;
         rain = rain.filter(p=>{
         	let _a;
@@ -145,6 +148,7 @@ export default {
 				context.putImageData(imageData,0,0);
 				const data = pixelArray(imageData);
 				this.windDirection = getDirection(data);
+				console.log('windDirection',this.windDirection)
 				this._rain.length = 0;
 				toRain(data, this._rain);
 				if(this.iam.x<500){

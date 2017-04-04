@@ -29,11 +29,10 @@ export class CanvasDirection{
 	 */
 	draw(x, y, a){
 		const ctx =this._context;
-
 		const p1 = this._xy(x,y, a-15);
 		const p2 = this._xy(x,y, a+15);
 
-
+        //console.log(a)
 
 		ctx.clearRect(0, 0, this.el.width, this.el.height);
 		ctx.fillStyle = 'rgba(255,0,0,0.1)';

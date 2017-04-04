@@ -3,7 +3,7 @@ import {center} from './radar-center'
 export function xy(center, a) {
 
 	if(360<a){
-		a = 360-a
+		a = a-360
 	}
 
 	let x, y;
