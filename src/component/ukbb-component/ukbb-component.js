@@ -22,7 +22,7 @@ const UkbbComponent = Vue.component('ukbb-component',	{
 
 
 
-		 setInterval(()=>{
+		 this.interval= setInterval(()=>{
 		 	  vm.src = urlCron.ukbb+'?date=' + new Date().toISOString()
 		 }, 60000);
 
@@ -41,8 +41,11 @@ const UkbbComponent = Vue.component('ukbb-component',	{
 		},
 		mounted: function () {
 
-			//console.log(this.$el)
-		}
+		},
+		destroyed: function () {
+			clearInterval(this.interval)
+        }
+
 	});
 
 
