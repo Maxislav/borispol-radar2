@@ -15,6 +15,7 @@ const YmetrikaComponent = Vue.component('ymetrika-component', {
                 const permits = {
                     id: d.data['y-metrika'],
                     allow: [
+                      'meteo',
                         'borispol',
                         'senko'
                     ]
