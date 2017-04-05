@@ -28,10 +28,9 @@ const toLngLat = {
 
 const calc = (rain, original, a)=>{
 
+
 	if(a){
-		if(360<a){
-			a=a-360
-		}
+		a = Math.normalizeDegree(a);
 		const {x, y} = original;
         rain = rain.filter(p=>{
         	let _a;
@@ -173,6 +172,8 @@ export default {
 	methods: {
 		mousemove: function (e) {
 
+			e.x = e.x || e.clientX;
+			e.y = e.y || e.clientY;
 			if(this.original.x<500){
 
 			}

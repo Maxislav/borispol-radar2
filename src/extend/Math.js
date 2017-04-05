@@ -20,3 +20,15 @@ Math.getRandom =  function(min, max, int) {
     }
     return rand;
 };
+
+Math.normalizeDegree = (alpha)=>{
+    const floor = Math.ceil(alpha/360);
+    if(360<alpha){
+        alpha = alpha-floor*360
+    }
+    if(alpha<0){
+        alpha = 360+alpha
+    }
+return alpha
+}
+
