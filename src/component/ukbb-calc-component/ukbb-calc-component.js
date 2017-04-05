@@ -172,15 +172,14 @@ export default {
 	methods: {
 		mousemove: function (e) {
 
-			e.x = e.x || e.clientX;
-			e.y = e.y || e.clientY;
+
 			if(this.original.x<500){
 
 			}
 
 			if(!this.drag) return;
-			this.iam.x = e.x - this.container.x - this.layer.x;
-			this.iam.y = e.y - this.container.y - this.layer.y;
+			this.iam.x = e.clientX- this.container.x - this.layer.x;
+			this.iam.y = e.clientY - this.container.y - this.layer.y;
 			//this.lngLat.lng = this.iam.x*(33.89 - 27.9)/515 + 27.9;
 			//this.lngLat.lat = toLngLat.lat(this.iam.y);
 
