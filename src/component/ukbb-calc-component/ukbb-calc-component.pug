@@ -1,5 +1,5 @@
 .ukbb-calc-component
-    .relative.drawable-container(@mousemove = "mousemove")
+    .relative.drawable-container(@mousemove = "mousemove", @touchmove="mousemove")
         .calc
             .set-flag(v-if="iam.y==0") {{iam.y==0 ? 'Установить флаг': 'lng:' + lngLat.lng}}
             .lng-lat(v-else) lng {{lngLat.lng | toFixed(2)}} lat {{lngLat.lat | toFixed(2)}}
@@ -10,5 +10,5 @@
             .no-meteo-phenomena(v-else) Нет метеоявлений
 
         ukbb-component(:staticLoad="onload")
-        .marker(:style="{top:iam.y+'px', left:iam.x+'px'}", @mousedown="mousedown")
+        .marker(:style="{top:iam.y+'px', left:iam.x+'px'}", @mousedown="mousedown", @touchstart="mousedown")
             .wind-flag

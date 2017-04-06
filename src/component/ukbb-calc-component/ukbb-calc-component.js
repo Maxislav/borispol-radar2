@@ -168,22 +168,37 @@ export default {
 		mousemove: function (e) {
 
 
-			if (this.original.x < 500) {
-
-			}
 
 			if (!this.drag) return;
-			this.iam.x = e.clientX - this.container.x - this.layer.x;
-			this.iam.y = e.clientY - this.container.y - this.layer.y;
-			//this.lngLat.lng = this.iam.x*(33.89 - 27.9)/515 + 27.9;
-			//this.lngLat.lat = toLngLat.lat(this.iam.y);
+
+			const position = {
+				X: 0,
+				Y:0
+			};
+			if(e instanceof TouchEvent){
+				e.stopPropagation();
+				e.preventDefault();
+
+				const touch = e.changedTouches[0]
+				position.X = touch.clientX
+				position.Y = touch.clientY
+			}else {
+				position.X = e.clientX
+				position.Y = e.clientY
+			}
+
+
+
+
+			this.iam.x = position.X - this.container.x - this.layer.x;
+			this.iam.y = position.Y- this.container.y - this.layer.y;
 
 			const origin = this.toOriginal();
 			this.original.x = origin.x;
 			this.original.y = origin.y;
 
-			this.lngLat.lat = toLngLat.lat(this.original.y)
-			this.lngLat.lng = toLngLat.lng(this.original.x)
+			this.lngLat.lat = toLngLat.lat(this.original.y);
+			this.lngLat.lng = toLngLat.lng(this.original.x);
 
 			if (this.windDirection != null)
 				this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection + 180);
@@ -195,15 +210,22 @@ export default {
 		},
 		mousedown: function (e) {
 
+			if(e instanceof TouchEvent){
+				const touch = e.changedTouches[0]
+				this.layer.x = touch.clientX-position(e.target).x;
+				this.layer.y = touch.clientY-position(e.target).y
+				this.drag = true;
+			}else{
+				this.layer.x = e.layerX - (document.body.scrollLeft || 0);
+				this.layer.y = e.layerY - (document.body.scrollTop || 0);
+				this.drag = true;
+			}
 
-			this.layer.x = e.layerX - (document.body.scrollLeft || 0);
-			this.layer.y = e.layerY - (document.body.scrollTop || 0);
-
-			this.drag = true;
 		}
 	},
 	beforeDestroy: function () {
 		document.removeEventListener('mouseup', this._mouseup)
+		document.removeEventListener('touchend', this._mouseup)
 	},
 	mounted: function () {
 		this.container = $(this.$el).find('.drawable-container');
@@ -214,8 +236,9 @@ export default {
 
 			this.$storage.setItem('flag-x', this.iam.x);
 			this.$storage.setItem('flag-y', this.iam.y)
-		}
+		};
 		document.addEventListener('mouseup', this._mouseup)
+		document.addEventListener('touchend', this._mouseup)
 
 	},
 	updated: function () {
