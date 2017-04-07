@@ -55,7 +55,7 @@ export function getDirection(arrData) {
 		}
 	};
 	const res = [];
-	for (let a = 0; a < 360; a += 0.5) {
+	for (let a = 0.5; a < 360; a += 0.5) {
 		const {x, y} = xy(center, a)
 		if (arrData[x][y].r == arrData[x][y].g && arrData[x][y].r < 5) {
 			res.push(a)
