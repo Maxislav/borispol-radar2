@@ -113,14 +113,14 @@ export default {
 
 		this.toOriginal = () => {
 			return {
-				x: (this.iam.x + 5) * (this.image.naturalWidth / this.image.width),
+				x: (this.iam.x + 0) * (this.image.naturalWidth / this.image.width)-1,
 				y: (this.iam.y + 22) * (this.image.naturalHeight / this.image.height)
 			}
 		};
 
 
 		const lngLat = {
-			lng: toLngLat.lng(iam.x + 5),
+			lng: toLngLat.lng(iam.x +0),
 			lat: toLngLat.lat(iam.y + 22)
 		};
 
