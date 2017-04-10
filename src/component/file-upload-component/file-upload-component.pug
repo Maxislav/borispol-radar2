@@ -9,4 +9,4 @@
 
 
     .images-container.padding-15
-        div.img(v-for="url in urls",  v-img="url")
+        div.img(v-for="url in urls",  v-img="url", @click="click(url)")

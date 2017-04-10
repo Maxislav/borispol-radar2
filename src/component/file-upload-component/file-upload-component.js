@@ -3,6 +3,7 @@ import template from './file-upload-component.pug';
 //import
 import './file-upload-component.styl';
 import {urlCron} from  '../../config/congig-url'
+import {bg} from '../../directive/directive-random-background';
 
 export const FileUploadComponent = Vue.component('file-upload-component', {
 	template: template({action: urlCron.upload}),
@@ -36,6 +37,11 @@ export const FileUploadComponent = Vue.component('file-upload-component', {
 			load: 0,
 			urls
 		};
+	},
+	methods: {
+		click: function (com) {
+			bg.src = com.src;
+		}
 	},
 	mounted: function () {
 
