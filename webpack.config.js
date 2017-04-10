@@ -6,6 +6,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const Version = require('./plugin/version.js');
+//import Version from './plugin/version.js';
+
 //console.log('dddddddddddddddddddddddd',__dirname)
 //return;
 
@@ -29,7 +32,6 @@ module.exports = {
   devtool: NODE_ENV == 'dev' ? 'source-map' : false,
   plugins: [
 
-      new ExtendDate({}),
       new Webpack.DefinePlugin({
         NODE_ENV: JSON.stringify(NODE_ENV)
       }),
@@ -125,7 +127,9 @@ module.exports = {
     }
 
 };
+
 if(NODE_ENV=='production'){
+	module.exports.plugins.unshift(new Version({}))
   module.exports.plugins.push(
     new Webpack.optimize.UglifyJsPlugin({
       compress: {
