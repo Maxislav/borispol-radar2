@@ -5,6 +5,7 @@ const Webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const dateFormat = require('dateformat');
 
 const Version = require('./plugin/version.js');
 //import Version from './plugin/version.js';
@@ -87,6 +88,7 @@ module.exports = {
 			    //limit: 10000
 		    }
 	    },
+
      /* {test: /\.scss?$/, loaders: ['style-loader', 'css-loader', 'sass-loader']},
       {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader?mimetype=image/svg+xml'},
       {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
