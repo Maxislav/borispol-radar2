@@ -115,12 +115,20 @@ module.exports = {
                 }
             },
             '/proxy-history/**': {
-                target: 'http://localhost/allborispol-radar2/dist/php/',
+                target: 'http://localhost/all/borispol-radar2/dist/php/',
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
                     '^/proxy\-history': ''
                 }
+            },
+            '/upload.php' : {
+              target: 'http://localhost/all/borispol-radar2/src/php/upload.php',
+	            secure: false,
+	            changeOrigin: true,
+	            pathRewrite: {
+		            'upload.php': ''
+	            }
             }
         }
 

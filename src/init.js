@@ -27,6 +27,7 @@ import VisibleComponent from './component/visible-component/visible-component'
 import UkbbComponent from './component/ukbb-component/ukbb-component'
 import UkbbCalcComponent from './component/ukbb-calc-component/ukbb-calc-component'
 import {AndroidComponent} from './component/android-component/android-component'
+import {FileUploadComponent} from './component/file-upload-component/file-upload-component'
 import VueResource from 'vue-resource'
 
 Vue.use(VueRouter);
@@ -42,6 +43,7 @@ const routes = [
 	{ path: '/visible', component: VisibleComponent },
 	{ path: '/meteosat', component: MeteosatComponent },
 	{ path: '/android', component: AndroidComponent },
+	{ path: '/fileupload', component: FileUploadComponent },
 	{ path: '/forecast-hour/:index', component: {
 			template: '<div>{{hh  }}</div>',
 			data: function () {

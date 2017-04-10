@@ -1,0 +1,12 @@
+.file-upload-component
+    strip-loader(v-bind:load="load")
+    .action-container.padding-15
+        form(id="file-form",  enctype="multipart/form-data", action=action, method="POST")
+            input(type="hidden"  name="afile" value="30000")
+            input(name="afile" id="file-select" type="file" style="visibility: hidden")
+            button Выбрать файл
+            button(type="submit" id="upload-button" value="Send File") Отправить
+
+
+    .images-container.padding-15
+        div.img(v-for="url in urls",  v-img="url")
