@@ -5,6 +5,7 @@ export default  {
 	],
 	BACKGROUND_UPLOAD: 'Background upload',
 	INFRARED : 'Infrared',
-	VISIBLE : 'Visible'
+	VISIBLE : 'Visible',
+	INFOMOMETRS : 'Infomometrs'
 
 };

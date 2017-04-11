@@ -3,5 +3,6 @@ export default {
 	DAY_NAMES: ['Нед', 'Пон', 'Втр', 'Срд' , 'Чет', 'П\'ят', "Суб"],
 	BACKGROUND_UPLOAD: 'Завантажити фон',
 	INFRARED : 'Iнфрачервоний',
-	VISIBLE : 'Видимий'
+	VISIBLE : 'Видимий',
+	INFOMOMETRS : 'Інфомометри'
 };
