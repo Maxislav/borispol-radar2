@@ -23,6 +23,7 @@ export default  Vue.component('forecast-3h-component', {
 		const date = new Date(this.hh['dt_txt']);
 		const temp = Math.round(this.hh.main.temp);
 
+
 		const HH ='hh'+ dateFormat(date, 'HH');
 		const icon = 'img/weather-ico/i01'+this.hh.weather[0].icon.match(/\D{1}$/)[0]+'.png';
 		//console.log(this.hh.clouds.all);
@@ -34,7 +35,6 @@ export default  Vue.component('forecast-3h-component', {
 		let rain = [];
 		if(rain3h){
 			rain.length = Math.round(rain3h*10) || 1
-
 		}
 		return{
 			date,
@@ -42,7 +42,8 @@ export default  Vue.component('forecast-3h-component', {
 			color: R.color[HH],
 			style,
 			icon,
-			rain
+			rain,
+			title:  rain.length? 'Rain 3h: ' + Math.toFixed (this.hh.rain['3h'], 3)+'mm' : 'Clear'
 		}
 	}
 	

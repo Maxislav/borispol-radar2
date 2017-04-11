@@ -30,5 +30,8 @@ Math.normalizeDegree = (alpha)=>{
         alpha = 360+alpha
     }
 return alpha
-}
+};
+Math.toFixed = (value, n)=> {
+	return (Math.round(value * Math.pow(10, n || 0)) / Math.pow(10, n || 0)).toFixed(n || 0)
+};
 

@@ -1,10 +1,10 @@
-.forecast-3h-component
-    div(v-bind:style="{background:color}")
+.forecast-3h-component(:title="title")
+    div(:style="{background:color}")
         .time
             | {{date | date('HH:MM')}}
         .img
             img(:src="icon")
-            img.clouds(src="img/weather-ico/clouds.png", v-bind:style="style")
+            img.clouds(src="img/weather-ico/clouds.png", :style="style")
          .water-container
              img(src="img/waterdrop.png", v-for="d in rain")
         .t(v-html="temp")
