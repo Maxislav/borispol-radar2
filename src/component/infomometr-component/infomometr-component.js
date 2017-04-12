@@ -1,8 +1,12 @@
 import Vue from 'vue';
 import template from './infomometr-component.pug';
 import './infomometr-component.styl';
-import {Deferred} from '../../util/deferred'
+import {Deferred} from '../../util/deferred';
 
+const sinoptikDiv = document.createElement('div')
+
+const sinoptikHtml = require("html-loader!./sinoptik.html");
+sinoptikDiv.innerHTML = sinoptikHtml;
 class ScriptLoad{
 	constructor(){
 		/**
@@ -27,6 +31,7 @@ class ScriptLoad{
 			this._linksDefer[src] = new Deferred();
 			const script = document.createElement('script');
 			script.setAttribute('type',"text/javascript");
+			script.setAttribute('charset',"UTF-8");
 			script.onload = ()=>{
 				this._linksDefer[src].resolve(script)
 			};
@@ -95,18 +100,24 @@ export const InfomometrComponent = Vue.component('infomometr-component', {
 				});
 
 			scriptLoad
-				.load('https://www.gismeteo.ua/ajax/getInformer/?hash=74y4607L4vnNV6')
+				.load('https://www.gismeteo.ua/ajax/getInformer/?hash=dmk2jSY5Swt8Qh')
 				.then(script=>{
 
 				});
 
+			//this.$el.appendChild(sinoptikDiv)
+		//	scriptLoad.load('//sinoptik.ua/informers_js.php?title=4&amp;wind=2&amp;cities=303010783&amp;lang=ru')
+
+
 			scriptLoad
 				.css('https://s1.gismeteo.ua/static/css/informer2/gs_informerClient.min.css');
+
 
 			setTimeout(()=>{
 				scriptLoad.setContent(this.$el)
 			},4000)
 		}
+
 
 
 	}
