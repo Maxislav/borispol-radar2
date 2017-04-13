@@ -15,7 +15,7 @@ export const FileUploadComponent = Vue.component('file-upload-component', {
 			urls.unshift(
 				new Vue({
 					data: {
-						src: './img/bg/' + i + '.jpg/?d='+Date.now()
+						src: './img/bg/' + i + '.jpg?d='+Date.now()
 					}
 				})
 			);
