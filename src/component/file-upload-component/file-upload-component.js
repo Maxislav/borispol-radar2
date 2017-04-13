@@ -10,29 +10,17 @@ export const FileUploadComponent = Vue.component('file-upload-component', {
 
 	data: function () {
 		const urls = [];
-
 		let i = 8;
-
-
-		/*setTimeout(()=>{
-			urls[0].src = './img/bg/'+7+'.jpg'
-		},1000)*/
-
 		do{
 			urls.unshift(
 				new Vue({
 					data: {
-						src: './img/bg/' + i + '.jpg'
+						src: './img/bg/' + i + '.jpg/?d='+Date.now()
 					}
 				})
 			);
 			i--;
 		}while (1<=i);
-
-
-		console.log(urls );
-
-
 		return {
 			load: 0,
 			urls
@@ -40,6 +28,7 @@ export const FileUploadComponent = Vue.component('file-upload-component', {
 	},
 	methods: {
 		click: function (com) {
+
 			bg.src = com.src;
 		}
 	},

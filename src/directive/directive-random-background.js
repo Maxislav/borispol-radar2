@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import  './directive-random-background.styl';
+import {getImage} from '../util/load-image-blob'
 
 const rand = Math.getRandom(1,8 , true);
 export const bg = new Vue({
@@ -11,22 +12,37 @@ export const bg = new Vue({
 
 export default  Vue.directive('random-background', {
     inserted: function (el, binding){
-        const img = new Image();
+        let image;
 
-	      img.style.opacity = 0;
-        const startLoad = (src)=>{
-	        img.onload = ()=>{
-		        img.$fadeTo(0,1,500).then();
-		        el.appendChild(img)
-	        };
-	        img.src = src;
+
+        const onLoad = (img)=>{
+	        img.style.opacity = 0;
+	        el.appendChild(img);
+	        image = img;
+	        img.$fadeTo(0,1,500).then();
+        }
+
+        const onUpdate = (img)=>{
+	        img.style.opacity = 0;
+	        image.$fadeTo(1,0,222)
+		        .then(d=>{
+			        el.removeChild(image)
+			        image = img
+			        el.appendChild(image)
+			        img.$fadeTo(0,1,500).then();
+
+
+		        })
         };
-        startLoad(bg.src);
+	      getImage(bg.src)
+		      .then(onLoad);
+
         bg.$watch(()=>bg.src, (val)=>{
-          img.$fadeTo(1,0,222)
-            .then(img=>{
-	            startLoad(val)
-            })
+
+	        getImage(val)
+		        .then(onUpdate)
+
+
         })
     }
 });
