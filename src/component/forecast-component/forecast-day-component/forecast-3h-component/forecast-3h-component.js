@@ -43,7 +43,14 @@ export default  Vue.component('forecast-3h-component', {
 			style,
 			icon,
 			rain,
+			index:this.hh.index,
 			title:  rain.length? 'Rain 3h: ' + Math.toFixed (this.hh.rain['3h'], 3)+'mm' : 'Clear'
+		}
+	},
+	methods: {
+		click: function (e, index) {
+			this.$router.push({name: 'forecast-item', params: {index}, canReuse: false})
+			//console.log()
 		}
 	}
 	

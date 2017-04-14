@@ -1,4 +1,4 @@
-.forecast-3h-component(:title="title")
+.forecast-3h-component(:title="title", @click="click($event, index)")
     div(:style="{background:color}")
         .time
             | {{date | date('HH:MM')}}

@@ -1,6 +1,6 @@
 "use strict";
 function Deferred() {
-	var _this = this;
+	const _this = this;
 	this.status = 0;
 	this.promise = new Promise(function (resolve, reject) {
 		_this._resolve = resolve;
