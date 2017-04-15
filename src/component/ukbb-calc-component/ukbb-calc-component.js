@@ -20,7 +20,7 @@ const toLngLat = {
 };
 
 
-const calc = (rain, original, a) => {
+const filter = (rain, original, a) => {
 
 
 	if (a) {
@@ -89,6 +89,14 @@ const calc = (rain, original, a) => {
 export default {
 	template: template(),
 	data: function () {
+
+		//console.log(this.$storage.getItem('show-flag'))
+        if(this.$storage.getItem('show-flag')===undefined){
+            this.$storage.setItem('show-flag', true)
+		}
+
+		let showFlag =  this.$storage.getItem('show-flag');
+
 		this.drag = false;
 		this.layer = {
 			x: 0,
@@ -153,7 +161,7 @@ export default {
 					this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection + 180);
 				}
 				this.rain.length = 0;
-				calc(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
+				filter(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
 			}
 		};
 
@@ -161,16 +169,18 @@ export default {
 			onload,
 			lngLat,
 			rain: [],
-			iam
+			iam,
+            showFlag
 		}
+	},
+	watch:{
+        showFlag: function (val) {
+            this.$storage.setItem('show-flag', val)
+        }
 	},
 	methods: {
 		mousemove: function (e) {
-
-
-
 			if (!this.drag) return;
-
 			const position = {
 				X: 0,
 				Y:0
@@ -187,9 +197,6 @@ export default {
 				position.Y = e.clientY
 			}
 
-
-
-
 			this.iam.x = position.X - this.container.x - this.layer.x;
 			this.iam.y = position.Y- this.container.y - this.layer.y;
 
@@ -205,7 +212,7 @@ export default {
 
 			this.rain.length = 0;
 			if (this.iam.x < 500)
-				calc(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
+				filter(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
 
 		},
 		mousedown: function (e) {

@@ -1,6 +1,6 @@
 .ukbb-calc-component
-    .relative.drawable-container(@mousemove = "mousemove", @touchmove="mousemove")
-        .calc
+    .relative.drawable-container.height-100(@mousemove = "mousemove", @touchmove="mousemove")
+        .calc.relative.height-100
             .set-flag(v-if="iam.y==0") {{iam.y==0 ? 'Установить флаг': 'lng:' + lngLat.lng}}
             .lng-lat(v-else) lng {{lngLat.lng | toFixed(2)}} lat {{lngLat.lat | toFixed(2)}}
             .dist(v-if="rain.length")
@@ -8,7 +8,13 @@
                     .d(:style="{'background-color': r.colorHex}")
                     div(style="clear: right" ) {{r.dist | toFixed(2)}} km {{r.text}}
             .no-meteo-phenomena(v-else) Нет метеоявлений
+            .checker-flag
+                .flex.align-items-center
+                    input(type="checkbox", v-model="showFlag")
+                    .margin-0-15(@click="showFlag = !showFlag") Показать флажок
 
         ukbb-component(:staticLoad="onload")
-        .marker(:style="{top:iam.y+'px', left:iam.x+'px'}", @mousedown="mousedown", @touchstart="mousedown")
+        .marker(:style="{top:iam.y+'px', left:iam.x+'px'}", v-if="showFlag", @mousedown="mousedown", @touchstart="mousedown")
             .wind-flag
+        .point(v-if="!showFlag", :style="{top:iam.y+57+'px', left:iam.x+2+'px'}")
+
