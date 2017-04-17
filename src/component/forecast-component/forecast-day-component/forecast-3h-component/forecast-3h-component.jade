@@ -1,5 +1,5 @@
-.forecast-3h-component(:title="title", @click="click($event, index)")
-    div(:style="{background:color}")
+.forecast-3h-component(:title="title")
+    router-link(:style="{background:color}", :to="{name: 'forecast-item', params:{index:index}}")
         .time
             | {{date | date('HH:MM')}}
         .img
