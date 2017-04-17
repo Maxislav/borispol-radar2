@@ -1,2 +1,16 @@
 .forecast-item-component
+    div.text-center.padding-15 {{hh.dt_txt}}
+    div
+
+        table.width-100
+            tr(v-for="(item, key) in hh.main")
+                td.tex-right.margit-bottom-15.padding-5 {{key}}
+                td.margit-bottom-15.padding-5 {{item}}
+            tr(v-for="(item, key) in hh.weather[0]")
+                td.tex-right.margit-bottom-15.padding-5 {{key}}
+                td.margit-bottom-15.padding-5 {{item}}
+            tr(v-for="(item, key) in hh.clouds")
+                td.tex-right.margit-bottom-15.padding-5 {{key}}
+                td.margit-bottom-15.padding-5 {{item}}
+
 

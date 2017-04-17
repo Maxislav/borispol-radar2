@@ -1,8 +1,11 @@
 import Vue from 'vue';
+import template from './forecast-item-component.pug';
+import './forecast-item-component.styl'
 import {forecast5} from '../../service/open-weather-map-service'
 
 export const ForecastItemComponent = Vue.component('forecast-item-component', {
-	template: '<div>{{hh}}dd</div>',
+	template: template(),
+
 	data: function () {
 
 		const data = new Vue({
