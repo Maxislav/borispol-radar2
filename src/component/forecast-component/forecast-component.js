@@ -14,6 +14,7 @@ export const list = [];
 export const forecastData = {
 	template: template(),
 	data: function () {
+		forecast5.fill(forecast5);
 		return forecast5
 	},
 	mounted: function () {

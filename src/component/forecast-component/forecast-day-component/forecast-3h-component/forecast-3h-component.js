@@ -38,7 +38,7 @@ export default  Vue.component('forecast-3h-component', {
 		}
 		return{
 			date,
-			temp: (temp<0 ? '-'+temp : '+'+temp)  +'&deg;C',
+			temp: (temp<0 ? ''+temp : '+'+temp)  +'&deg;C',
 			color: R.color[HH],
 			style,
 			icon,

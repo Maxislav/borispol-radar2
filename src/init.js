@@ -38,8 +38,8 @@ Vue.use(LocalStorage, {prefix: 'radar'});
 
 
 
-import {forecast5} from './service/open-weather-map-service';
-forecast5.fill();
+//import {forecast5} from './service/open-weather-map-service';
+
 
 
 const routes = [

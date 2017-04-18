@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueResource  from 'vue-resource';
-import {Deferred} from '../util/deferred'
+import {Deferred} from '../util/deferred';
+import {Color} from '../constant/constant-hh-color';
+const color = new Color();
 
 /** @example data
 {
@@ -41,10 +43,30 @@ import {Deferred} from '../util/deferred'
 */
 
 let  def;
+const current = {};
 export const forecast5 = new Vue({
 	data:{
 		list: [],
 		srcList: [],
+		current: {
+			color: null,
+			dt_txt: null,
+			main: null,
+			weather: null,
+			clouds: null,
+			rain: null,
+			sys:null
+		},
+		setCurrent: function (index) {
+			return this.fill()
+				.then(d=>{
+					for(let key in this.srcList[index]){
+						this.current[key] = this.srcList[index][key]
+					}
+					this.current.color = color.getColorByDate(this.current.dt_txt);
+					return this.current
+				})
+		},
 		/**
 		 * @return {Promise.<Array>}
 		 */
