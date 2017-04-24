@@ -1,16 +1,45 @@
 .forecast-item-component
     .item(:style="{'background-color': color}")
-        div.text-center.padding-15 {{dt_txt}}
+        div.text-center.padding-15 {{hh.dt_txt}}
         div
             table.width-100
-                tr(v-for="(item, key) in main")
-                    td.tex-right.margit-bottom-15.padding-5 {{key}}
-                    td.margit-bottom-15.padding-5 {{item}}
-                //tr(v-for="(item, key) in hh.weather[0]")
-                    td.tex-right.margit-bottom-15.padding-5 {{key}}
-                    td.margit-bottom-15.padding-5 {{item}}
-                tr(v-for="(item, key) in clouds")
-                    td.tex-right.margit-bottom-15.padding-5 {{key}}
-                    td.margit-bottom-15.padding-5 {{item}}
+                tr(v-if="icon")
+                    td(colspan=2)
+                        .relative
+                            img.icon(:src="icon")
+                            img.clouds(src="img/weather-ico/clouds.png", :style="style")
+                            .water-container
+                                img(src="img/waterdrop.png", v-for="d in rain")
+                tr
+                    td.tex-right.padding-5 {{'TEMPERATURE' | translate}}
+                    td
+                       .padding-5(v-if="hh.main")
+                             span(v-if="0<hh.main.temp") +
+                             span {{hh.main.temp | toFixed(0)}} &#176;C
+
+                tr(v-if="hh.main")
+                    td.tex-right.padding-5 {{'PRESSURE' | translate}}
+                    td
+                       .padding-5
+                             span {{hh.main.pressure }}
+                tr(v-if="hh.main")
+                    td.tex-right.padding-5 {{'HUMIDITY' | translate}}
+                    td
+                       .padding-5
+                             span {{hh.main.humidity}} %
+                tr(v-if="hh.clouds")
+                    td.tex-right.padding-5 {{'CLOUDS' | translate}}
+                    td
+                       .padding-5
+                             span {{hh.clouds.all}} %
+                tr(v-if="hh.wind")
+                    td.tex-right.padding-5 {{'WIND' | translate}}
+                    td
+                       .padding-5
+                             span.wind-deg(:style="{transform:'rotate('+(hh.wind.deg+180)+'deg)'}") &#x2191;
+                             span {{hh.wind.speed}} м/c
+
+
+
 
 

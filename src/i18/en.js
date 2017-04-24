@@ -6,6 +6,11 @@ export default  {
 	BACKGROUND_UPLOAD: 'Background upload',
 	INFRARED : 'Infrared',
 	VISIBLE : 'Visible',
-	INFOMOMETRS : 'Infomometrs'
+	INFOMOMETRS : 'Infomometrs',
+	TEMPERATURE : 'Temperature',
+	PRESSURE : 'Pressure',
+	HUMIDITY : 'Humidity',
+	CLOUDS : 'Clouds',
+	WIND : 'Wind'
 
 };

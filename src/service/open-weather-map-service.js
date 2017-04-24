@@ -48,7 +48,7 @@ export const forecast5 = new Vue({
 	data:{
 		list: [],
 		srcList: [],
-		current: {
+		/*current: {
 			color: null,
 			dt_txt: null,
 			main: null,
@@ -66,7 +66,7 @@ export const forecast5 = new Vue({
 					this.current.color = color.getColorByDate(this.current.dt_txt);
 					return this.current
 				})
-		},
+		},*/
 		/**
 		 * @return {Promise.<Array>}
 		 */

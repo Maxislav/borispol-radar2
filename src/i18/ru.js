@@ -4,5 +4,10 @@ export default {
 	BACKGROUND_UPLOAD: 'Загрузить фон',
 	INFRARED : 'Инфракрасный',
 	VISIBLE : 'Видимий',
-	INFOMOMETRS : 'Инфомометры'
+	INFOMOMETRS : 'Инфомометры',
+	TEMPERATURE : 'Температура',
+	PRESSURE : 'Давление',
+	HUMIDITY : 'Влажность',
+	CLOUDS : 'Облачность',
+	WIND : 'Ветер'
 };
