@@ -9,5 +9,6 @@ export default {
 	PRESSURE : 'Давление',
 	HUMIDITY : 'Влажность',
 	CLOUDS : 'Облачность',
-	WIND : 'Ветер'
+	WIND : 'Ветер',
+	RAIN : 'Осадки за 3ч'
 };

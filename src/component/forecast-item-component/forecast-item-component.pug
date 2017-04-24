@@ -32,6 +32,11 @@
                     td
                        .padding-5
                              span {{hh.clouds.all}} %
+                tr(v-if="hh.rain")
+                    td.tex-right.padding-5 {{'RAIN' | translate}}
+                    td
+                       .padding-5
+                             span {{hh.rain['3h'] || 0}} мм
                 tr(v-if="hh.wind")
                     td.tex-right.padding-5 {{'WIND' | translate}}
                     td

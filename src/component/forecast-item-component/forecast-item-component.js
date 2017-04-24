@@ -26,7 +26,7 @@ export const ForecastItemComponent = Vue.component('forecast-item-component', {
 
 
 		data.$watch(()=>this.$route.path, (val)=>{
-			data.hh = forecast5.srcList[this.$route.params['index']]
+			//data.hh = forecast5.srcList[this.$route.params['index']]
 		});
 		return data
 
@@ -40,12 +40,17 @@ export const ForecastItemComponent = Vue.component('forecast-item-component', {
 			//let rain = [];
 			if(rain3h){
 				this.rain.length = Math.round(rain3h*10) || 1
+			}else {
+				this.rain.length = 0
 			}
 			this.style = {
 				transform: 'scale('+this.hh.clouds.all/100+')'
 			};
 
 		},
+		'$route'(to, from){
+			this.hh = forecast5.srcList[to.params.index]
+		}
 	}
 });
 

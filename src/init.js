@@ -83,7 +83,8 @@ const routes = [
 
 const router = new VueRouter({
 	routes, // short for routes: routes,
-	canReuse: false
+	canReuse: false,
+	hash: '#hghh!'
 });
 router.beforeEach ((to, from, next) => {
 	if(to.path == '/'){

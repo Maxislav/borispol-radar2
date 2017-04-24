@@ -9,5 +9,6 @@ export default {
 	PRESSURE : 'Тиск',
 	HUMIDITY : 'Вологість',
 	CLOUDS : 'Хмарність',
-	WIND : 'Вітер'
+	WIND : 'Вітер',
+	RAIN : 'Опады за 3год'
 };

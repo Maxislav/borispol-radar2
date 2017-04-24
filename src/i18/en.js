@@ -11,6 +11,7 @@ export default  {
 	PRESSURE : 'Pressure',
 	HUMIDITY : 'Humidity',
 	CLOUDS : 'Clouds',
-	WIND : 'Wind'
+	WIND : 'Wind',
+	RAIN : 'Rainfall 3h'
 
 };
