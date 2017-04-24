@@ -56,7 +56,7 @@ export class PixelData{
     distFrom(x, y){
         const X = Math.abs(x-this.x);
         const Y = Math.abs(y-this.y);
-        this.dist = Math.pow( Math.pow(X, 2)+ Math.pow(Y, 2), 1/2)*(200/470);
+        this.dist = Math.pow( Math.pow(X, 2)+ Math.pow(Y, 2), 1/2)*(400/470);
 
         return this.dist
     }

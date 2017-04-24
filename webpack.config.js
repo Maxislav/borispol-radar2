@@ -67,14 +67,14 @@ module.exports = {
         test: /\.jade$/,
         loader: 'jade-loader',
         query: {
-          pretty: true
+          pretty: NODE_ENV=='dev'
         }
       },
       {
         test: /\.pug/,
         loader: 'pug-loader',
         query: {
-          pretty: true
+          pretty: NODE_ENV=='dev'
         }
       },
       {
@@ -102,7 +102,7 @@ module.exports = {
   resolve: {
     extensions: ['.js'],
     alias: {
-      'vue$': 'vue/dist/vue.js',
+      'vue$': NODE_ENV=='dev' ?  'vue/dist/vue.js': 'vue/dist/vue.min.js',
       'vue-router$': 'vue-router/dist/vue-router.js'
     }
   },

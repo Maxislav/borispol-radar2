@@ -7,7 +7,7 @@ import $ from 'jquery-lite/src/event';
 import {position} from  '../../util/position';
 import {CanvasDirection} from  './canvas-direction';
 import {getDirection} from './get-direction';
-import {PixelData, pixelArray, toRain} from './pixel-data';
+import { pixelArray, toRain} from './pixel-data';
 
 
 const toLngLat = {
@@ -44,7 +44,7 @@ const filter = (rain, original, a) => {
 
 	const filterByColor = rain.filter((item) => {
 		return constantRadarColor.find((val) => {
-			const find = Math.abs(item.colorDec - val.colorDec) < 1000
+			const find = Math.abs(item.colorDec - val.colorDec) < 1000;
 			if (find) {
 				item.text = val.text
 			}
