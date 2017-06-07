@@ -8,7 +8,7 @@ import {position} from  '../../util/position';
 import {CanvasDirection} from  './canvas-direction';
 import {getDirection} from './get-direction';
 import { pixelArray, toRain} from './pixel-data';
-
+const TouchEvent = window.TouchEvent || window.Touch || Array;
 
 const toLngLat = {
 	lng: (x) => {
@@ -216,6 +216,9 @@ export default {
 
 		},
 		mousedown: function (e) {
+			console.log(e)
+
+			window.E = e
 
 			if(e instanceof TouchEvent){
 				const touch = e.changedTouches[0]

@@ -4,7 +4,8 @@
   "scripts": {
     "start": "concurrently  \"npm run webpack-dev-server\" \"npm run server-dev\"  ",
     "server-dev": "node-dev server/index.js",
-    "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline"
+    "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline",
+    "prod": "webpack"
   },
   "dependencies": {
     "express": "^4.14.1",
