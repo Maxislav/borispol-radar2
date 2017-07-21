@@ -1,4 +1,3 @@
-
 import Vue from 'vue'
 import VueRouter from 'vue-router';
 import LocalStorage from './plugin/LocalStorage'
@@ -20,6 +19,7 @@ import './filter/translate'
 import './component/strip-loader/strip-loader';
 import './component/player-component/player-component'
 import './component/forecast-component/forecast-day-component/forecast-3h-component/forecast-3h-component';
+import {SettingComponent} from './component/setting-component/setting-component'
 import HomeComponent from './component/home-component/home-component'
 import IredComponent from './component/ired-component/ired-component'
 import MeteosatComponent from './component/meteosat-component/meteosat-component'
@@ -30,6 +30,7 @@ import {AndroidComponent} from './component/android-component/android-component'
 import {FileUploadComponent} from './component/file-upload-component/file-upload-component'
 import {InfomometrComponent} from './component/infomometr-component/infomometr-component'
 import {ForecastItemComponent} from './component/forecast-item-component/forecast-item-component'
+
 import VueResource from 'vue-resource'
 
 Vue.use(VueRouter);
@@ -37,22 +38,20 @@ Vue.use(VueResource);
 Vue.use(LocalStorage, {prefix: 'radar'});
 
 
-
 //import {forecast5} from './service/open-weather-map-service';
 
 
-
 const routes = [
-	{ path: '/home', component: HomeComponent },
-	{ path: '/radar', component: UkbbCalcComponent },
-	{ path: '/ired', component: IredComponent },
-	{ path: '/visible', component: VisibleComponent },
-	{ path: '/meteosat', component: MeteosatComponent },
-	{ path: '/android', component: AndroidComponent },
-	{ path: '/fileupload', component: FileUploadComponent },
-	{ path: '/infomometr', component: InfomometrComponent },
+	{path: '/home', component: HomeComponent},
+	{path: '/radar', component: UkbbCalcComponent},
+	{path: '/ired', component: IredComponent},
+	{path: '/visible', component: VisibleComponent},
+	{path: '/meteosat', component: MeteosatComponent},
+	{path: '/android', component: AndroidComponent},
+	{path: '/fileupload', component: FileUploadComponent},
+	{path: '/infomometr', component: InfomometrComponent},
 	{
-		path:'/forecast-item/:index',
+		path: '/forecast-item/:index',
 		name: 'forecast-item',
 		canReuse: true,
 		component: ForecastItemComponent,
@@ -62,10 +61,11 @@ const routes = [
 			next()
 		}
 	},
-	{ path: '/forecast-hour/:index', component: {
+	{
+		path: '/forecast-hour/:index',
+		component: {
 			template: '<div>{{hh  }}</div>',
 			data: function () {
-
 				return {
 					list: list,
 					hh: {}
@@ -77,7 +77,12 @@ const routes = [
 					this.hh = this.list[this.$route.params['index']]
 				}
 			}
-	} },
+		}
+	},
+	{
+		path: '/setting',
+		component: SettingComponent
+	}
 ];
 
 
@@ -86,9 +91,9 @@ const router = new VueRouter({
 	canReuse: false,
 	hash: '#hghh!'
 });
-router.beforeEach ((to, from, next) => {
-	if(to.path == '/'){
-		router.replace('/home', ()=>{
+router.beforeEach((to, from, next) => {
+	if (to.path == '/') {
+		router.replace('/home', () => {
 		})
 	}
 	next()

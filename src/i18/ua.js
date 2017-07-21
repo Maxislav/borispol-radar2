@@ -10,5 +10,6 @@ export default {
 	HUMIDITY : 'Вологість',
 	CLOUDS : 'Хмарність',
 	WIND : 'Вітер',
-	RAIN : 'Опады за 3год'
+	RAIN : 'Опады за 3год',
+	SETTING: 'S'
 };
