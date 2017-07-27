@@ -6,7 +6,17 @@ export const SettingComponent = Vue.component('setting-component', {
 	data: function () {
 		return{
 			onGetNotify: function () {
-				console.log('olold')
+				Notification.requestPermission().then(function(result) {
+					console.log(result);
+					switch (result){
+						case 'granted':
+
+							break;
+						default:
+
+
+					}
+				});
 			}
 		}
 	}
