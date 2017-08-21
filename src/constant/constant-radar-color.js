@@ -4,6 +4,7 @@ class Color extends Array{
        super();
        Color.const.map((item, i)=>{
            const color = {
+               id: i,
                text:item.text,
                hex: item.hex,
                colorHex: '#'+item.hex,
@@ -36,7 +37,7 @@ class Color extends Array{
                 text: 'Конвективные осадки слабые'
             },
             {
-                hex: '0d5eff',
+                hex: '0c59ff', //206cfd
                 text: 'Конвективные осадки умерянные'
             },
             {

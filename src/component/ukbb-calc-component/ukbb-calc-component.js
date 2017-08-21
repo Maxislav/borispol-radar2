@@ -43,10 +43,16 @@ const filter = (rain, original, a) => {
 	}
 
 	const filterByColor = rain.filter((item) => {
+		if(item.colorHex != '#cccccc'){
+			//console.log(item.colorHex)
+			//console.log('%c '+item.colorHex, 'background: '+item.colorHex+'; color: #ffffff');
+		}
 		return constantRadarColor.find((val) => {
 			const find = Math.abs(item.colorDec - val.colorDec) < 1000;
 			if (find) {
-				item.text = val.text
+				item.text = val.text;
+				item.id = val.id;
+				//console.log(item.id)
 			}
 			return find
 		});
@@ -72,11 +78,11 @@ const filter = (rain, original, a) => {
 
 
 	return filterByColor.filter(function (value, index, arr) {
-		const find = colors.find((val) => {
-			return Math.abs(value.colorDec - val) < 10
-		});
-		if (!find && (100 < value.r || 100 < value.g || 100 < value.b )) {
-			colors.push(value.colorDec);
+		const find = colors.indexOf(value.id);
+
+		//console.log(find.colorHex)
+		if (find==-1 && (100 < value.r || 100 < value.g || 100 < value.b )) {
+			colors.push(value.id);
 
 			return true
 		}
@@ -163,6 +169,8 @@ export default {
 				this.rain.length = 0;
 				filter(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
 			}
+
+			console.log(this.rain)
 		};
 
 		return {

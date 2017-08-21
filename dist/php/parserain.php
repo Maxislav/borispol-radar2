@@ -248,9 +248,9 @@ $unicom = array();
 
 foreach($arrayResult as $key=> $val){
     //echo "<div style='background: #$val[color]; width: 140px; margin-bottom:2px'>$val[intensity]</div>"."";
-    if(!checkIntensity($intensity, $val[intensity] )){
+    if(!checkIntensity($intensity, $val["intensity"] )){
         array_push($unicom, $val);
-        array_push($intensity, $val[intensity] );
+        array_push($intensity, $val["intensity"] );
     }
   //  echo json_encode($val).'<br>';
 }

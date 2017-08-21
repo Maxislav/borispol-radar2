@@ -39,17 +39,45 @@ export class PixelData{
 
 
     }
-
+	/*static _toHex(r, g, b, a) {
+		let hex = '';
+		new Array(...arguments).forEach((color, i)=>{
+			if(i<3){
+				let c = color.toString(16);
+				if (c.length<2) c = '0'+c;
+				hex+=c
+			}
+		});
+		return hex;
+	}*/
 
     _rgbToHex(){
         let hex = '';
-        for(let opt in this.rgba){
+
+	    /*let hex = '';
+	    new Array(...arguments).forEach((color, i)=>{
+		    if(i<3){
+			    let c = color.toString(16);
+			    if (c.length<2) c = '0'+c;
+			    hex+=c
+		    }
+	    });
+	    return hex;*/
+
+	    ['r','g','b'].forEach(ch=>{
+		    let c = this.rgba[ch].toString(16);
+		    if (c.length<2) c = '0'+c;
+		    hex+=c
+      })
+
+
+       /* for(let opt in this.rgba){
             if(opt!='a'){
                 let c = this.rgba[opt].toString(16);
                 if (c.length<2) c = '0'+c;
                 hex+=c
             }
-        }
+        }*/
         return hex;
     }
 
