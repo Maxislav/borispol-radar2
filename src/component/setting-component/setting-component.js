@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import template from './setting-component.pug';
 import './setting-component.styl';
+/*
 
 
 const firebase = require("firebase/app");
@@ -11,6 +12,7 @@ var config = {
 	apiKey : 'AIzaSyBK1TPsIwKh6uR7y1GQi9rekBbUOgo18T0'
 };
 firebase.initializeApp(config);
+*/
 
 
 'use strict';
