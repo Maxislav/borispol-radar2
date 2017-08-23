@@ -22,7 +22,7 @@ class Color extends Array{
             },
             {
                 hex: '58ff42',
-                text: 'Остадки умерянные'
+                text: 'Остадки умеренные'
             },
             {
                 hex: '48c277',

@@ -156,7 +156,7 @@ export default {
 
 			const data = pixelArray(imageData);
 			this.windDirection = getDirection(data);
-			console.log('windDirection', this.windDirection)
+			//console.log('windDirection', this.windDirection)
 			this._rain.length = 0;
 			toRain(data, this._rain);
 			if (this.iam.x < 500) {
@@ -170,7 +170,7 @@ export default {
 				filter(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
 			}
 
-			console.log(this.rain)
+			//console.log(this.rain)
 		};
 
 		return {
@@ -224,7 +224,7 @@ export default {
 
 		},
 		mousedown: function (e) {
-			console.log(e)
+			//console.log(e)
 
 			window.E = e
 
@@ -244,19 +244,28 @@ export default {
 	beforeDestroy: function () {
 		document.removeEventListener('mouseup', this._mouseup)
 		document.removeEventListener('touchend', this._mouseup)
+		window.removeEventListener('resize',this._resize)
 	},
 	mounted: function () {
+
 		this.container = $(this.$el).find('.drawable-container');
 		this.container.x = position(this.container[0]).x;
 		this.container.y = position(this.container[0]).y;
 		this._mouseup = (e) => {
 			this.drag = false;
-
 			this.$storage.setItem('flag-x', this.iam.x);
 			this.$storage.setItem('flag-y', this.iam.y)
 		};
+
 		document.addEventListener('mouseup', this._mouseup)
 		document.addEventListener('touchend', this._mouseup)
+
+		this._resize = ()=>{
+			this.container.x = position(this.container[0]).x;
+			this.container.y = position(this.container[0]).y;
+		}
+
+		window.addEventListener('resize',this._resize)
 
 	},
 	updated: function () {

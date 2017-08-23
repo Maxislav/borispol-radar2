@@ -77,10 +77,10 @@ module.exports = {
           pretty: NODE_ENV=='dev'
         }
       },
-      {
+    /*  {
         test: /\.styl$/, 
         loader: 'style-loader!css-loader!stylus-loader'
-      },
+      },*/
 	    {
 		    test: /[^loader]\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
 		    loader: 'url-loader',
@@ -88,6 +88,24 @@ module.exports = {
 			    //limit: 10000
 		    }
 	    },
+	    {
+		    test: /\.styl$/,
+		    use: [
+			    {
+				    loader: 'style-loader'
+			    },
+			    {
+				    loader: 'css-loader',
+				    options: {
+					    modules: false,
+				      importLoaders: 1
+             },
+			    },
+			    {
+				    loader: 'stylus-loader'
+			    }
+		    ]
+	    }
 
      /* {test: /\.scss?$/, loaders: ['style-loader', 'css-loader', 'sass-loader']},
       {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader?mimetype=image/svg+xml'},
