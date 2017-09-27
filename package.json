@@ -2,8 +2,9 @@
   "name": "borispol-radar-2",
   "version": "0.0.1",
   "scripts": {
-    "start": "concurrently  \"npm run webpack-dev-server\" \"npm run server-dev\"  ",
+    "start": "concurrently \" npm run ws \"  \"npm run webpack-dev-server\" \"npm run server-dev\"  ",
     "server-dev": "node-dev server/index.js",
+    "ws": "node server/ws.js",
     "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline",
     "prod": "webpack"
   },
@@ -12,7 +13,9 @@
     "firebase": "^4.3.0",
     "html-loader": "^0.4.5",
     "jade-loader": "^0.8.0",
-    "vue-router": "^2.2.1"
+    "socket.io": "^2.0.3",
+    "vue-router": "^2.2.1",
+    "ws": "^3.2.0"
   },
   "devDependencies": {
     "babel": "^6.23.0",

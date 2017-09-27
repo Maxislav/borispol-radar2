@@ -1,43 +1,55 @@
-'use strict';
+"use strict";
+const CACHE_VERSION = 2;
+const CURRENT_CACHES = {
+	'read-through': 'read-through-cache-v' + CACHE_VERSION
+};
+let socket;
+
+let i = 0;
 
 self.addEventListener('install', function(event) {
-	event.waitUntil(self.skipWaiting());
-});
+	console.log('install', event);
 
-self.addEventListener('push', function (event) {
+
 	event.waitUntil(
-		fetch('/latest.json').then(function (response) {
-			if (response.status !== 200) {
-				console.log('Latest.json request error: ' + response.status);
-				throw new Error();
-			}
-
-			return response.json().then(function (data) {
-				if (data.error || !data.notification) {
-					console.error('Latest.json Format Error.', data.error);
-					throw new Error();
-				}
-
-				var title = data.notification.title;
-				var body = data.notification.body;
-				var icon = 'https://mysite.ru/my_beautiful_push_icon.png';
-
-				return self.registration.showNotification(title, {
-					body: body,
-					icon: icon,
-					data: {
-						url: data.notification.url
-					}
-				});
-			}).catch(function (err) {
-				console.error('Retrieve data Error', err);
-			});
-		})
+		caches.open(CACHE_VERSION)
+			.then(function (cache) {
+				console.log('Opened cache');
+				return cache.addAll([]);
+			})
 	);
+
+
+
+	socket = new WebSocket("ws://localhost:8082")
+
+	setInterval(()=>{
+		self.clients.matchAll({includeUncontrolled: true, type: 'window'})
+			.then(clients=>{
+				//console.log(clients)
+				clients.forEach(client=>{
+					client.postMessage('Client postMessage ' + i++)
+				})
+			})
+	}, 2000)
+	self.skipWaiting()
 });
 
-self.addEventListener('notificationclick', function (event) {
-	event.notification.close();
-	var url = event.notification.data.url;
-	event.waitUntil(clients.openWindow(url));
+self.addEventListener('activate', function(event) {
+	// активация
+	console.log('activate', event);
+
+});
+
+self.addEventListener('message', function(event){
+	console.log("SW Received Message: " + event.data);
+	//console.log(WebSocket)
+	socket.send("Привет");
+
+
+
+});
+
+self.addEventListener('fetch', function(event) {
+
 });

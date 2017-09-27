@@ -1,49 +1,99 @@
 import Vue from 'vue';
 import template from './setting-component.pug';
 import './setting-component.styl';
-/*
 
+let scope = null
 
-const firebase = require("firebase/app");
-require("firebase/auth");
-require("firebase/database");
-
-var config = {
-	apiKey : 'AIzaSyBK1TPsIwKh6uR7y1GQi9rekBbUOgo18T0'
-};
-firebase.initializeApp(config);
-*/
-
-
-'use strict';
-
-
-function SendPushMe() {
+window.addEventListener('load', ()=>{
 	if ('serviceWorker' in navigator) {
-		console.log('Service Worker is supported');
-		navigator.serviceWorker.register('/sw.js').then(function() {
-			return navigator.serviceWorker.ready;
-		}).then(function(reg) {
-			console.log('Service Worker is ready :^)', reg);
-			reg.pushManager.subscribe({userVisibleOnly: true}).then(function(sub) {
-				console.log('endpoint: ->', sub.endpoint);
-				Vue.http.get( "http://meteo-radar.info/createpushadresat?adresat=" + sub.endpoint, function( data ) {});
+		navigator.serviceWorker.getRegistrations().then(function(registrations) {
+			for(let registration of registrations) {
+				registration.unregister()
+			}
+			navigator.serviceWorker.register('/sw.js').then(function(registration) {
+				// Registration was successful
+				scope = registration.scope
+				console.log('ServiceWorker registration successful with scope: ', registration.scope);
+
+
+				navigator.serviceWorker.addEventListener('message', function(event){
+					console.log(event.data);
+					//event.ports[0].postMessage("Client 1 Says 'Hello back!'");
+				});
+
+
+			}, function(err) {
+				// registration failed :(
+				console.log('ServiceWorker registration failed: ', err);
 			});
-		}).catch(function(error) {
-			console.log('Service Worker error :^(', error);
-		});
+		})
 	}
-}
-
-
+});
 
 
 export const SettingComponent = Vue.component('setting-component', {
 	template: template(),
 	data: function () {
 		return{
-			onGetNotify: function () {
-				SendPushMe()
+			onStart: ()=>{
+
+
+
+			},
+			onStop: ()=>{
+
+
+				console.log('stop')
+
+				navigator.serviceWorker
+					.ready
+					.then(d=>{
+						//console.log(d)
+						//d.unregister()
+
+						navigator.serviceWorker.getRegistrations()
+							.then(function(registrations) {
+								console.log(registrations)
+								//ServiceWorkerRegistration.unregister(registrations)
+
+								for(let registration of registrations) {
+									registration.unregister()
+								} });
+
+					})
+
+			},
+
+			onNotify: function () {
+
+				navigator.serviceWorker.controller.postMessage("Client 1 says ");
+
+
+
+				//SendPushMe()
+				//navigator.serviceWorker.controller.postMessage("Client 1 says ");
+/*
+				navigator.serviceWorker.getRegistrations()
+					.then(function(registrations) {
+						for(let registration of registrations) {
+							registration.unregister()
+						} });*/
+
+
+				setTimeout(function () {
+
+				/*	if ('serviceWorker' in navigator) {
+						navigator.serviceWorker.register('/sw.js').then(function(registration) {
+							// Registration was successful
+							console.log('ServiceWorker registration successful with scope: ', registration.scope);
+						}, function(err) {
+							// registration failed :(
+							console.log('ServiceWorker registration failed: ', err);
+						});
+					};*/
+
+				}, 1000)
+
 			}
 			/*	Notification.requestPermission().then(function(result) {
 					console.log(result);

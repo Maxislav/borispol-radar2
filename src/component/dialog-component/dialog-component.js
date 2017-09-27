@@ -8,7 +8,7 @@ const DialogItemComponent = Vue.component('dialog-item-component', {
 	props:['options'],
 	data: function () {
 
-		console.log(this.options)
+		//console.log(this.options)
 		return {
 
 		}
