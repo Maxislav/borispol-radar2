@@ -3,6 +3,32 @@ import template from './bookmark-component.jade';
 import './bookmark-component.styl';
 
 const BookmarkComponent = Vue.component('bookmark-component',{
-	template: template()
+	template: template(),
+  destroyed: function() {
+
+  },
+	data: function() {
+    const listIco = 	new Vue({
+      data: {
+        src:'img/icons8-xbox-menu.png'
+      }
+    });
+    const data = {
+      listIco,
+      onMenu: function(e) {
+      	e.stopPropagation();
+        this.isMenuShow = !this.isMenuShow
+      },
+      isMenuShow: false
+    };
+    this.documentClick = (e) =>{
+    	e.stopPropagation()
+      if(data.isMenuShow) data.isMenuShow = false
+    };
+    document.addEventListener('click', this.documentClick);
+		return data
+  }
+
+
 });
 export  default BookmarkComponent

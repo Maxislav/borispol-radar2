@@ -14,7 +14,6 @@ export default  Vue.directive('random-background', {
     inserted: function (el, binding){
         let image;
 
-
         const onLoad = (img)=>{
 	        img.style.opacity = 0;
 	        el.appendChild(img);

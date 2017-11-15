@@ -11,5 +11,6 @@ export default {
 	CLOUDS : 'Хмарність',
 	WIND : 'Вітер',
 	RAIN : 'Опады за 3год',
-	SETTING: 'S'
+	SETTING: 'S',
+  EARTH: 'Планета'
 };

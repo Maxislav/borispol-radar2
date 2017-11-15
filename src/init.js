@@ -31,7 +31,7 @@ import {FileUploadComponent} from './component/file-upload-component/file-upload
 import {InfomometrComponent} from './component/infomometr-component/infomometr-component'
 import {ForecastItemComponent} from './component/forecast-item-component/forecast-item-component'
 import {DialogComponent} from './component/dialog-component/dialog-component'
-
+import EarthComponent from './component/earth-component/earth-component'
 import VueResource from 'vue-resource'
 
 Vue.use(VueRouter);
@@ -51,6 +51,7 @@ const routes = [
 	{path: '/android', component: AndroidComponent},
 	{path: '/fileupload', component: FileUploadComponent},
 	{path: '/infomometr', component: InfomometrComponent},
+	{path: '/earth', component: EarthComponent},
 	{
 		path: '/forecast-item/:index',
 		name: 'forecast-item',

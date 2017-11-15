@@ -11,5 +11,6 @@ export default {
 	CLOUDS : 'Облачность',
 	WIND : 'Ветер',
 	RAIN : 'Осадки за 3ч',
-	SETTING: 'S'
+	SETTING: 'S',
+  EARTH: 'Планета'
 };

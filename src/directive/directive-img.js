@@ -4,11 +4,20 @@ import templateLoader from "./loader.jade";
 import './directive-img.styl';
 import {getImage} from '../util/load-image-blob'
 
+function removeStyle(name) {
+  let style = this.getAttribute('style');
+	const rex = new RegExp(name.concat(':\\s+?.+?;'));
+  if(style){
+    style = style.replace(rex, '')
+  }
+  this.setAttribute('style', style)
+}
 
 export default Vue.directive('img', {
     inserted: function (el, binding) {
 
        //console.log(binding.value.$watch);
+
 
 
         const loaderDiv = document.createElement('div');
@@ -54,6 +63,9 @@ export default Vue.directive('img', {
 				        imgLoader.$fadeTo(1, 0, 222)
 					        .then(imgLoader => {
 						        el.removeChild(imgLoader)
+                    removeStyle.call(el, 'position')
+                    removeStyle.call(_imgNeeded, 'position')
+
 					        });
 			        });
 		        isAppend = true

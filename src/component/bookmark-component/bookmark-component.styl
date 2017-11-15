@@ -1,8 +1,8 @@
 @import "../../styl/constant.styl"
 .bookmark-component
   display flex
+  position relative
   background linear-gradient(to bottom, #eaf1ff 0%,#ffffff 20%, #ffffff 100%)
-
   border-bottom 1px solid #eaf1ff
   a
     padding   8px 15px
@@ -22,3 +22,18 @@
     &:hover
       color $color-bookmark-hover
       background-color $color-bookmark-bacggound-hover
+  &>.list-btn
+    position absolute
+    right 3px
+    top 3px
+    display flex
+    align-items center
+    &>.btn>img
+      width 30px
+      height 30px
+  &>.list
+    position absolute
+    right 5px
+    top 100%
+    z-index 5
+    box-shadow 1px 1px 10px rgba(0,0,0,0.4)
