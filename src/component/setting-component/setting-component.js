@@ -2,7 +2,37 @@ import Vue from 'vue';
 import template from './setting-component.pug';
 import './setting-component.styl';
 
-let scope = null
+let scope = null;
+
+let port = null
+
+const onMessage = (e)=>{
+	const mess = e.data;
+	console.log(mess)
+	port = event.ports[0]
+	//event.ports[0].postMessage("SW Says 'Hello back!'")
+};
+
+const postMessage = (text) =>{
+	if(!port){
+		port = navigator.serviceWorker.controller
+		if(port){
+			port.postMessage("SW Says 'Hello back!'")
+		}else {
+			navigator.serviceWorker.ready
+				.then(d=>{
+					port.postMessage("SW Says 'Hello back!'")
+				})
+				.catch(err=>{
+					console.log(err)
+				})
+		}
+
+	}else {
+		port.postMessage("SW Says 'Hello back!'")
+	}
+
+}
 
 window.addEventListener('load', ()=>{
 	if ('serviceWorker' in navigator) {
@@ -10,17 +40,16 @@ window.addEventListener('load', ()=>{
 			for(let registration of registrations) {
 				registration.unregister()
 			}
+
+			/**
+			 * {ServiceWorkerContainer}
+			 */
+			navigator.serviceWorker;
 			navigator.serviceWorker.register('/sw.js').then(function(registration) {
 				// Registration was successful
-				scope = registration.scope
-				console.log('ServiceWorker registration successful with scope: ', registration.scope);
-
-
-				navigator.serviceWorker.addEventListener('message', function(event){
-					console.log(event.data);
-					//event.ports[0].postMessage("Client 1 Says 'Hello back!'");
-				});
-
+				scope = registration.scope;
+				console.log('ServiceWorker registration successful');
+				navigator.serviceWorker.addEventListener('message', onMessage);
 
 			}, function(err) {
 				// registration failed :(
@@ -65,8 +94,8 @@ export const SettingComponent = Vue.component('setting-component', {
 			},
 
 			onNotify: function () {
-
-				navigator.serviceWorker.controller.postMessage("Client 1 says ");
+				postMessage("Client 1 says")
+				//navigator.serviceWorker.controller.postMessage("Client 1 says ");
 
 
 
@@ -80,19 +109,6 @@ export const SettingComponent = Vue.component('setting-component', {
 						} });*/
 
 
-				setTimeout(function () {
-
-				/*	if ('serviceWorker' in navigator) {
-						navigator.serviceWorker.register('/sw.js').then(function(registration) {
-							// Registration was successful
-							console.log('ServiceWorker registration successful with scope: ', registration.scope);
-						}, function(err) {
-							// registration failed :(
-							console.log('ServiceWorker registration failed: ', err);
-						});
-					};*/
-
-				}, 1000)
 
 			}
 			/*	Notification.requestPermission().then(function(result) {
