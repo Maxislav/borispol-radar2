@@ -31,7 +31,7 @@ import {FileUploadComponent} from './component/file-upload-component/file-upload
 import {InfomometrComponent} from './component/infomometr-component/infomometr-component'
 import {ForecastItemComponent} from './component/forecast-item-component/forecast-item-component'
 import {DialogComponent} from './component/dialog-component/dialog-component'
-import EarthComponent from './component/earth-component/earth-component'
+import {EarthComponent} from './component/earth-component/earth-component'
 import VueResource from 'vue-resource'
 
 Vue.use(VueRouter);

@@ -22,11 +22,22 @@ const BookmarkComponent = Vue.component('bookmark-component',{
       isMenuShow: false
     };
     this.documentClick = (e) =>{
-    	e.stopPropagation()
+    	e.stopPropagation();
       if(data.isMenuShow) data.isMenuShow = false
     };
     document.addEventListener('click', this.documentClick);
 		return data
+  }
+  ,
+  computed:{
+    currentLocation() {
+      return this.$route.path
+    },
+  },
+  watch: {
+    currentLocation(newValue) {
+      this.$data.isMenuShow = false
+    }
   }
 
 

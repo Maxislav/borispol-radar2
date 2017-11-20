@@ -47,6 +47,10 @@ module.exports = {
         {
           from:'./src/php',
           to:'./php'
+        },
+        {
+          from: './node_modules/three/build/three.js',
+          to:'./lib'
         }
       ])
   ],
@@ -55,6 +59,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        exclude: /node_modules/,
         query: {
           presets: ['es2015', 'stage-1'],
 	        cacheDirectory: true,
