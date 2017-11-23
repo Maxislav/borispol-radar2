@@ -4,7 +4,7 @@ import './setting-component.styl';
 
 let scope = null;
 
-let port = null
+let port = null;
 
 const onMessage = (e)=>{
 	const mess = e.data;
@@ -48,7 +48,7 @@ window.addEventListener('load', ()=>{
 			navigator.serviceWorker.register('/sw.js').then(function(registration) {
 				// Registration was successful
 				scope = registration.scope;
-				console.log('ServiceWorker registration successful');
+				//console.log('ServiceWorker registration successful');
 				navigator.serviceWorker.addEventListener('message', onMessage);
 
 			}, function(err) {

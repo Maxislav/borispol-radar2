@@ -52,7 +52,8 @@ module.exports = {
           from: './node_modules/three/build/three.js',
           to:'./lib'
         }
-      ])
+      ],{copyUnmodified: true})
+
   ],
   module: {
     loaders: [

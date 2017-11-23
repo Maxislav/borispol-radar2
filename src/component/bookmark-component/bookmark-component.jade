@@ -5,10 +5,11 @@
 	router-link(to='/visible') {{'VISIBLE' | translate}}
 	router-link(to='/meteosat') Meteosat
 	router-link(to='/infomometr') {{'INFOMOMETRS' | translate}}
+	router-link(to='/earth') {{'EARTH' | translate}}
 	router-link.android(to='/android') Android
 	.list-btn
 		.btn(@click="onMenu($event)" v-img='listIco' )
 	.list(@click="$event.stopPropagation()" v-if='isMenuShow')
-		router-link(to='/earth') {{'EARTH' | translate}}
+
 		router-link(to='/fileupload') {{'BACKGROUND_UPLOAD' | translate}}
 		//router-link(to='/setting') {{'SETTING' | translate}}
