@@ -52,6 +52,32 @@ function rotate(pitch, roll, yaw) {
 
 
 
+const materialLoader = (z, x, y) =>{
+
+  const sphereMaterial = new THREE.MeshPhongMaterial({
+    needsUpdate: true,
+    specular: "#ffffff",
+    shininess: 1,
+    //flatShading: true,
+    bumpScale: 0.1
+  });
+
+  sphereMaterial.promise = new Promise((res, rej)=>{
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(`http://c.tile.openstreetmap.org/${z}/${x}/${y}.png`, (texture) =>{
+      sphereMaterial.map = texture
+      sphereMaterial.needsUpdate = true
+      res(sphereMaterial)
+    })
+  })
+
+  return sphereMaterial
+
+
+}
+
+
+
 class EarthView{
   constructor(){
     this.$$el = null;
@@ -75,16 +101,49 @@ class EarthView{
     renderer.setSize(el.clientWidth, el.clientHeight);
     el.appendChild(renderer.domElement);
 
-    const light	= new THREE.SpotLight( 0x888888 )
-    light.position.set( 10, 10, 10 );
-    scene.add( light )
+    const light	= new THREE.SpotLight( 0x888888, 1.2 )
+    light.position.set( 2, 2, 40 );
+    const light2	= new THREE.SpotLight( 0x888888,0.2 )
+    light2.position.set( -20, -10, 10 );
+    scene.add( light );
+    scene.add( light2 );
 
-    const sphereGeometry = new THREE.SphereGeometry(4, 32, 16);
+
+    const zoom = 5;
+
+    const faces =  Math.pow(2, zoom)
+
+    const sphereGeometry = new THREE.SphereGeometry(4, faces, faces);
+
+    const textureLoader = new THREE.TextureLoader()
 
 
     //const sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} )
-    const sphereMaterial = new THREE.MeshPhongMaterial({
-      //map: THREE.ImageUtils.loadTexture('img/three/osm.png', {}, render),
+
+    const sphereMaterial = materialLoader(0 , 0,  0);
+
+    const materials = ((z)=>{
+      const arr = [];
+      const max = Math.pow(2, z);
+      for(let y = 0; y<max; y++){
+        for(let x=0; x<max; x++){
+          arr.push(materialLoader(z, x, y))
+        }
+      }
+      return arr
+    })(zoom);
+
+
+
+    /*Promise.all(
+      materials.map(it=>materialLoader(...it).promise)
+    ).then(m=>{
+      console.log(m)
+    })*/
+    console.log(materials)
+
+    const sphereMaterial2 = new THREE.MeshPhongMaterial({
+      // map: THREE.TextureLoader('src/img/sq.png', {}),
       //map: THREE.ImageUtils.loadTexture('img/three/earth.png', {}, render),
       // map: textureLoader.load('img/three/earth.png', render),
       //bumpMap: textureLoader.load('img/three/earth_bump.png', render),
@@ -92,17 +151,91 @@ class EarthView{
       //specularMap: textureLoader.load('img/three/earth-specular.jpg', render),
       //emissiveMap: textureLoader.load('img/three/earth_night.jpg',  render),
       // emissive : "#aaa",
-      flatShading: true,
+      //morphNormals: true,
+      //flatShading: true,
       specular: "#ffffff",
-      dynamic: true,
       shininess: 50,
       bumpScale: 0.1
     });
 
-    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    textureLoader.load('src/img/sq.png',
+    function(texture1) {
+      sphereMaterial2.map = texture1
+      sphereMaterial2.needsUpdate = true
+      textureLoader.load( 'http://c.tile.openstreetmap.org/0/0/0.png',
+        function ( texture ) {
+          sphereMaterial.map = texture
+          sphereMaterial.needsUpdate = true
+        }
+      )
+    })
+
+    const faceVertexUvs = sphereGeometry.faceVertexUvs[0]
+
+/*
+    faceVertexUvs[4] = [
+      new THREE.Vector2(1, 1),
+      new THREE.Vector2(0, 1),
+      new THREE.Vector2(1, 0)];
+
+    faceVertexUvs[5] = [
+      new THREE.Vector2(0, 1),
+      new THREE.Vector2(0, 0),
+      new THREE.Vector2(1, 0),
+    ];*/
+
+    for (let i = 0; i< sphereGeometry.faces.length; i+=2){
+      faceVertexUvs[i] = [
+        new THREE.Vector2(1, 1),
+        new THREE.Vector2(0, 1),
+        new THREE.Vector2(1, 0)];
+
+      faceVertexUvs[i+1] = [
+        new THREE.Vector2(0, 1),
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(1, 0),
+      ];
+      /*if(i<4){
+        sphereGeometry.faces[i].materialIndex = i
+      }*/
+    }
+   /* sphereGeometry.faces[0].materialIndex = 0
+    sphereGeometry.faces[1].materialIndex = 1
+    sphereGeometry.faces[2].materialIndex = 2
+    sphereGeometry.faces[3].materialIndex = 3*/
+
+    let k = faces
+    for(let i = faces; i<sphereGeometry.faces.length; i+=2){
+      sphereGeometry.faces[i+1].materialIndex = k;
+      sphereGeometry.faces[i].materialIndex = k;
+      k++
+    }
+
+/*
+
+    sphereGeometry.faces[4].materialIndex = 4
+    sphereGeometry.faces[5].materialIndex = 4
+    sphereGeometry.faces[6].materialIndex = 5
+    sphereGeometry.faces[7].materialIndex = 5
+*/
+
+
+
+console.log(sphereGeometry.faces)
+    //console.log(THREE.SceneUtils.createMultiMaterialObject(sphereGeometry, [sphereMaterial, sphereMaterial2]))
+    /*for(var i = 0; i <  sphereGeometry.faces.length; i++) {
+        sphereGeometry.faces[i].materialIndex = i
+      //sphereGeometry.faces[i].materialIndex = i
+
+    }*/
+
+    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, materials);
+
     rEarthMesh.position.x = 0;
     rEarthMesh.position.y = 0;
     rEarthMesh.position.z = 0;
+
+
 
     scene.add(rEarthMesh)
     scene.add(light)
@@ -159,15 +292,23 @@ class EarthView{
     this.$$el.removeEventListener('mousemove', this.mousmove)
   }
 
+  @autobind
+  onweel(e){
+    this.camera.position.z = this.camera.position.z+=(e.deltaY*.1)
+  }
+
   bindEvents(){
       this.$$el.addEventListener('mousedown', this.mousedown)
       this.$$el.addEventListener('mouseup', this.mouseup)
+      this.$$el.addEventListener("wheel", this.onweel);
+
   }
 
   unbindEvents(){
     this.$$el.removeEventListener('mousedown', this.mousedown)
     this.$$el.removeEventListener('mouseup', this.mouseup)
     this.$$el.removeEventListener('mousemove', this.mousmove)
+    this.$$el.removeEventListener("wheel", this.onweel);
   }
 
   destroy(){
