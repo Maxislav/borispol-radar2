@@ -14,46 +14,35 @@ function evalInContext(js, context) {
 
 let THREE = undefined;
 
-function rotate(pitch, roll, yaw) {
-  var cosa = Math.cos(yaw);
-  var sina = Math.sin(yaw);
-
-  var cosb = Math.cos(pitch);
-  var sinb = Math.sin(pitch);
-
-  var cosc = Math.cos(roll);
-  var sinc = Math.sin(roll);
-
-  var Axx = cosa*cosb;
-  var Axy = cosa*sinb*sinc - sina*cosc;
-  var Axz = cosa*sinb*cosc + sina*sinc;
-
-  var Ayx = sina*cosb;
-  var Ayy = sina*sinb*sinc + cosa*cosc;
-  var Ayz = sina*sinb*cosc - cosa*sinc;
-
-  var Azx = -sinb;
-  var Azy = cosb*sinc;
-  var Azz = cosb*cosc;
-
-  const points = [this]
-
-  for (var i = 0; i < points.length; i++) {
-    var px = points[i].x;
-    var py = points[i].y;
-    var pz = points[i].z;
-
-    points[i].x = Axx*px + Axy*py + Axz*pz;
-    points[i].y = Ayx*px + Ayy*py + Ayz*pz;
-    points[i].z = Azx*px + Azy*py + Azz*pz;
-  }
-  return points
-}
 
 
+const cloudsMaterialLoader = (z, x, y) =>{
+  const sphereMaterial = new THREE.MeshPhongMaterial({
+    needsUpdate: true,
+    specular: "#ffffff",
+    color: 0xffffff,
+    shininess: 1,
+    transparent: true,
+    opacity: 0.6,
+    //flatShading: true,
+    bumpScale: 0.1
+  });
 
-const materialLoader = (z, x, y) =>{
+  sphereMaterial.promise = new Promise((res, rej)=>{
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(`https://d.maps.owm.io/map/clouds_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`, (texture) =>{
+      //sphereMaterial.alphaMap = texture;
+      sphereMaterial.map = texture;
+      sphereMaterial.emissiveMap = texture;
+      sphereMaterial.emissiveIntensity = 5;
+      sphereMaterial.needsUpdate = true;
+      res(sphereMaterial)
+    })
+  })
+  return sphereMaterial
+};
 
+const groundMaterialLoader = (z, x, y) =>{
   const sphereMaterial = new THREE.MeshPhongMaterial({
     needsUpdate: true,
     specular: "#ffffff",
@@ -64,17 +53,15 @@ const materialLoader = (z, x, y) =>{
 
   sphereMaterial.promise = new Promise((res, rej)=>{
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load(`http://c.tile.openstreetmap.org/${z}/${x}/${y}.png`, (texture) =>{
-      sphereMaterial.map = texture
-      sphereMaterial.needsUpdate = true
+    //textureLoader.load(`http://c.tile.openstreetmap.org/${z}/${x}/${y}.png`, (texture) =>{
+    textureLoader.load(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY"`, (texture) =>{
+      sphereMaterial.map = texture;
+      sphereMaterial.needsUpdate = true;
       res(sphereMaterial)
     })
   })
-
   return sphereMaterial
-
-
-}
+};
 
 
 
@@ -93,6 +80,7 @@ class EarthView{
    * @param {Element} el
    */
   init(el){
+    this.isDestroyed = false
     this.$$el = el;
     const scene = new THREE.Scene();
     const camera = this.camera =  new THREE.PerspectiveCamera(12, el.clientWidth / el.clientHeight, 0.1, 1000);
@@ -115,75 +103,36 @@ class EarthView{
 
     const sphereGeometry = new THREE.SphereGeometry(4, faces, faces);
 
+
+
     const textureLoader = new THREE.TextureLoader()
 
-
-    //const sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} )
-
-    const sphereMaterial = materialLoader(0 , 0,  0);
-
-    const materials = ((z)=>{
+    const groundMaterials = ((z)=>{
       const arr = [];
       const max = Math.pow(2, z);
       for(let y = 0; y<max; y++){
         for(let x=0; x<max; x++){
-          arr.push(materialLoader(z, x, y))
+          arr.push(groundMaterialLoader(z, x, y))
+        }
+      }
+      return arr
+    })(zoom);
+
+    const cloudsMaterials = ((z)=>{
+      const arr = [];
+      const max = Math.pow(2, z);
+      for(let y = 0; y<max; y++){
+        for(let x=0; x<max; x++){
+          arr.push(cloudsMaterialLoader(z, x, y))
         }
       }
       return arr
     })(zoom);
 
 
-
-    /*Promise.all(
-      materials.map(it=>materialLoader(...it).promise)
-    ).then(m=>{
-      console.log(m)
-    })*/
-    console.log(materials)
-
-    const sphereMaterial2 = new THREE.MeshPhongMaterial({
-      // map: THREE.TextureLoader('src/img/sq.png', {}),
-      //map: THREE.ImageUtils.loadTexture('img/three/earth.png', {}, render),
-      // map: textureLoader.load('img/three/earth.png', render),
-      //bumpMap: textureLoader.load('img/three/earth_bump.png', render),
-      needsUpdate: true,
-      //specularMap: textureLoader.load('img/three/earth-specular.jpg', render),
-      //emissiveMap: textureLoader.load('img/three/earth_night.jpg',  render),
-      // emissive : "#aaa",
-      //morphNormals: true,
-      //flatShading: true,
-      specular: "#ffffff",
-      shininess: 50,
-      bumpScale: 0.1
-    });
-
-    textureLoader.load('src/img/sq.png',
-    function(texture1) {
-      sphereMaterial2.map = texture1
-      sphereMaterial2.needsUpdate = true
-      textureLoader.load( 'http://c.tile.openstreetmap.org/0/0/0.png',
-        function ( texture ) {
-          sphereMaterial.map = texture
-          sphereMaterial.needsUpdate = true
-        }
-      )
-    })
+    console.log(groundMaterials)
 
     const faceVertexUvs = sphereGeometry.faceVertexUvs[0]
-
-/*
-    faceVertexUvs[4] = [
-      new THREE.Vector2(1, 1),
-      new THREE.Vector2(0, 1),
-      new THREE.Vector2(1, 0)];
-
-    faceVertexUvs[5] = [
-      new THREE.Vector2(0, 1),
-      new THREE.Vector2(0, 0),
-      new THREE.Vector2(1, 0),
-    ];*/
-
     for (let i = 0; i< sphereGeometry.faces.length; i+=2){
       faceVertexUvs[i] = [
         new THREE.Vector2(1, 1),
@@ -211,17 +160,11 @@ class EarthView{
       k++
     }
 
-/*
-
-    sphereGeometry.faces[4].materialIndex = 4
-    sphereGeometry.faces[5].materialIndex = 4
-    sphereGeometry.faces[6].materialIndex = 5
-    sphereGeometry.faces[7].materialIndex = 5
-*/
 
 
 
-console.log(sphereGeometry.faces)
+
+    console.log(sphereGeometry.faces)
     //console.log(THREE.SceneUtils.createMultiMaterialObject(sphereGeometry, [sphereMaterial, sphereMaterial2]))
     /*for(var i = 0; i <  sphereGeometry.faces.length; i++) {
         sphereGeometry.faces[i].materialIndex = i
@@ -229,7 +172,14 @@ console.log(sphereGeometry.faces)
 
     }*/
 
-    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, materials);
+    const cloudsGeometry = sphereGeometry.clone()
+
+    console.log(cloudsGeometry)
+
+
+    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, groundMaterials);
+    const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
+    cloudsMesh.radius = 5
 
     rEarthMesh.position.x = 0;
     rEarthMesh.position.y = 0;
@@ -238,6 +188,7 @@ console.log(sphereGeometry.faces)
 
 
     scene.add(rEarthMesh)
+    scene.add(cloudsMesh)
     scene.add(light)
     camera.lookAt(rEarthMesh.position);
     camera.position.z = this.$$cameraDist;
@@ -255,10 +206,20 @@ console.log(sphereGeometry.faces)
   @autobind
   mousmove(e){
 
+
+
     const dx = this.tx ? e.clientX - this.tx : 0
     const dy = this.ty ? e.clientY - this.ty : 0
-    this.rEarthMesh.rotation.y+=(dx*.005)
-    this.rEarthMesh.rotation.x+=(dy*.005)
+
+    //let dy = (e.deltaY*0.001);
+    const k = this.camera.position.z - 4;
+
+
+    this.rEarthMesh.rotation.y+=(dx*.0002*k)
+    this.rEarthMesh.rotation.x+=(dy*.0002*k)
+
+    this.cloudsMesh.rotation.y+=(dx*.0002*k)
+    this.cloudsMesh.rotation.x+=(dy*.0002*k)
 
     this.tx = e.clientX
     this.ty = e.clientY
@@ -294,7 +255,14 @@ console.log(sphereGeometry.faces)
 
   @autobind
   onweel(e){
-    this.camera.position.z = this.camera.position.z+=(e.deltaY*.1)
+
+    //console.log(this.$$cameraDist - this.camera.position.z+1)
+
+    let dy = (e.deltaY*0.002);
+    const k = this.camera.position.z - 4;
+    this.camera.position.z = this.camera.position.z+(dy*k)
+
+
   }
 
   bindEvents(){
