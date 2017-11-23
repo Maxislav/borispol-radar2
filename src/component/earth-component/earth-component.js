@@ -4,6 +4,7 @@
 import Vue from 'vue';
 import template from './earth-component.pug';
 import './earth-component.styl'
+import {autobind} from "core-decorators";
 
 function evalInContext(js, context) {
   return function () {
@@ -13,61 +14,171 @@ function evalInContext(js, context) {
 
 let THREE = undefined;
 
-/**
- *
- * @param {Element} el
- */
-const init = (el) =>{
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(12, el.clientWidth / el.clientHeight, 0.1, 1000);
-  var renderer = new THREE.WebGLRenderer({antialias: true});
-  renderer.setClearColor('#000');
-  renderer.setSize(el.clientWidth, el.clientHeight);
-  el.appendChild(renderer.domElement);
+function rotate(pitch, roll, yaw) {
+  var cosa = Math.cos(yaw);
+  var sina = Math.sin(yaw);
 
-  var light	= new THREE.SpotLight( 0x888888 )
-  light.position.set( 10, 10, 10 );
-  scene.add( light )
+  var cosb = Math.cos(pitch);
+  var sinb = Math.sin(pitch);
 
-  var sphereGeometry = new THREE.SphereGeometry(4, 32, 16);
+  var cosc = Math.cos(roll);
+  var sinc = Math.sin(roll);
 
+  var Axx = cosa*cosb;
+  var Axy = cosa*sinb*sinc - sina*cosc;
+  var Axz = cosa*sinb*cosc + sina*sinc;
 
-  //var sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} )
-  var sphereMaterial = new THREE.MeshPhongMaterial({
-    //map: THREE.ImageUtils.loadTexture('img/three/osm.png', {}, render),
-    //map: THREE.ImageUtils.loadTexture('img/three/earth.png', {}, render),
-    // map: textureLoader.load('img/three/earth.png', render),
-    //bumpMap: textureLoader.load('img/three/earth_bump.png', render),
-    needsUpdate: true,
-    //specularMap: textureLoader.load('img/three/earth-specular.jpg', render),
-    //emissiveMap: textureLoader.load('img/three/earth_night.jpg',  render),
-   // emissive : "#aaa",
-    flatShading: true,
-    specular: "#ffffff",
-    dynamic: true,
-    shininess: 50,
-    bumpScale: 0.1
-  });
+  var Ayx = sina*cosb;
+  var Ayy = sina*sinb*sinc + cosa*cosc;
+  var Ayz = sina*sinb*cosc - cosa*sinc;
 
-  var rEarthMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-  rEarthMesh.position.x = 0;
-  rEarthMesh.position.y = 0;
-  rEarthMesh.position.z = 0;
+  var Azx = -sinb;
+  var Azy = cosb*sinc;
+  var Azz = cosb*cosc;
 
-  scene.add(rEarthMesh)
-  scene.add(light)
+  const points = [this]
 
-  camera.lookAt(rEarthMesh.position);
-  camera.position.z = 50
+  for (var i = 0; i < points.length; i++) {
+    var px = points[i].x;
+    var py = points[i].y;
+    var pz = points[i].z;
 
-  setTimeout(()=>{
-    renderer.render(scene, camera);
-  }, 200)
-
-
-
-
+    points[i].x = Axx*px + Axy*py + Axz*pz;
+    points[i].y = Ayx*px + Ayy*py + Ayz*pz;
+    points[i].z = Azx*px + Azy*py + Azz*pz;
+  }
+  return points
 }
+
+
+
+class EarthView{
+  constructor(){
+    this.$$el = null;
+    this.$$rx = 0;
+    this.$$ry = 0;
+    this.$$ay = 0; this.tempAy = 0;
+    this.$$ax = 0; this.tempAx = 0;
+    this.$$cameraDist  = 50;
+    this.isDestroyed = false
+  }
+
+  /**
+   * @param {Element} el
+   */
+  init(el){
+    this.$$el = el;
+    const scene = new THREE.Scene();
+    const camera = this.camera =  new THREE.PerspectiveCamera(12, el.clientWidth / el.clientHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setClearColor('#000');
+    renderer.setSize(el.clientWidth, el.clientHeight);
+    el.appendChild(renderer.domElement);
+
+    const light	= new THREE.SpotLight( 0x888888 )
+    light.position.set( 10, 10, 10 );
+    scene.add( light )
+
+    const sphereGeometry = new THREE.SphereGeometry(4, 32, 16);
+
+
+    //const sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} )
+    const sphereMaterial = new THREE.MeshPhongMaterial({
+      //map: THREE.ImageUtils.loadTexture('img/three/osm.png', {}, render),
+      //map: THREE.ImageUtils.loadTexture('img/three/earth.png', {}, render),
+      // map: textureLoader.load('img/three/earth.png', render),
+      //bumpMap: textureLoader.load('img/three/earth_bump.png', render),
+      needsUpdate: true,
+      //specularMap: textureLoader.load('img/three/earth-specular.jpg', render),
+      //emissiveMap: textureLoader.load('img/three/earth_night.jpg',  render),
+      // emissive : "#aaa",
+      flatShading: true,
+      specular: "#ffffff",
+      dynamic: true,
+      shininess: 50,
+      bumpScale: 0.1
+    });
+
+    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    rEarthMesh.position.x = 0;
+    rEarthMesh.position.y = 0;
+    rEarthMesh.position.z = 0;
+
+    scene.add(rEarthMesh)
+    scene.add(light)
+    camera.lookAt(rEarthMesh.position);
+    camera.position.z = this.$$cameraDist;
+
+    const anima = () => {
+      renderer.render(scene, camera);
+      if(!this.isDestroyed)
+        requestAnimationFrame(anima);
+    }
+    anima()
+    this.bindEvents();
+    return this;
+  }
+
+  @autobind
+  mousmove(e){
+
+    const dx = this.tx ? e.clientX - this.tx : 0
+    const dy = this.ty ? e.clientY - this.ty : 0
+    this.rEarthMesh.rotation.y+=(dx*.005)
+    this.rEarthMesh.rotation.x+=(dy*.005)
+
+    this.tx = e.clientX
+    this.ty = e.clientY
+
+    /*const dx = this.$$rx - e.clientX ;
+    const dy =  e.clientY - this.$$ry;
+    this.$$ax = this.tempAx + dy;
+    this.$$ay = this.tempAy + dx;
+    const ayRad = Math.radians(this.$$ay)
+    const axRad = Math.radians(this.$$ax)
+
+    this.camera.position.x = this.$$cameraDist*Math.sin(ayRad)
+    this.camera.position.z = this.$$cameraDist*Math.cos(ayRad);
+    this.camera.position.y = this.$$cameraDist*Math.sin(axRad)
+
+    this.camera.position.z = this.$$cameraDist*Math.cos(axRad) -(this.$$cameraDist - this.camera.position.z);
+    this.camera.lookAt(this.rEarthMesh.position);
+    console.log(axRad)*/
+
+  }
+
+  @autobind
+  mousedown(e){
+    this.tx = 0
+    this.ty = 0
+    this.$$el.removeEventListener('mousemove', this.mousmove);
+    this.$$el.addEventListener('mousemove', this.mousmove)
+  }
+  @autobind
+  mouseup(e){
+    this.$$el.removeEventListener('mousemove', this.mousmove)
+  }
+
+  bindEvents(){
+      this.$$el.addEventListener('mousedown', this.mousedown)
+      this.$$el.addEventListener('mouseup', this.mouseup)
+  }
+
+  unbindEvents(){
+    this.$$el.removeEventListener('mousedown', this.mousedown)
+    this.$$el.removeEventListener('mouseup', this.mouseup)
+    this.$$el.removeEventListener('mousemove', this.mousmove)
+  }
+
+  destroy(){
+    this.unbindEvents()
+    this.isDestroyed = true
+  }
+}
+
+const earthView = new EarthView()
+
+
 
 
 
@@ -91,16 +202,18 @@ export const EarthComponent = Vue.component('android-component', {
             const module = {}
             evalInContext(`(function(global) {let module; ` +text+ `;}).call(this)`, module)
             THREE = module.THREE;
-            init(this.$el)
+            earthView.init(this.$el)
           };
           reader.readAsText(d.data);
         })
     }else {
-      init(this.$el)
+      earthView.init(this.$el)
     }
 
   },
-
-
+  beforeDestroy: function() {
+    console.log(this.$el)
+    earthView.destroy()
+  }
 
 });
