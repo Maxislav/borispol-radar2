@@ -23,14 +23,17 @@ const cloudsMaterialLoader = (z, x, y) =>{
     color: 0xffffff,
     shininess: 1,
     transparent: true,
-    opacity: 0.6,
+    opacity: 1.2,
+    reflectivity: 10,
     //flatShading: true,
     bumpScale: 0.1
   });
 
   sphereMaterial.promise = new Promise((res, rej)=>{
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load(`https://d.maps.owm.io/map/clouds_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`, (texture) =>{
+    //textureLoader.load(`https://d.maps.owm.io/map/clouds_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`, (texture) =>{
+    //textureLoader.load(`https://g.maps.owm.io/map/temp_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`, (texture) =>{
+    textureLoader.load(`https://f.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`, (texture) =>{
       //sphereMaterial.alphaMap = texture;
       sphereMaterial.map = texture;
       sphereMaterial.emissiveMap = texture;
@@ -51,11 +54,14 @@ const groundMaterialLoader = (z, x, y) =>{
     bumpScale: 0.1
   });
 
+
   sphereMaterial.promise = new Promise((res, rej)=>{
     const textureLoader = new THREE.TextureLoader();
-    //textureLoader.load(`http://c.tile.openstreetmap.org/${z}/${x}/${y}.png`, (texture) =>{
-    textureLoader.load(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY"`, (texture) =>{
+    textureLoader.load(`http://c.tile.openstreetmap.org/${z}/${x}/${y}.png`, (texture) =>{
+    //textureLoader.load(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY"`, (texture) =>{
+    //textureLoader.load(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY"`, (texture) =>{
       sphereMaterial.map = texture;
+      sphereMaterial.emissiveMap = texture
       sphereMaterial.needsUpdate = true;
       res(sphereMaterial)
     })
@@ -118,6 +124,8 @@ class EarthView{
       return arr
     })(zoom);
 
+
+
     const cloudsMaterials = ((z)=>{
       const arr = [];
       const max = Math.pow(2, z);
@@ -128,6 +136,7 @@ class EarthView{
       }
       return arr
     })(zoom);
+
 
 
     console.log(groundMaterials)
