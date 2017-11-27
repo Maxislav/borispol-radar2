@@ -1,4 +1,5 @@
 const images = {};
+import {Deferred} from './deferred'
 class MyImage extends window.Image{
 	toCanvas(w, h, w1, h1, x, y){
 		const canvas =  document.createElement('canvas');
@@ -40,17 +41,12 @@ function loadPromise(url) {
 		xhr.onerror = function (e) {
 			reject(e);
 		};
-
 		xhr.onload = function () {
 			if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
 				const imgData = xhr.response;
-
 				const img = new Image();
-
 				const blob = new window.Blob([new Uint8Array(imgData)], {type: 'image/png'});
-
 				img.onload = function () {
-
 					(window.URL || window.webkitURL).revokeObjectURL(img.src);
 					resolve(img);
 				};
@@ -63,6 +59,10 @@ function loadPromise(url) {
 	});
 }
 
+let worker;
+const workerDeferred = {}
+const workerList = []
+
 export function getImage(url, cache) {
 	if(cache){
 		if(!images[url]){
@@ -72,4 +72,58 @@ export function getImage(url, cache) {
 	}else{
 		return loadPromise(url)
 	}
+}
+
+
+
+
+export function getImageWorker(url) {
+
+  workerDeferred[url] = new Deferred();
+  workerList.push(url)
+	if(!worker){
+		worker = new Worker('src/util/load-image.worker.js')
+		worker.onmessage = ({data}) =>{
+      if(workerDeferred[data.name] && workerDeferred[data.name].status == 0){
+
+			const imgData = data.data
+        const img = new Image();
+        const blob = new window.Blob([new Uint8Array(imgData)], {type: 'image/png'});
+        img.onload = function () {
+          (window.URL || window.webkitURL).revokeObjectURL(img.src);
+          //resolve(img);
+          workerDeferred[data.name].resolve(img)
+          workerList.splice(0,1)
+					if(workerList.length){
+          	post(workerList[0])
+					}
+
+
+        };
+        img.src = (window.URL || window.webkitURL).createObjectURL(blob);
+
+        //workerDeferred[data.name].resolve(data.data)
+			}else {
+      	console.error('Rrr workerDeferred->')
+        workerDeferred[data.name].reject()
+			}
+		}
+	}
+
+	function post(url) {
+    worker.postMessage({
+      name: url,
+      data: url
+    });
+  }
+  if(workerList.length == 1){
+    post(workerList[0])
+	}
+
+
+
+
+
+
+	return workerDeferred[url].promise
 }

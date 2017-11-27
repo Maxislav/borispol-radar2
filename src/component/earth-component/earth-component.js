@@ -5,6 +5,10 @@ import Vue from 'vue';
 import template from './earth-component.pug';
 import './earth-component.styl'
 import {autobind} from "core-decorators";
+import {$Worker} from '../../util/worker'
+import {getImageWorker} from  '../../util/load-image-blob'
+
+import defineload from '../../util/defineload'
 
 function evalInContext(js, context) {
   return function () {
@@ -13,6 +17,8 @@ function evalInContext(js, context) {
 }
 
 let THREE = undefined;
+
+
 
 
 
@@ -25,7 +31,9 @@ const cloudsMaterialLoader = (z, x, y) =>{
     transparent: true,
     opacity: 1.2,
     reflectivity: 10,
-    //flatShading: true,
+
+
+   // flatShading: true,
     bumpScale: 0.1
   });
 
@@ -51,23 +59,118 @@ const groundMaterialLoader = (z, x, y) =>{
     specular: "#ffffff",
     shininess: 1,
     //flatShading: true,
+    //wireframe: true,
     bumpScale: 0.1
   });
+  sphereMaterial.needsUpdate = true;
+
+
+
+
 
 
   sphereMaterial.promise = new Promise((res, rej)=>{
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.load(`http://c.tile.openstreetmap.org/${z}/${x}/${y}.png`, (texture) =>{
-    //textureLoader.load(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY"`, (texture) =>{
+   /* getImageWorker(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`)
+      .then(img=>{
+        const texture = new THREE.Texture(img)
+        sphereMaterial.map = texture;
+        sphereMaterial.emissiveMap = texture
+        sphereMaterial.needsUpdate = true;
+        texture.needsUpdate = true;
+        res(sphereMaterial)
+      })*/
+
+
+   const canvas = document.createElement('canvas')
+
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d')
+    ctx.fillStyle = "green";
+    ctx.fillRect(125/2, 125/2, 125, 125);
+    ctx.strokeStyle="blue";
+    ctx.rect(0,0,256,256);
+
+
+
+
+    ctx.fillStyle = "red";
+    ctx.stroke();
+    ctx.font = "20px Arial";
+    ctx.fillText(`x=${x}; y=${y}`,65, 110);
+
+    let lng = x * 360/Math.pow(2, z);
+    let lat = 90 - (y+2)*180/(Math.pow(2, z)+2)
+    if(180<lng){
+      lng = lng - 360
+    }
+
+    ctx.fillText(`lng=${lng};`,10,220);
+    ctx.fillText(`lat=${lat};`,10,240);
+
+
+    const img = new Image();
+    //const blob = new window.Blob([ctx.getImageData(0,0,256, 256).data], {type: 'image/png'});
+    img.onload = function () {
+      (window.URL || window.webkitURL).revokeObjectURL(img.src);
+      //resolve(img);
+
+      const texture = new THREE.Texture(img)
+      sphereMaterial.map = texture;
+      sphereMaterial.emissiveMap = texture
+      sphereMaterial.needsUpdate = true;
+      texture.needsUpdate = true;
+      res(sphereMaterial)
+
+    };
+    img.src = canvas.toDataURL("image/png")
+
+
+
+
+
+
+    /*const textureLoader = new THREE.TextureLoader();
+   // textureLoader.load(`http://c.tile.openstreetmap.org/${z}/${x}/${y}.png`, (texture) =>{
+    textureLoader.load(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY"`, (texture) =>{
     //textureLoader.load(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY"`, (texture) =>{
       sphereMaterial.map = texture;
       sphereMaterial.emissiveMap = texture
       sphereMaterial.needsUpdate = true;
       res(sphereMaterial)
-    })
+    })*/
   })
   return sphereMaterial
 };
+
+
+const facesIndexed = (sphereGeometry, faces) =>{
+  let k = 1;
+  for(let i = 0 ; i<sphereGeometry.faces.length; i++ ){
+    if(faces-1<i && i<sphereGeometry.faces.length-faces){
+      sphereGeometry.faces[i].materialIndex = k
+      if(i%2){
+        k++
+      }
+    }
+  }
+
+  const faceVertexUvs = sphereGeometry.faceVertexUvs[0]
+  for (let i = 0; i< sphereGeometry.faces.length; i+=2){
+    if(faces-1<i && i<sphereGeometry.faces.length-faces){
+      faceVertexUvs[i] = [
+        new THREE.Vector2(1, 1),
+        new THREE.Vector2(0, 1),
+        new THREE.Vector2(1, 0)];
+
+      faceVertexUvs[i+1] = [
+        new THREE.Vector2(0, 1),
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(1, 0),
+      ];
+    }
+  }
+}
 
 
 
@@ -78,7 +181,8 @@ class EarthView{
     this.$$ry = 0;
     this.$$ay = 0; this.tempAy = 0;
     this.$$ax = 0; this.tempAx = 0;
-    this.$$cameraDist  = 50;
+    this.$$cameraDist  = 40;
+
     this.isDestroyed = false
   }
 
@@ -86,11 +190,16 @@ class EarthView{
    * @param {Element} el
    */
   init(el){
+
+
+
+
     this.isDestroyed = false
     this.$$el = el;
-    const scene = new THREE.Scene();
+    const scene =this.scene =  new THREE.Scene();
+
     const camera = this.camera =  new THREE.PerspectiveCamera(12, el.clientWidth / el.clientHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({antialias: true});
+    const renderer = this.renderer =  new THREE.WebGLRenderer({antialias: true});
     renderer.setClearColor('#000');
     renderer.setSize(el.clientWidth, el.clientHeight);
     el.appendChild(renderer.domElement);
@@ -107,12 +216,20 @@ class EarthView{
 
     const faces =  Math.pow(2, zoom)
 
-    const sphereGeometry = new THREE.SphereGeometry(4, faces, faces);
+    const sphereGeometry = new THREE.SphereGeometry(4, faces, faces+2);
+    const cloudsGeometry = new THREE.SphereGeometry(4.1, faces, faces);
+
+    const holeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 
 
+
+
+    facesIndexed(sphereGeometry, faces)
+    facesIndexed(cloudsGeometry, faces)
 
     const textureLoader = new THREE.TextureLoader()
 
+    console.log(faces)
     const groundMaterials = ((z)=>{
       const arr = [];
       const max = Math.pow(2, z);
@@ -123,6 +240,7 @@ class EarthView{
       }
       return arr
     })(zoom);
+
 
 
 
@@ -139,61 +257,31 @@ class EarthView{
 
 
 
-    console.log(groundMaterials)
-
-    const faceVertexUvs = sphereGeometry.faceVertexUvs[0]
-    for (let i = 0; i< sphereGeometry.faces.length; i+=2){
-      faceVertexUvs[i] = [
-        new THREE.Vector2(1, 1),
-        new THREE.Vector2(0, 1),
-        new THREE.Vector2(1, 0)];
-
-      faceVertexUvs[i+1] = [
-        new THREE.Vector2(0, 1),
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(1, 0),
-      ];
-      /*if(i<4){
-        sphereGeometry.faces[i].materialIndex = i
-      }*/
-    }
-   /* sphereGeometry.faces[0].materialIndex = 0
-    sphereGeometry.faces[1].materialIndex = 1
-    sphereGeometry.faces[2].materialIndex = 2
-    sphereGeometry.faces[3].materialIndex = 3*/
-
-    let k = faces
-    for(let i = faces; i<sphereGeometry.faces.length; i+=2){
-      sphereGeometry.faces[i+1].materialIndex = k;
-      sphereGeometry.faces[i].materialIndex = k;
-      k++
-    }
 
 
+    const materials = []
+    materials.push(holeMaterial)
+
+    groundMaterials.unshift(holeMaterial);
+    groundMaterials.push(holeMaterial);
+
+    cloudsMaterials.unshift(holeMaterial)
+    cloudsMaterials.push(holeMaterial)
+
+    const halfIndex = sphereGeometry.faces.length/2 - (faces*2)
+    sphereGeometry.faces[halfIndex].materialIndex =  0
+    sphereGeometry.faces[halfIndex+1].materialIndex =  0
 
 
-
-    console.log(sphereGeometry.faces)
-    //console.log(THREE.SceneUtils.createMultiMaterialObject(sphereGeometry, [sphereMaterial, sphereMaterial2]))
-    /*for(var i = 0; i <  sphereGeometry.faces.length; i++) {
-        sphereGeometry.faces[i].materialIndex = i
-      //sphereGeometry.faces[i].materialIndex = i
-
-    }*/
-
-    const cloudsGeometry = sphereGeometry.clone()
-
-    console.log(cloudsGeometry)
-
+    console.log(sphereGeometry.faces[halfIndex])
 
     const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, groundMaterials);
     const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
-    cloudsMesh.radius = 5
+
 
     rEarthMesh.position.x = 0;
     rEarthMesh.position.y = 0;
     rEarthMesh.position.z = 0;
-
 
 
     scene.add(rEarthMesh)
@@ -208,8 +296,17 @@ class EarthView{
         requestAnimationFrame(anima);
     }
     anima()
+    //this.render()
     this.bindEvents();
     return this;
+  }
+  @autobind
+  render(){
+    requestAnimationFrame(()=>{
+      this.renderer.render(this.scene, this.camera);
+    })
+
+
   }
 
   @autobind
@@ -230,6 +327,7 @@ class EarthView{
     this.cloudsMesh.rotation.y+=(dx*.0002*k)
     this.cloudsMesh.rotation.x+=(dy*.0002*k)
 
+
     this.tx = e.clientX
     this.ty = e.clientY
 
@@ -247,6 +345,7 @@ class EarthView{
     this.camera.position.z = this.$$cameraDist*Math.cos(axRad) -(this.$$cameraDist - this.camera.position.z);
     this.camera.lookAt(this.rEarthMesh.position);
     console.log(axRad)*/
+    this.render()
 
   }
 
@@ -271,7 +370,7 @@ class EarthView{
     const k = this.camera.position.z - 4;
     this.camera.position.z = this.camera.position.z+(dy*k)
 
-
+    this.render()
   }
 
   bindEvents(){
@@ -298,8 +397,8 @@ const earthView = new EarthView()
 
 
 
-
-
+/*
+*/
 
 
 
@@ -309,25 +408,11 @@ export const EarthComponent = Vue.component('android-component', {
     return {}
   },
   mounted: function(e) {
-    console.log(this.$el)
-    if(!THREE){
-      this.$http.get('./lib/three.js')
-        .then(d=>{
-          const reader = new FileReader();
-          reader.onload = () => {
-            //console.log(reader.result);
-            const text = reader.result;
-            const module = {}
-            evalInContext(`(function(global) {let module; ` +text+ `;}).call(this)`, module)
-            THREE = module.THREE;
-            earthView.init(this.$el)
-          };
-          reader.readAsText(d.data);
-        })
-    }else {
-      earthView.init(this.$el)
-    }
-
+      defineload('THREE')
+        .then(t=>{
+          THREE = t
+          earthView.init(this.$el)
+        });
   },
   beforeDestroy: function() {
     console.log(this.$el)
