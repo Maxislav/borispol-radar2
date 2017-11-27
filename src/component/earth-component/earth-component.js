@@ -23,6 +23,7 @@ let THREE = undefined;
 
 
 const cloudsMaterialLoader = (z, x, y) =>{
+  debugger
   const sphereMaterial = new THREE.MeshPhongMaterial({
     needsUpdate: true,
     specular: "#ffffff",
@@ -144,20 +145,20 @@ const groundMaterialLoader = (z, x, y) =>{
 };
 
 
-const facesIndexed = (sphereGeometry, faces) =>{
+const facesIndexed = (geometry, facesCount) =>{
   let k = 1;
-  for(let i = 0 ; i<sphereGeometry.faces.length; i++ ){
-    if(faces-1<i && i<sphereGeometry.faces.length-faces){
-      sphereGeometry.faces[i].materialIndex = k
+  for(let i = 0 ; i<geometry.faces.length; i++ ){
+    if(facesCount-1<i && i<geometry.faces.length-facesCount){
+      geometry.faces[i].materialIndex = k
       if(i%2){
         k++
       }
     }
   }
 
-  const faceVertexUvs = sphereGeometry.faceVertexUvs[0]
-  for (let i = 0; i< sphereGeometry.faces.length; i+=2){
-    if(faces-1<i && i<sphereGeometry.faces.length-faces){
+  const faceVertexUvs = geometry.faceVertexUvs[0]
+  for (let i = 0; i< geometry.faces.length; i+=2){
+    if(facesCount-1<i && i<geometry.faces.length-facesCount){
       faceVertexUvs[i] = [
         new THREE.Vector2(1, 1),
         new THREE.Vector2(0, 1),
@@ -182,6 +183,8 @@ class EarthView{
     this.$$ay = 0; this.tempAy = 0;
     this.$$ax = 0; this.tempAx = 0;
     this.$$cameraDist  = 40;
+
+    this.rotationMeshList = [];
 
     this.isDestroyed = false
   }
@@ -218,16 +221,12 @@ class EarthView{
 
     const sphereGeometry = new THREE.SphereGeometry(4, faces, faces+2);
     const cloudsGeometry = new THREE.SphereGeometry(4.1, faces, faces);
-
     const holeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
-
-
 
 
     facesIndexed(sphereGeometry, faces)
     facesIndexed(cloudsGeometry, faces)
 
-    const textureLoader = new THREE.TextureLoader()
 
     console.log(faces)
     const groundMaterials = ((z)=>{
@@ -244,7 +243,7 @@ class EarthView{
 
 
 
-    const cloudsMaterials = ((z)=>{
+    /*const cloudsMaterials = ((z)=>{
       const arr = [];
       const max = Math.pow(2, z);
       for(let y = 0; y<max; y++){
@@ -253,7 +252,7 @@ class EarthView{
         }
       }
       return arr
-    })(zoom);
+    })(zoom);*/
 
 
 
@@ -265,8 +264,8 @@ class EarthView{
     groundMaterials.unshift(holeMaterial);
     groundMaterials.push(holeMaterial);
 
-    cloudsMaterials.unshift(holeMaterial)
-    cloudsMaterials.push(holeMaterial)
+   // cloudsMaterials.unshift(holeMaterial)
+   // cloudsMaterials.push(holeMaterial)
 
     const halfIndex = sphereGeometry.faces.length/2 - (faces*2)
     sphereGeometry.faces[halfIndex].materialIndex =  0
@@ -276,7 +275,10 @@ class EarthView{
     console.log(sphereGeometry.faces[halfIndex])
 
     const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, groundMaterials);
-    const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
+    //const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
+
+    //this.rotationMeshList.push(rEarthMesh, cloudsMesh);
+    this.rotationMeshList.push(rEarthMesh);
 
 
     rEarthMesh.position.x = 0;
@@ -285,7 +287,7 @@ class EarthView{
 
 
     scene.add(rEarthMesh)
-    scene.add(cloudsMesh)
+   // scene.add(cloudsMesh)
     scene.add(light)
     camera.lookAt(rEarthMesh.position);
     camera.position.z = this.$$cameraDist;
@@ -316,17 +318,12 @@ class EarthView{
 
     const dx = this.tx ? e.clientX - this.tx : 0
     const dy = this.ty ? e.clientY - this.ty : 0
-
-    //let dy = (e.deltaY*0.001);
     const k = this.camera.position.z - 4;
 
-
-    this.rEarthMesh.rotation.y+=(dx*.0002*k)
-    this.rEarthMesh.rotation.x+=(dy*.0002*k)
-
-    this.cloudsMesh.rotation.y+=(dx*.0002*k)
-    this.cloudsMesh.rotation.x+=(dy*.0002*k)
-
+    this.rotationMeshList.forEach(mesh=>{
+      mesh.rotation.y+=(dx*.001)
+      mesh.rotation.x+=(dy*.001)
+    });
 
     this.tx = e.clientX
     this.ty = e.clientY
@@ -366,11 +363,15 @@ class EarthView{
 
     //console.log(this.$$cameraDist - this.camera.position.z+1)
 
-    let dy = (e.deltaY*0.002);
-    const k = this.camera.position.z - 4;
-    this.camera.position.z = this.camera.position.z+(dy*k)
+    let dy = (e.deltaY*0.005);
+    //const k = this.camera.position.z - 4;
+   // this.camera.position.z = this.camera.position.z+(dy*k)
 
-    this.render()
+    this.camera.fov +=dy
+    this.camera.updateProjectionMatrix()
+
+
+    //this.render()
   }
 
   bindEvents(){

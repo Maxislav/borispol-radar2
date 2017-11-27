@@ -48,8 +48,9 @@ function loadPromise(url) {
 
 export default function defineload(name, callback) {
   return new Promise((resolve, reject)=>{
-    if(module.name){
-      resolve(module, name)
+    if(module[name]){
+      resolve(module[name])
+      if(callback) callback(module[name])
     } else {
       loadPromise(moduleMap[name])
         .then(arrayBuf=>{
