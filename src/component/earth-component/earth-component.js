@@ -91,10 +91,6 @@ const groundMaterialLoader = (z, x, y) =>{
     ctx.fillRect(125/2, 125/2, 125, 125);
     ctx.strokeStyle="blue";
     ctx.rect(0,0,256,256);
-
-
-
-
     ctx.fillStyle = "red";
     ctx.stroke();
     ctx.font = "20px Arial";
@@ -105,17 +101,21 @@ const groundMaterialLoader = (z, x, y) =>{
     if(180<lng){
       lng = lng - 360
     }
-
     ctx.fillText(`lng=${lng};`,10,220);
     ctx.fillText(`lat=${lat};`,10,240);
 
+    const zoom = 1
+
+    const xPx = (Math.radians(lng)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
+    const yPx = (Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(lat/2) )  ))* Math.pow(2, zoom)*128/Math.PI
+
+
+    ctx.fillText(`X =${xPx}px;`,10,160);
+    ctx.fillText(`Y =${yPx}px;`,10,180);
 
     const img = new Image();
-    //const blob = new window.Blob([ctx.getImageData(0,0,256, 256).data], {type: 'image/png'});
     img.onload = function () {
       (window.URL || window.webkitURL).revokeObjectURL(img.src);
-      //resolve(img);
-
       const texture = new THREE.Texture(img)
       sphereMaterial.map = texture;
       sphereMaterial.emissiveMap = texture
@@ -126,7 +126,10 @@ const groundMaterialLoader = (z, x, y) =>{
     };
     img.src = canvas.toDataURL("image/png")
 
-
+   /* getImageWorker('https://maps.tilehosting.com/data/satellite/0/0/0.jpg?key=SoGrAH8cEUtj6OnMI1UY')
+      .then(img=>{
+        console.log(img)
+      })*/
 
 
 
@@ -364,11 +367,11 @@ class EarthView{
     //console.log(this.$$cameraDist - this.camera.position.z+1)
 
     let dy = (e.deltaY*0.005);
-    //const k = this.camera.position.z - 4;
-   // this.camera.position.z = this.camera.position.z+(dy*k)
+    const k = this.camera.position.z - 4;
+    this.camera.position.z = this.camera.position.z+(dy*k)
 
-    this.camera.fov +=dy
-    this.camera.updateProjectionMatrix()
+    //this.camera.fov +=dy
+    //this.camera.updateProjectionMatrix()
 
 
     //this.render()
