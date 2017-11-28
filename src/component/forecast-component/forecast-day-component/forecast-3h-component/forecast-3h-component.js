@@ -32,10 +32,28 @@ export default  Vue.component('forecast-3h-component', {
 		};
 
 		const rain3h = (this.hh.rain && this.hh.rain['3h']) ?   this.hh.rain['3h'] : null;
+		//console.log((this.hh && this.hh.snow['3h']) ? this.hh.snow['3h'] : null)
+		const snow3h = (this.hh && this.hh.snow['3h']) ? this.hh.snow['3h'] : null
+
 		let rain = [];
 		if(rain3h){
 			rain.length = Math.round(rain3h*10) || 1
 		}
+		let snow = [];
+		if(snow3h){
+      snow.length = Math.round(snow3h*10) || 1
+		}
+
+		let title = '';
+
+		if(rain.length){
+      title = title.concat('Rain 3h: ' + Math.toFixed (this.hh.rain['3h'], 3)+'mm')
+		}
+
+		if(snow.length){
+      title = title.concat('\n','Snow 3h: ' + Math.toFixed (this.hh.snow['3h'], 3)+'mm')
+		}
+
 		return{
 			date,
 			temp: (temp<0 ? ''+temp : '+'+temp)  +'&deg;C',
@@ -43,8 +61,9 @@ export default  Vue.component('forecast-3h-component', {
 			style,
 			icon,
 			rain,
+			snow,
 			index:this.hh.index,
-			title:  rain.length? 'Rain 3h: ' + Math.toFixed (this.hh.rain['3h'], 3)+'mm' : 'Clear'
+			title:  title ? title: 'Clear'
 		}
 	},
 	methods: {
