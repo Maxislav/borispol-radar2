@@ -25,18 +25,6 @@ function loadPromise(url) {
     xhr.onload = function () {
       if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
         resolve(xhr.response);
-       /* const imgData = xhr.response;
-
-        const img = new Image();
-
-        const blob = new window.Blob([new Uint8Array(imgData)], {type: 'image/png'});
-
-        img.onload = function () {
-
-          (window.URL || window.webkitURL).revokeObjectURL(img.src);
-          resolve(img);
-        };
-        img.src = (window.URL || window.webkitURL).createObjectURL(blob);*/
       } else {
         reject(new Error(xhr.statusText));
       }

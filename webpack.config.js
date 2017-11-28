@@ -51,6 +51,10 @@ module.exports = {
         {
           from: './node_modules/three/build/three.js',
           to:'./lib'
+        },
+        {
+          from: './src/util/load-image.worker.js',
+          to:'./worker'
         }
       ],{copyUnmodified: true})
 

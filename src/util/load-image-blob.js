@@ -79,7 +79,7 @@ export function getImage(url, cache) {
 
 export function getImageWorker(url) {
   if(!worker){
-    worker = new Worker('src/util/load-image.worker.js')
+    worker = new Worker('./worker/load-image.worker.js')
     worker.onmessage = ({data}) =>{
       if(workerDeferred[data.name] && workerDeferred[data.name].status == 0){
 
