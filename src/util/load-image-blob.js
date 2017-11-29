@@ -118,3 +118,26 @@ export function getImageWorker(url) {
 
 	return workerDeferred[url].promise
 }
+
+
+export class Canvas{
+	constructor(){
+		this.instance = this.canvas = document.createElement('canvas')
+		this.context =this.canvas.getContext('2d');
+
+
+	}
+	drawImage(...agrs){
+
+    this.context.drawImage(...agrs)
+		return this
+	}
+	toImage(){
+		const img = new Image();
+		return new Promise((resolve, reject)=>{
+
+		})
+	}
+
+
+}
