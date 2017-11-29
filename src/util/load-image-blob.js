@@ -121,23 +121,35 @@ export function getImageWorker(url) {
 
 
 export class Canvas{
-	constructor(){
-		this.instance = this.canvas = document.createElement('canvas')
-		this.context =this.canvas.getContext('2d');
+	constructor(width, height){
+
+		const canvas = this.instance = document.createElement('canvas');
+		canvas.width = width;
+		canvas.height = height;
+		this.context = canvas.getContext('2d');
 
 
 	}
-	drawImage(...agrs){
-
-    this.context.drawImage(...agrs)
-		return this
+	drawImage(...args){
+    this.context.drawImage(...args)
+		return this;
 	}
-	toImage(){
-		const img = new Image();
-		return new Promise((resolve, reject)=>{
 
+	getImage() {
+
+		return new Promise( (resolve, reject) => {
+      const img = new  Image()
+      img.onload = () =>{
+        resolve(img)
+      }
+      img.src = this.instance.toDataURL("image/png")
 		})
+
+
+
 	}
+
+
 
 
 }

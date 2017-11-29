@@ -9,6 +9,7 @@ import {$Worker} from '../../util/worker'
 import {getImageWorker} from  '../../util/load-image-blob'
 
 import defineload from '../../util/defineload'
+import {getTile} from "./eart-tile";
 
 function evalInContext(js, context) {
   return function () {
@@ -96,18 +97,47 @@ const groundMaterialLoader = (z, x, y) =>{
     ctx.font = "20px Arial";
     ctx.fillText(`x=${x}; y=${y}`,65, 110);
 
-    let lng = x * 360/Math.pow(2, z);
-    let lat = 90 - (y+2)*180/(Math.pow(2, z)+2)
-    if(180<lng){
-      lng = lng - 360
+    let lngMin = x * 360/Math.pow(2, z);
+    let lngMax = (x+1) * 360/Math.pow(2, z);
+    let latMin = 90 - (y+2)*180/(Math.pow(2, z)+2);
+    let latMax = 90 - (y+2-1)*180/(Math.pow(2, z)+2);
+
+
+
+
+    if(180<lngMin){
+      lngMin = lngMin - 360
     }
-    ctx.fillText(`lng=${lng};`,10,220);
-    ctx.fillText(`lat=${lat};`,10,240);
+
+    if(180 < lngMax){
+      lngMax = lngMax - 360
+    }
+
+    getTile({
+      lngMin,
+      lngMax,
+      latMin,
+      latMax
+    }).then(img=>{
+      console.log(img)
+      const texture = new THREE.Texture(img)
+      sphereMaterial.map = texture;
+      sphereMaterial.emissiveMap = texture
+      sphereMaterial.needsUpdate = true;
+      texture.needsUpdate = true;
+      res(sphereMaterial)
+    })
+
+    /*ctx.fillText(`fromLng=${lngMin};`,10,220);
+    ctx.fillText(`fromLat=${latMin};`,10,240);
+
+    ctx.fillText(`toLng=${lngMax};`,125,30);
+    ctx.fillText(`toLat=${latMax};`,125,50);
 
     const zoom = 4;
 
-    const xPx = (Math.radians(lng)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
-    const yPx = (Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(lat/2) )  ))* Math.pow(2, zoom)*128/Math.PI
+    const xPx = (Math.radians(lngMin)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
+    const yPx = (Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(latMin/2) )  ))* Math.pow(2, zoom)*128/Math.PI
 
 
     ctx.fillText(`X =${xPx}px;`,10,160);
@@ -124,51 +154,10 @@ const groundMaterialLoader = (z, x, y) =>{
       yN=0
     }
 
-    getImageWorker(`https://maps.tilehosting.com/data/satellite/${zoom}/${xN}/${yN}.jpg?key=SoGrAH8cEUtj6OnMI1UY`)
-      .then(img=>{
-        const x = (xPx/256) - parseInt(xPx/256);
-        const y = -(yPx/256)+  parseInt(yPx/256);
-
-        const canvas = document.createElement('canvas')
-        canvas.width = 256
-        canvas.height = 256
-        const ctx = canvas.getContext('2d');
-
-        ctx.drawImage(img,x,y);
 
 
 
-        const imgC = new Image();
-        imgC.onload = function () {
-          (window.URL || window.webkitURL).revokeObjectURL(imgC.src);
-          const texture = new THREE.Texture(imgC)
-          sphereMaterial.map = texture;
-          sphereMaterial.emissiveMap = texture
-          sphereMaterial.needsUpdate = true;
-          texture.needsUpdate = true;
-          res(sphereMaterial)
-
-        };
-        imgC.src = canvas.toDataURL("image/png")
-
-
-
-
-
-
-        /*const texture = new THREE.Texture(img)
-        sphereMaterial.map = texture;
-        sphereMaterial.emissiveMap = texture
-        sphereMaterial.needsUpdate = true;
-        texture.needsUpdate = true;
-        res(sphereMaterial)*/
-      })
-      .catch(err=>{
-        console.log(err)
-      })
-
-
-    /*const img = new Image();
+    const img = new Image();
     img.onload = function () {
       (window.URL || window.webkitURL).revokeObjectURL(img.src);
       const texture = new THREE.Texture(img)
