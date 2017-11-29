@@ -113,8 +113,16 @@ const groundMaterialLoader = (z, x, y) =>{
     ctx.fillText(`X =${xPx}px;`,10,160);
     ctx.fillText(`Y =${yPx}px;`,10,180);
 
-    const xN = parseInt(xPx/256)
-    const yN = parseInt(yPx/256)
+    let xN = parseInt(xPx/256)
+    let yN = parseInt(yPx/256)
+
+    if(Math.pow(2, zoom)<=xN){
+      xN = 0
+    }
+
+    if(Math.pow(2, zoom)<=yN){
+      yN=0
+    }
 
     getImageWorker(`https://maps.tilehosting.com/data/satellite/${zoom}/${xN}/${yN}.jpg?key=SoGrAH8cEUtj6OnMI1UY`)
       .then(img=>{
