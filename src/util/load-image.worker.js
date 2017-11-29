@@ -26,7 +26,10 @@ function loadPromise(url) {
       if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
         resolve(xhr.response);
       } else {
-        reject(new Error(xhr.statusText));
+        reject({
+          url: url,
+          error: xhr.status
+        });
       }
     };
     xhr.send();
@@ -40,6 +43,12 @@ onmessage = (e) =>{
     .then(arrayBuffer=>{
       postMessage({
         data: arrayBuffer,
+        name
+      })
+    })
+    .catch(err=>{
+      postMessage({
+        error: err,
         name
       })
     })

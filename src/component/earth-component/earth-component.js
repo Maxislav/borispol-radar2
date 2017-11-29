@@ -104,7 +104,7 @@ const groundMaterialLoader = (z, x, y) =>{
     ctx.fillText(`lng=${lng};`,10,220);
     ctx.fillText(`lat=${lat};`,10,240);
 
-    const zoom = 1
+    const zoom = 4;
 
     const xPx = (Math.radians(lng)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
     const yPx = (Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(lat/2) )  ))* Math.pow(2, zoom)*128/Math.PI
@@ -113,7 +113,24 @@ const groundMaterialLoader = (z, x, y) =>{
     ctx.fillText(`X =${xPx}px;`,10,160);
     ctx.fillText(`Y =${yPx}px;`,10,180);
 
-    const img = new Image();
+    const xN = parseInt(xPx/256)
+    const yN = parseInt(yPx/256)
+
+    getImageWorker(`https://maps.tilehosting.com/data/satellite/${zoom}/${xN}/${yN}.jpg?key=SoGrAH8cEUtj6OnMI1UY`)
+      .then(img=>{
+        const texture = new THREE.Texture(img)
+        sphereMaterial.map = texture;
+        sphereMaterial.emissiveMap = texture
+        sphereMaterial.needsUpdate = true;
+        texture.needsUpdate = true;
+        res(sphereMaterial)
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+
+
+    /*const img = new Image();
     img.onload = function () {
       (window.URL || window.webkitURL).revokeObjectURL(img.src);
       const texture = new THREE.Texture(img)
@@ -124,7 +141,7 @@ const groundMaterialLoader = (z, x, y) =>{
       res(sphereMaterial)
 
     };
-    img.src = canvas.toDataURL("image/png")
+    img.src = canvas.toDataURL("image/png")*/
 
    /* getImageWorker('https://maps.tilehosting.com/data/satellite/0/0/0.jpg?key=SoGrAH8cEUtj6OnMI1UY')
       .then(img=>{

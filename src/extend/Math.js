@@ -1,9 +1,17 @@
-// Converts from degrees to radians.
+/**
+ * Converts from degrees to radians.
+ * @param {number} degrees
+ * @return {number}
+ */
 Math.radians = function(degrees) {
 	return degrees * Math.PI / 180;
 };
 
-// Converts from radians to degrees.
+/**
+ *
+ * @param {number} radians
+ * @return {number}
+ */
 Math.degrees = function(radians) {
 	return radians * 180 / Math.PI;
 };

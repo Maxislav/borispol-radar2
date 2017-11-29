@@ -82,15 +82,20 @@ export function getImageWorker(url) {
     worker = new Worker('./worker/load-image.worker.js')
     worker.onmessage = ({data}) =>{
       if(workerDeferred[data.name] && workerDeferred[data.name].status == 0){
+      	if(!data.error){
+          const imgData = data.data
+          const img = new Image();
+          const blob = new window.Blob([new Uint8Array(imgData)], {type: 'image/png'});
+          img.onload = function () {
+            (window.URL || window.webkitURL).revokeObjectURL(img.src);
+            workerDeferred[data.name].resolve(img)
+          };
+          img.src = (window.URL || window.webkitURL).createObjectURL(blob);
+				}else {
+          workerDeferred[data.name].reject(data.error)
+				}
 
-        const imgData = data.data
-        const img = new Image();
-        const blob = new window.Blob([new Uint8Array(imgData)], {type: 'image/png'});
-        img.onload = function () {
-          (window.URL || window.webkitURL).revokeObjectURL(img.src);
-          workerDeferred[data.name].resolve(img)
-        };
-        img.src = (window.URL || window.webkitURL).createObjectURL(blob);
+
 
         //workerDeferred[data.name].resolve(data.data)
       }else {
