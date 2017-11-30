@@ -87,7 +87,7 @@ export function getImageWorker(url) {
           const img = new Image();
           const blob = new window.Blob([new Uint8Array(imgData)], {type: 'image/png'});
           img.onload = function () {
-            (window.URL || window.webkitURL).revokeObjectURL(img.src);
+           // (window.URL || window.webkitURL).revokeObjectURL(img.src);
             workerDeferred[data.name].resolve(img)
           };
           img.src = (window.URL || window.webkitURL).createObjectURL(blob);
@@ -127,7 +127,9 @@ export class Canvas{
 		canvas.width = width;
 		canvas.height = height;
 		this.context = canvas.getContext('2d');
-
+    this.context.font = "20px Arial";
+    this.context.fillStyle = "red";
+    this.context.strokeStyle="blue";
 
 	}
 	drawImage(...args){
@@ -136,7 +138,6 @@ export class Canvas{
 	}
 
 	getImage() {
-
 		return new Promise( (resolve, reject) => {
       const img = new  Image()
       img.onload = () =>{
@@ -144,10 +145,39 @@ export class Canvas{
       }
       img.src = this.instance.toDataURL("image/png")
 		})
+	}
+  fillText(...args){
+    this.context.fillText(...args);
+    return this
+	}
+
+
+	fillStyle(color) {
+    this.context.fillStyle = color;
+    return this
+	}
+  strokeStyle(color){
+  	this.context.strokeStyle = color
+		return this
+	}
+
+	rect(...args){
+    this.context.rect(...args);
+    this.context.stroke();
+	}
+
+	cutTo256(x, y, width, height){
+		const imgData =  this.context.getImageData(x, y, width, height);
+    this.instance.width = width;
+    this.instance.height = height;
+    this.context = this.instance.getContext('2d');
+    this.context.putImageData(imgData, 256, 256)
+
 
 
 
 	}
+
 
 
 

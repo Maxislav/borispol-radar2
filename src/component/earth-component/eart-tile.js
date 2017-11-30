@@ -10,7 +10,8 @@ function getY(latMin, zoom) {
 
 function getXN(xMin, yMin, zoom) {
   let xN = parseInt(xMin/256);
-  let yN = parseInt(yMin/256);
+  let yN = parseInt(yMin/256)+1;
+
 
   if(Math.pow(2, zoom)<=xN){
     xN = 0
@@ -65,7 +66,7 @@ function getNeighbor(tile, z, n) {
 
 }
 
-export function getTile({lngMin, lngMax, latMin, latMax}) {
+export function getTile({lngMin, lngMax, latMin, latMax, x, y}) {
   const zoom = 4;
   const xMin = getX(lngMin, zoom)// (Math.radians(lngMin)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
   const yMin = getY(latMin,zoom)//    Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(latMin/2) )  ))* Math.pow(2, zoom)*128/Math.PI
@@ -73,51 +74,52 @@ export function getTile({lngMin, lngMax, latMin, latMax}) {
   const xMax = getX(lngMax, zoom)
   const yMax = getY(latMax, zoom)
 
-  const width = xMax - xMin;
-  const height =  yMin -yMax
+  const width = Math.abs(xMax - xMin);
+  const height = Math.abs(yMin -yMax)
   //console.log(height)
 
   let n1 = getXN(xMin, yMin, zoom);
   let n2 = getXN(xMax, yMax, zoom);
+  const tiles = getNeighbor(n1, zoom, 2);
 
 
- const tiles = getNeighbor(n1, zoom, 2);
+  if(n1.x == 8 && n1.y ==8){
+    console.log(tiles)
+  }
 
-
-
-
-
-
+  function tileMarker(img, tile) {
+    const canvas = new Canvas(256, 256);
+    canvas.drawImage(img, 0, 0);
+    canvas.fillText(`x=${tile.x}; y=${tile.y}`,65, 110)
+    return canvas.getImage()
+  }
  return Promise.all(tiles.map(tile=>{
    return getImageWorker(`https://maps.tilehosting.com/data/satellite/${tile.z}/${tile.x}/${tile.y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`)
+     .then(img=>{
+       return tileMarker(img, tile)
+     })
  }))
    .then((imgList)=>{
-
      const canvas = new Canvas(512, 512);
-     canvas.drawImage(imgList[0], 0, 0)
+     canvas.drawImage(imgList[0], 0, 0);
      canvas.drawImage(imgList[1], 256, 0);
      canvas.drawImage(imgList[2], 0,256 );
-     canvas.drawImage(imgList[2], 256,256 );
+     canvas.drawImage(imgList[3], 256,256 );
+
+
+     const x = xMin - n1.x*256
+     const y = 512- ((n1.y*256) - yMin+height)
+     //console.log(y)
+     //TODO рисует контур квадрата
+     //canvas.rect(x, y, width, height)
      return canvas.getImage()
        .then(img=>{
-         const x = (xMin/256) - parseInt(xMin/256);
-         const y = (yMin/256)- parseInt(yMin/256);
-         const canvas = new Canvas(width, height)
-         canvas.drawImage(img, x, y)
-         return canvas.getImage()
-
-       })
-       .then(img=>{
-         const canvas = new Canvas(256, 256)
-         canvas.drawImage(img, 0, 0, 256, 256)
+         const  canvas = new Canvas(256, 256)
+         canvas.drawImage(img, x, y, width, height, 0, 0 ,256, 256)
+         canvas
+           .strokeStyle('white')
+           .rect(0, 0, 256, 256)
          return canvas.getImage()
        })
-
-
    })
-
-
-
-
-  //getImageWorker
 }

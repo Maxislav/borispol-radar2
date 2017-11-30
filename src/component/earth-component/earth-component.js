@@ -83,8 +83,7 @@ const groundMaterialLoader = (z, x, y) =>{
       })*/
 
 
-   const canvas = document.createElement('canvas')
-
+    const canvas = document.createElement('canvas')
     canvas.width = 256;
     canvas.height = 256;
     const ctx = canvas.getContext('2d')
@@ -113,13 +112,15 @@ const groundMaterialLoader = (z, x, y) =>{
       lngMax = lngMax - 360
     }
 
+    //if(0<=latMin && latMin<90 && 0<=lngMin && lngMin<45)
     getTile({
       lngMin,
       lngMax,
       latMin,
-      latMax
+      latMax,
+      x,
+      y
     }).then(img=>{
-      console.log(img)
       const texture = new THREE.Texture(img)
       sphereMaterial.map = texture;
       sphereMaterial.emissiveMap = texture
@@ -128,7 +129,7 @@ const groundMaterialLoader = (z, x, y) =>{
       res(sphereMaterial)
     })
 
-    /*ctx.fillText(`fromLng=${lngMin};`,10,220);
+    ctx.fillText(`fromLng=${lngMin};`,10,220);
     ctx.fillText(`fromLat=${latMin};`,10,240);
 
     ctx.fillText(`toLng=${lngMax};`,125,30);
@@ -157,7 +158,7 @@ const groundMaterialLoader = (z, x, y) =>{
 
 
 
-    const img = new Image();
+   /* const img = new Image();
     img.onload = function () {
       (window.URL || window.webkitURL).revokeObjectURL(img.src);
       const texture = new THREE.Texture(img)
@@ -314,12 +315,12 @@ class EarthView{
    // cloudsMaterials.unshift(holeMaterial)
    // cloudsMaterials.push(holeMaterial)
 
-    const halfIndex = sphereGeometry.faces.length/2 - (faces*2)
+   /* const halfIndex = sphereGeometry.faces.length/2 - (faces*2)
     sphereGeometry.faces[halfIndex].materialIndex =  0
-    sphereGeometry.faces[halfIndex+1].materialIndex =  0
+    sphereGeometry.faces[halfIndex+1].materialIndex =  0*/
 
 
-    console.log(sphereGeometry.faces[halfIndex])
+    //console.log(sphereGeometry.faces[halfIndex])
 
     const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, groundMaterials);
     //const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
@@ -368,8 +369,8 @@ class EarthView{
     const k = this.camera.position.z - 4;
 
     this.rotationMeshList.forEach(mesh=>{
-      mesh.rotation.y+=(dx*.001)
-      mesh.rotation.x+=(dy*.001)
+      mesh.rotation.y+=(dx*.002)
+      mesh.rotation.x+=(dy*.002)
     });
 
     this.tx = e.clientX
