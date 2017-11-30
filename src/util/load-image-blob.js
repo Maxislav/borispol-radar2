@@ -88,16 +88,15 @@ export function getImageWorker(url) {
           const blob = new window.Blob([new Uint8Array(imgData)], {type: 'image/png'});
           img.onload = function () {
            // (window.URL || window.webkitURL).revokeObjectURL(img.src);
-            workerDeferred[data.name].resolve(img)
+            setTimeout(()=>{
+              workerDeferred[data.name].resolve(img)
+            },Math.getRandom(10, 200, true))
+
           };
           img.src = (window.URL || window.webkitURL).createObjectURL(blob);
 				}else {
           workerDeferred[data.name].reject(data.error)
 				}
-
-
-
-        //workerDeferred[data.name].resolve(data.data)
       }else {
         console.error('Rrr workerDeferred->')
         workerDeferred[data.name].reject()
@@ -108,10 +107,13 @@ export function getImageWorker(url) {
 
   if(!workerDeferred[url]){
     workerDeferred[url] = new Deferred();
-    worker.postMessage({
-      name: url,
-      data: url
-    });
+    setTimeout(()=>{
+      worker.postMessage({
+        name: url,
+        data: url
+      });
+		}, Math.getRandom(5, 50, true))
+
   }
 
 
@@ -164,6 +166,7 @@ export class Canvas{
 	rect(...args){
     this.context.rect(...args);
     this.context.stroke();
+    return this;
 	}
 
 	cutTo256(x, y, width, height){

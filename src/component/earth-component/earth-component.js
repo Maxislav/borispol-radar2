@@ -24,7 +24,6 @@ let THREE = undefined;
 
 
 const cloudsMaterialLoader = (z, x, y) =>{
-  debugger
   const sphereMaterial = new THREE.MeshPhongMaterial({
     needsUpdate: true,
     specular: "#ffffff",
@@ -40,17 +39,37 @@ const cloudsMaterialLoader = (z, x, y) =>{
   });
 
   sphereMaterial.promise = new Promise((res, rej)=>{
-    const textureLoader = new THREE.TextureLoader();
-    //textureLoader.load(`https://d.maps.owm.io/map/clouds_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`, (texture) =>{
-    //textureLoader.load(`https://g.maps.owm.io/map/temp_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`, (texture) =>{
-    textureLoader.load(`https://f.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`, (texture) =>{
-      //sphereMaterial.alphaMap = texture;
+
+    let lngMin = x * 360/Math.pow(2, z);
+    let lngMax = (x+1) * 360/Math.pow(2, z);
+    let latMin = 90 - (y+2)*180/(Math.pow(2, z)+2);
+    let latMax = 90 - (y+2-1)*180/(Math.pow(2, z)+2);
+
+    if(180<lngMin){
+      lngMin = lngMin - 360
+    }
+
+    if(180 < lngMax){
+      lngMax = lngMax - 360
+    }
+
+    //if(0<=latMin && latMin<90 && 135<=lngMin && lngMin<=180)
+    getTile({
+      lngMin,
+      lngMax,
+      latMin,
+      latMax,
+      x,
+      y,
+      type: 'clouds'
+    }).then(img=>{
+      const texture = new THREE.Texture(img)
       sphereMaterial.map = texture;
-      sphereMaterial.emissiveMap = texture;
-      sphereMaterial.emissiveIntensity = 5;
+      sphereMaterial.emissiveMap = texture
       sphereMaterial.needsUpdate = true;
+      texture.needsUpdate = true;
       res(sphereMaterial)
-    })
+    });
   })
   return sphereMaterial
 };
@@ -65,44 +84,12 @@ const groundMaterialLoader = (z, x, y) =>{
     bumpScale: 0.1
   });
   sphereMaterial.needsUpdate = true;
-
-
-
-
-
-
   sphereMaterial.promise = new Promise((res, rej)=>{
-   /* getImageWorker(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`)
-      .then(img=>{
-        const texture = new THREE.Texture(img)
-        sphereMaterial.map = texture;
-        sphereMaterial.emissiveMap = texture
-        sphereMaterial.needsUpdate = true;
-        texture.needsUpdate = true;
-        res(sphereMaterial)
-      })*/
-
-
-    const canvas = document.createElement('canvas')
-    canvas.width = 256;
-    canvas.height = 256;
-    const ctx = canvas.getContext('2d')
-    ctx.fillStyle = "green";
-    ctx.fillRect(125/2, 125/2, 125, 125);
-    ctx.strokeStyle="blue";
-    ctx.rect(0,0,256,256);
-    ctx.fillStyle = "red";
-    ctx.stroke();
-    ctx.font = "20px Arial";
-    ctx.fillText(`x=${x}; y=${y}`,65, 110);
 
     let lngMin = x * 360/Math.pow(2, z);
     let lngMax = (x+1) * 360/Math.pow(2, z);
     let latMin = 90 - (y+2)*180/(Math.pow(2, z)+2);
     let latMax = 90 - (y+2-1)*180/(Math.pow(2, z)+2);
-
-
-
 
     if(180<lngMin){
       lngMin = lngMin - 360
@@ -112,14 +99,15 @@ const groundMaterialLoader = (z, x, y) =>{
       lngMax = lngMax - 360
     }
 
-    //if(0<=latMin && latMin<90 && 0<=lngMin && lngMin<45)
+    //if(0<=latMin && latMin<90 && 135<=lngMin && lngMin<=180)
     getTile({
       lngMin,
       lngMax,
       latMin,
       latMax,
       x,
-      y
+      y,
+      type: 'ground'
     }).then(img=>{
       const texture = new THREE.Texture(img)
       sphereMaterial.map = texture;
@@ -127,33 +115,9 @@ const groundMaterialLoader = (z, x, y) =>{
       sphereMaterial.needsUpdate = true;
       texture.needsUpdate = true;
       res(sphereMaterial)
-    })
-
-    ctx.fillText(`fromLng=${lngMin};`,10,220);
-    ctx.fillText(`fromLat=${latMin};`,10,240);
-
-    ctx.fillText(`toLng=${lngMax};`,125,30);
-    ctx.fillText(`toLat=${latMax};`,125,50);
-
-    const zoom = 4;
-
-    const xPx = (Math.radians(lngMin)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
-    const yPx = (Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(latMin/2) )  ))* Math.pow(2, zoom)*128/Math.PI
+    });
 
 
-    ctx.fillText(`X =${xPx}px;`,10,160);
-    ctx.fillText(`Y =${yPx}px;`,10,180);
-
-    let xN = parseInt(xPx/256)
-    let yN = parseInt(yPx/256)
-
-    if(Math.pow(2, zoom)<=xN){
-      xN = 0
-    }
-
-    if(Math.pow(2, zoom)<=yN){
-      yN=0
-    }
 
 
 
@@ -291,7 +255,7 @@ class EarthView{
 
 
 
-    /*const cloudsMaterials = ((z)=>{
+    const cloudsMaterials = ((z)=>{
       const arr = [];
       const max = Math.pow(2, z);
       for(let y = 0; y<max; y++){
@@ -300,7 +264,7 @@ class EarthView{
         }
       }
       return arr
-    })(zoom);*/
+    })(zoom);
 
 
 
@@ -312,8 +276,8 @@ class EarthView{
     groundMaterials.unshift(holeMaterial);
     groundMaterials.push(holeMaterial);
 
-   // cloudsMaterials.unshift(holeMaterial)
-   // cloudsMaterials.push(holeMaterial)
+    cloudsMaterials.unshift(holeMaterial)
+    cloudsMaterials.push(holeMaterial)
 
    /* const halfIndex = sphereGeometry.faces.length/2 - (faces*2)
     sphereGeometry.faces[halfIndex].materialIndex =  0
@@ -323,10 +287,10 @@ class EarthView{
     //console.log(sphereGeometry.faces[halfIndex])
 
     const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, groundMaterials);
-    //const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
+    const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
 
-    //this.rotationMeshList.push(rEarthMesh, cloudsMesh);
-    this.rotationMeshList.push(rEarthMesh);
+    this.rotationMeshList.push(rEarthMesh, cloudsMesh);
+    //this.rotationMeshList.push(rEarthMesh);
 
 
     rEarthMesh.position.x = 0;
@@ -335,7 +299,7 @@ class EarthView{
 
 
     scene.add(rEarthMesh)
-   // scene.add(cloudsMesh)
+    scene.add(cloudsMesh)
     scene.add(light)
     camera.lookAt(rEarthMesh.position);
     camera.position.z = this.$$cameraDist;

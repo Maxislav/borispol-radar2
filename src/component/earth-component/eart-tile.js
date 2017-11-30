@@ -66,22 +66,29 @@ function getNeighbor(tile, z, n) {
 
 }
 
-export function getTile({lngMin, lngMax, latMin, latMax, x, y}) {
+export function getTile({lngMin, lngMax, latMin, latMax, x, y, type}) {
   const zoom = 4;
+  const maxxx = Math.pow(2,zoom)*256
+  let widthLast;
+  if(0<lngMin && lngMax<0){
+    widthLast = getX(lngMin, zoom) - getX(-lngMax, zoom)
+  }
+
   const xMin = getX(lngMin, zoom)// (Math.radians(lngMin)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
   const yMin = getY(latMin,zoom)//    Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(latMin/2) )  ))* Math.pow(2, zoom)*128/Math.PI
-
   const xMax = getX(lngMax, zoom)
   const yMax = getY(latMax, zoom)
-
   const width = Math.abs(xMax - xMin);
-  const height = Math.abs(yMin -yMax)
+  const height = Math.abs(yMin - yMax);
   //console.log(height)
 
   let n1 = getXN(xMin, yMin, zoom);
-  let n2 = getXN(xMax, yMax, zoom);
+  //let n2 = getXN(xMax, yMax, zoom);
   const tiles = getNeighbor(n1, zoom, 2);
 
+  if(lngMin==180 && latMin==0){
+
+  }
 
   if(n1.x == 8 && n1.y ==8){
     console.log(tiles)
@@ -93,8 +100,19 @@ export function getTile({lngMin, lngMax, latMin, latMax, x, y}) {
     canvas.fillText(`x=${tile.x}; y=${tile.y}`,65, 110)
     return canvas.getImage()
   }
+
+
  return Promise.all(tiles.map(tile=>{
-   return getImageWorker(`https://maps.tilehosting.com/data/satellite/${tile.z}/${tile.x}/${tile.y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`)
+   let url = ''
+
+   if(type == 'ground'){
+     //url = `https://maps.tilehosting.com/data/satellite/${tile.z}/${tile.x}/${tile.y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`
+     url = `http://c.tile.openstreetmap.org/${tile.z}/${tile.x}/${tile.y}.png`
+   }else {
+     url = `https://f.maps.owm.io/map/precipitation_new/${tile.z}/${tile.x}/${tile.y}?appid=b1b15e88fa797225412429c1c50c122a1`
+   }
+
+   return getImageWorker(url)
      .then(img=>{
        return tileMarker(img, tile)
      })
@@ -105,20 +123,26 @@ export function getTile({lngMin, lngMax, latMin, latMax, x, y}) {
      canvas.drawImage(imgList[1], 256, 0);
      canvas.drawImage(imgList[2], 0,256 );
      canvas.drawImage(imgList[3], 256,256 );
-
-
-     const x = xMin - n1.x*256
+     let x = xMin - n1.x*256
+     if(maxxx<=x){
+       x = 0
+     }
      const y = 512- ((n1.y*256) - yMin+height)
-     //console.log(y)
+     //console.log(x, y, width)
      //TODO рисует контур квадрата
-     //canvas.rect(x, y, width, height)
+    /* canvas
+       .strokeStyle('green')
+       .fillText(`${lngMin} ... ${lngMax}`, 10, 60)*/
+       //.rect(x, y, widthLast ? widthLast : width, height)
      return canvas.getImage()
        .then(img=>{
          const  canvas = new Canvas(256, 256)
-         canvas.drawImage(img, x, y, width, height, 0, 0 ,256, 256)
-         canvas
-           .strokeStyle('white')
-           .rect(0, 0, 256, 256)
+         canvas.drawImage(img, x, y,  widthLast ? widthLast : width, height, 0, 0 ,256, 256)
+         if(type == 'ground')
+           canvas
+             .strokeStyle('white')
+             .rect(0, 0, 256, 256)
+             .fillText(`${lngMin}  ${lngMax}`,20, 200 );
          return canvas.getImage()
        })
    })
