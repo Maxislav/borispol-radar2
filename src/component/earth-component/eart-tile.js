@@ -66,6 +66,29 @@ function getNeighbor(tile, z, n) {
 
 }
 
+
+
+function contrast(canvas) {
+  const imgData =  canvas.getImageData(0, 0, canvas.width, canvas.height )
+  for(let i = 3; i<imgData.data.length; i+=4){
+    let a = imgData.data[i]
+
+    if(160<a){
+      //a = a*1.2
+    }else{
+      a = a - 80// a/1.8
+    }
+
+    if(a<100){
+      a = 0
+    }
+    imgData.data[i] = parseInt(a)
+  }
+  canvas.putImageData(imgData, 0,0)
+  return canvas
+}
+
+
 export function getTile({lngMin, lngMax, latMin, latMax, x, y, type}) {
   const zoom = 4;
   const maxxx = Math.pow(2,zoom)*256
@@ -106,16 +129,17 @@ export function getTile({lngMin, lngMax, latMin, latMax, x, y, type}) {
    let url = ''
 
    if(type == 'ground'){
-     //url = `https://maps.tilehosting.com/data/satellite/${tile.z}/${tile.x}/${tile.y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`
-     url = `http://c.tile.openstreetmap.org/${tile.z}/${tile.x}/${tile.y}.png`
+     url = `https://maps.tilehosting.com/data/satellite/${tile.z}/${tile.x}/${tile.y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`
+     //url = `http://c.tile.openstreetmap.org/${tile.z}/${tile.x}/${tile.y}.png`
    }else {
-     url = `https://f.maps.owm.io/map/precipitation_new/${tile.z}/${tile.x}/${tile.y}?appid=b1b15e88fa797225412429c1c50c122a1`
+     url = `https://c.maps.owm.io/map/clouds_new/${tile.z}/${tile.x}/${tile.y}?appid=b1b15e88fa797225412429c1c50c122a1` //карта осадков
+     //url = `https://f.maps.owm.io/map/precipitation_new/${tile.z}/${tile.x}/${tile.y}?appid=b1b15e88fa797225412429c1c50c122a1` //карта облачности
    }
 
    return getImageWorker(url)
-     .then(img=>{
+    /* .then(img=>{
        return tileMarker(img, tile)
-     })
+     })*/
  }))
    .then((imgList)=>{
      const canvas = new Canvas(512, 512);
@@ -138,11 +162,17 @@ export function getTile({lngMin, lngMax, latMin, latMax, x, y, type}) {
        .then(img=>{
          const  canvas = new Canvas(256, 256)
          canvas.drawImage(img, x, y,  widthLast ? widthLast : width, height, 0, 0 ,256, 256)
-         if(type == 'ground')
+         /*if(type == 'ground')
            canvas
              .strokeStyle('white')
              .rect(0, 0, 256, 256)
-             .fillText(`${lngMin}  ${lngMax}`,20, 200 );
+             .fillText(`${lngMin}  ${lngMax}`,20, 200 );*/
+         return canvas//.getImage()
+       })
+       .then(canvas =>{
+         if(type == 'clouds'){
+           return contrast(canvas).getImage()
+         }
          return canvas.getImage()
        })
    })

@@ -84,16 +84,18 @@ export function getImageWorker(url) {
       if(workerDeferred[data.name] && workerDeferred[data.name].status == 0){
       	if(!data.error){
           const imgData = data.data
-          const img = new Image();
+         // workerDeferred[data.name].img
           const blob = new window.Blob([new Uint8Array(imgData)], {type: 'image/png'});
-          img.onload = function () {
+          workerDeferred[data.name].img.onload = function () {
            // (window.URL || window.webkitURL).revokeObjectURL(img.src);
+
             setTimeout(()=>{
-              workerDeferred[data.name].resolve(img)
+              workerDeferred[data.name].resolve(workerDeferred[data.name].img)
+							delete workerDeferred[data.name].img
             },Math.getRandom(10, 200, true))
 
           };
-          img.src = (window.URL || window.webkitURL).createObjectURL(blob);
+          workerDeferred[data.name].img.src = (window.URL || window.webkitURL).createObjectURL(blob);
 				}else {
           workerDeferred[data.name].reject(data.error)
 				}
@@ -107,6 +109,7 @@ export function getImageWorker(url) {
 
   if(!workerDeferred[url]){
     workerDeferred[url] = new Deferred();
+    workerDeferred[url].img = new Image()
     setTimeout(()=>{
       worker.postMessage({
         name: url,
@@ -126,8 +129,9 @@ export class Canvas{
 	constructor(width, height){
 
 		const canvas = this.instance = document.createElement('canvas');
-		canvas.width = width;
-		canvas.height = height;
+		this.width = canvas.width = width;
+		this.height = canvas.height = height;
+
 		this.context = canvas.getContext('2d');
     this.context.font = "20px Arial";
     this.context.fillStyle = "red";
@@ -176,9 +180,15 @@ export class Canvas{
     this.context = this.instance.getContext('2d');
     this.context.putImageData(imgData, 256, 256)
 
+	}
 
+	getImageData(...args){
+    return this.context.getImageData(...args)
+	}
 
-
+	putImageData(...args){
+    this.context.putImageData(...args)
+		return this
 	}
 
 

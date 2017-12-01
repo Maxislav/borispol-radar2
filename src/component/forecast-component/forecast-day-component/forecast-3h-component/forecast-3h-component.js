@@ -33,7 +33,7 @@ export default  Vue.component('forecast-3h-component', {
 
 		const rain3h = (this.hh.rain && this.hh.rain['3h']) ?   this.hh.rain['3h'] : null;
 		//console.log((this.hh && this.hh.snow['3h']) ? this.hh.snow['3h'] : null)
-		const snow3h = (this.hh && this.hh.snow['3h']) ? this.hh.snow['3h'] : null
+		const snow3h = (this.hh && this.hh.snow && this.hh.snow['3h']) ? this.hh.snow['3h'] : null
 
 		let rain = [];
 		if(rain3h){

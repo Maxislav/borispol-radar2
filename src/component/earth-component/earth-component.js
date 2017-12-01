@@ -30,7 +30,7 @@ const cloudsMaterialLoader = (z, x, y) =>{
     color: 0xffffff,
     shininess: 1,
     transparent: true,
-    opacity: 1.2,
+    opacity: 1,
     reflectivity: 10,
 
 
@@ -53,7 +53,7 @@ const cloudsMaterialLoader = (z, x, y) =>{
       lngMax = lngMax - 360
     }
 
-    //if(0<=latMin && latMin<90 && 135<=lngMin && lngMin<=180)
+    //if(0<=latMin && latMin<90 && 90<=lngMin && lngMin<=180)
     getTile({
       lngMin,
       lngMax,
@@ -99,7 +99,7 @@ const groundMaterialLoader = (z, x, y) =>{
       lngMax = lngMax - 360
     }
 
-    //if(0<=latMin && latMin<90 && 135<=lngMin && lngMin<=180)
+    //if(0<=latMin && latMin<90 && 90<=lngMin && lngMin<=180)
     getTile({
       lngMin,
       lngMax,
@@ -232,7 +232,7 @@ class EarthView{
     const faces =  Math.pow(2, zoom)
 
     const sphereGeometry = new THREE.SphereGeometry(4, faces, faces+2);
-    const cloudsGeometry = new THREE.SphereGeometry(4.1, faces, faces);
+    const cloudsGeometry = new THREE.SphereGeometry(4.1, faces, faces+2);
     const holeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 
 
