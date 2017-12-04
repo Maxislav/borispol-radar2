@@ -53,7 +53,7 @@ const cloudsMaterialLoader = (z, x, y) =>{
       lngMax = lngMax - 360
     }
 
-    //if(0<=latMin && latMin<90 && 90<=lngMin && lngMin<=180)
+    //if(0<=latMin && latMin<45 && 90<=lngMin && lngMin<=180)
     getTile({
       lngMin,
       lngMax,
@@ -99,7 +99,7 @@ const groundMaterialLoader = (z, x, y) =>{
       lngMax = lngMax - 360
     }
 
-    //if(0<=latMin && latMin<90 && 90<=lngMin && lngMin<=180)
+    //if(0<=latMin && latMin<45 && 90<=lngMin && lngMin<=180)
     getTile({
       lngMin,
       lngMax,

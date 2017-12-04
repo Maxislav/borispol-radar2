@@ -67,24 +67,33 @@ function getNeighbor(tile, z, n) {
 }
 
 
+let k = 0
 
 function contrast(canvas) {
-  const imgData =  canvas.getImageData(0, 0, canvas.width, canvas.height )
+  k++;
+
+  var imgData =  canvas.getImageData(0, 0, canvas.width, canvas.height );
+
+
+
+
   for(let i = 3; i<imgData.data.length; i+=4){
-    let a = imgData.data[i]
-
-    if(160<a){
-      //a = a*1.2
-    }else{
-      a = a - 80// a/1.8
+    var cb = 0.7;
+    var w1 = cb*255;
+    var a = imgData.data[i];
+    var  d = a - w1;
+    if(0<d){
+      a = a + Math.pow(2,d*0.8)
+    }else {
+      a = a - Math.pow(2,d*0.7)
     }
-
-    if(a<100){
+    if(a<0){
       a = 0
     }
+
     imgData.data[i] = parseInt(a)
   }
-  canvas.putImageData(imgData, 0,0)
+  canvas.putImageData(imgData, 0,0);
   return canvas
 }
 
