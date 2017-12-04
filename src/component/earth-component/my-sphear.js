@@ -13,12 +13,12 @@ export function init() {
 
 
         class EarthFace{
-          constructor(face1, face2, faceUvs1, faceUvs2, index){
+          constructor(face1, face2, faceVertexUvs , index, faceIndex){
             this.face1 = face1;
             this.face2 = face2;
-            this.faceUvs1 = faceUvs1;
-            this.faceUvs2 = faceUvs2;
+            this.faceVertexUvs = faceVertexUvs
             this.index = index;
+            this.faceIndex = faceIndex
 
             this.latMin = 0;
             this.latMax = 0;
@@ -35,6 +35,8 @@ export function init() {
              */
             this.colIndex = 0;
 
+            this.vertexCoord = new Array(4);
+
             //console.log(index)
           }
 
@@ -43,6 +45,26 @@ export function init() {
             this.face2.materialIndex = i;
             return this;
           }
+
+          uvsMaping(){
+            const v = this.vertexCoord
+
+            this.faceVertexUvs[this.faceIndex] = [
+              new THREE.Vector2(v[2].x, v[2].y ),
+              new THREE.Vector2(v[3].x, v[3].y),
+              new THREE.Vector2(v[1].x, v[1].y)
+            ]
+
+            this.faceVertexUvs[this.faceIndex+1]  = [
+              new THREE.Vector2(v[3].x, v[3].y),
+              new THREE.Vector2(v[0].x, v[0].y),
+              new THREE.Vector2(v[1].x, v[1].y)
+            ]
+
+
+
+          }
+
         }
 
 
@@ -66,7 +88,7 @@ export function init() {
             const faceVertexUvs = this.faceVertexUvs[0]
             for (let i = 0; i< this.faces.length; i+=2){
               if(facesCount-1<i && i<this.faces.length-facesCount){
-                const  earthFace = new EarthFace(this.faces[i], this.faces[i+1], faceVertexUvs[i], faceVertexUvs[i+1], k);
+                const  earthFace = new EarthFace(this.faces[i], this.faces[i+1], faceVertexUvs, k, i);
                 this.earhFaces.push(earthFace);
                 k++;
 
@@ -84,7 +106,6 @@ export function init() {
             }
 
             this.earhFaces.forEach((earthFace, i) =>{
-
               const dLat = 180/(segments+2);
               const dLng = 360/segments;
               earthFace.rowIndex = parseInt(i/segments);
@@ -92,24 +113,42 @@ export function init() {
 
               earthFace.lngMin =  earthFace.colIndex * dLng;
               earthFace.lngMax =  (earthFace.colIndex+1) * dLng;
-
+              if(180<=earthFace.lngMin){
+                earthFace.lngMin =  earthFace.lngMin - 360;
+                earthFace.lngMax = earthFace.lngMax - 360;
+              }
               earthFace.latMin = 90 - (earthFace.rowIndex+1)*dLat;
               earthFace.latMax = 90 - (earthFace.rowIndex+2)*dLat;
-              console.log(earthFace.lngMin, earthFace.lngMax);
-              if(earthFace.rowIndex == 0){
-                earthFace.setMaterialIndex(2)
-              }else {
-                earthFace.setMaterialIndex(1)
+              earthFace.vertexCoord[0] = {
+                x: this.getX(earthFace.lngMin, 0)/256,
+                y: 1 - this.getY(earthFace.latMax, 0)/256
               }
+              earthFace.vertexCoord[1] = {
+                x: this.getX(earthFace.lngMax, 0)/256,
+                y: 1 - this.getY(earthFace.latMax, 0)/256
+              }
+              earthFace.vertexCoord[2] = {
+                x: this.getX(earthFace.lngMax, 0)/256,
+                y: 1 - this.getY(earthFace.latMin, 0)/256
+              }
+
+              earthFace.vertexCoord[3] = {
+                x: this.getX(earthFace.lngMin, 0)/256,
+                y: 1- this.getY(earthFace.latMin, 0)/256
+              }
+              earthFace.uvsMaping();
+
+
+              earthFace.setMaterialIndex(1)
             })
           }
-
-
-
-          faceIndex(){
-
-
+          getX(lngMin, zoom) {
+            return (Math.radians(lngMin)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
           }
+          getY(latMin, zoom) {
+            return (Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(latMin/2) )  ))* Math.pow(2, zoom)*128/Math.PI
+          }
+
         };
         return three
       })

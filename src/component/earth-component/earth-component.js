@@ -6,14 +6,14 @@ import template from './earth-component.pug';
 import './earth-component.styl'
 import {autobind} from "core-decorators";
 import {$Worker} from '../../util/worker'
-import {getImageWorker} from  '../../util/load-image-blob'
+import {getImageWorker, Canvas} from  '../../util/load-image-blob'
 
 import {init as mySphearInit} from  './my-sphear'
 
 console.log(mySphearInit)
 
 import defineload from '../../util/defineload'
-import {getTile} from "./eart-tile";
+import {getTile, getTiledImage} from "./eart-tile";
 
 function evalInContext(js, context) {
   return function () {
@@ -236,10 +236,42 @@ class EarthView{
     const faces =  Math.pow(2, zoom)
 
     const sphereGeometry = new THREE.EarthGeometry(4, faces);
-    //const cloudsGeometry = new THREE.SphereGeometry(4.1, faces, faces+2);
+    const cloudsGeometry = new THREE.EarthGeometry(4.1, faces);
     const holeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
-    const groundMaterial = new THREE.MeshPhongMaterial({color: 0x0000ff, flatShading: true});
+    const groundMaterial = new THREE.MeshPhongMaterial();
+    const cloudsMaterial = new THREE.MeshPhongMaterial({transparent: true,opacity: 1});
+
     const testMaterial = new THREE.MeshPhongMaterial({color: 0xff0000, flatShading: true});
+
+
+    getTiledImage({type:'ground'})
+      .then(img=>{
+        const texture = new THREE.Texture(img);
+        groundMaterial.map = texture;
+        groundMaterial.emissiveMap = texture;
+        groundMaterial.needsUpdate = true;
+        texture.needsUpdate = true;
+      })
+    getTiledImage({type:'rain'}, () =>{
+
+    })
+      .then(img=>{
+        const texture = new THREE.Texture(img);
+        cloudsMaterial.map = texture;
+        cloudsMaterial.emissiveMap = texture;
+        cloudsMaterial.needsUpdate = true;
+        texture.needsUpdate = true;
+      })
+
+
+   /* getImageWorker('../src/img/z0.jpg')
+      .then(img=>{
+        const texture = new THREE.Texture(img);
+        groundMaterial.map = texture;
+        groundMaterial.emissiveMap = texture;
+        groundMaterial.needsUpdate = true;
+        texture.needsUpdate = true;
+      });*/
 
 
     //facesIndexed(sphereGeometry, faces)
@@ -292,11 +324,11 @@ class EarthView{
 
     //console.log(sphereGeometry.faces[halfIndex])
 
-    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, [holeMaterial, groundMaterial, testMaterial]);
-    //const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
+    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, [holeMaterial, groundMaterial]);
+    const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry,  [holeMaterial, cloudsMaterial]);
 
-    //this.rotationMeshList.push(rEarthMesh, cloudsMesh);
-    this.rotationMeshList.push(rEarthMesh);
+    this.rotationMeshList.push(rEarthMesh, cloudsMesh);
+    //this.rotationMeshList.push(rEarthMesh);
 
 
     rEarthMesh.position.x = 0;
@@ -305,7 +337,7 @@ class EarthView{
 
 
     scene.add(rEarthMesh)
-   // scene.add(cloudsMesh)
+    scene.add(cloudsMesh)
     scene.add(light)
     camera.lookAt(rEarthMesh.position);
     camera.position.z = this.$$cameraDist;

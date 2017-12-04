@@ -186,3 +186,46 @@ export function getTile({lngMin, lngMax, latMin, latMax, x, y, type}) {
        })
    })
 }
+
+
+export const  getTiledImage = ({type = 'ground'}, loader) =>{
+  return new Promise((resolve, reject)=>{
+    const z = 4;
+    const canvasGround = new Canvas(Math.pow(2, z)*256, Math.pow(2, z)*256)
+    let groundNeeded = Math.pow(Math.pow(2, z),2);
+    console.log(groundNeeded);
+    const applyTile = (z, x, y) =>{
+
+      let url;
+
+      if(type == 'ground'){
+        url = `https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`;
+      }else{
+        url = `https://e.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`
+      }
+
+      getImageWorker(url)
+        .then(img =>{
+          canvasGround.drawImage(img, x*256 , y*256)
+          groundNeeded--;
+          console.log(groundNeeded)
+          loader && loader(groundNeeded)
+          if(groundNeeded==0){
+            canvasGround.getImage()
+              .then(img=>{
+                resolve(img)
+              })
+          }
+        })
+        .catch(err=>{
+          console.error(err)
+        })
+    }
+
+    for(let y = 0; y<Math.pow(2, z); y++){
+      for(let x = 0; x< Math.pow(2, z); x++ ){
+        applyTile(z, x, y)
+      }
+    }
+  })
+}
