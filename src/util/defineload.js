@@ -45,7 +45,12 @@ function loadPromise(url) {
     xhr.send();
   });
 }
-
+/**
+ *
+ * @param name
+ * @param callback
+ * @return {Promise.<T>}
+ */
 export default function defineload(name, callback) {
   return new Promise((resolve, reject)=>{
     if(module[name]){

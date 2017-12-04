@@ -8,6 +8,10 @@ import {autobind} from "core-decorators";
 import {$Worker} from '../../util/worker'
 import {getImageWorker} from  '../../util/load-image-blob'
 
+import {init as mySphearInit} from  './my-sphear'
+
+console.log(mySphearInit)
+
 import defineload from '../../util/defineload'
 import {getTile} from "./eart-tile";
 
@@ -231,17 +235,19 @@ class EarthView{
 
     const faces =  Math.pow(2, zoom)
 
-    const sphereGeometry = new THREE.SphereGeometry(4, faces, faces+2);
-    const cloudsGeometry = new THREE.SphereGeometry(4.1, faces, faces+2);
+    const sphereGeometry = new THREE.EarthGeometry(4, faces);
+    //const cloudsGeometry = new THREE.SphereGeometry(4.1, faces, faces+2);
     const holeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
+    const groundMaterial = new THREE.MeshPhongMaterial({color: 0x0000ff, flatShading: true});
+    const testMaterial = new THREE.MeshPhongMaterial({color: 0xff0000, flatShading: true});
 
 
-    facesIndexed(sphereGeometry, faces)
-    facesIndexed(cloudsGeometry, faces)
+    //facesIndexed(sphereGeometry, faces)
+    //facesIndexed(cloudsGeometry, faces)
 
 
-    console.log(faces)
-    const groundMaterials = ((z)=>{
+   // console.log(faces)
+   /* const groundMaterials = ((z)=>{
       const arr = [];
       const max = Math.pow(2, z);
       for(let y = 0; y<max; y++){
@@ -251,11 +257,11 @@ class EarthView{
       }
       return arr
     })(zoom);
+*/
 
 
 
-
-    const cloudsMaterials = ((z)=>{
+    /*const cloudsMaterials = ((z)=>{
       const arr = [];
       const max = Math.pow(2, z);
       for(let y = 0; y<max; y++){
@@ -264,7 +270,7 @@ class EarthView{
         }
       }
       return arr
-    })(zoom);
+    })(zoom);*/
 
 
 
@@ -273,11 +279,11 @@ class EarthView{
     const materials = []
     materials.push(holeMaterial)
 
-    groundMaterials.unshift(holeMaterial);
-    groundMaterials.push(holeMaterial);
+    //groundMaterials.unshift(holeMaterial);
+    //groundMaterials.push(holeMaterial);
 
-    cloudsMaterials.unshift(holeMaterial)
-    cloudsMaterials.push(holeMaterial)
+    //cloudsMaterials.unshift(holeMaterial)
+    //cloudsMaterials.push(holeMaterial)
 
    /* const halfIndex = sphereGeometry.faces.length/2 - (faces*2)
     sphereGeometry.faces[halfIndex].materialIndex =  0
@@ -286,11 +292,11 @@ class EarthView{
 
     //console.log(sphereGeometry.faces[halfIndex])
 
-    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, groundMaterials);
-    const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
+    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, [holeMaterial, groundMaterial, testMaterial]);
+    //const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterials);
 
-    this.rotationMeshList.push(rEarthMesh, cloudsMesh);
-    //this.rotationMeshList.push(rEarthMesh);
+    //this.rotationMeshList.push(rEarthMesh, cloudsMesh);
+    this.rotationMeshList.push(rEarthMesh);
 
 
     rEarthMesh.position.x = 0;
@@ -299,7 +305,7 @@ class EarthView{
 
 
     scene.add(rEarthMesh)
-    scene.add(cloudsMesh)
+   // scene.add(cloudsMesh)
     scene.add(light)
     camera.lookAt(rEarthMesh.position);
     camera.position.z = this.$$cameraDist;
@@ -423,7 +429,10 @@ export const EarthComponent = Vue.component('android-component', {
   mounted: function(e) {
       defineload('THREE')
         .then(t=>{
-          THREE = t
+          THREE = t;
+          return mySphearInit()
+        })
+        .then(()=>{
           earthView.init(this.$el)
         });
   },
