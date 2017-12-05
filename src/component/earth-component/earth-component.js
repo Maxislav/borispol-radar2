@@ -241,6 +241,56 @@ class EarthView{
     const groundMaterial = new THREE.MeshPhongMaterial();
     const cloudsMaterial = new THREE.MeshPhongMaterial({transparent: true,opacity: 1});
 
+
+
+    const glowMaterial = new THREE.ShaderMaterial(
+      {
+        uniforms:
+          {
+            "c":   { type: "f", value: 1.0 },
+            "p":   { type: "f", value: 1.4 },
+            glowColor: { type: "c", value: new THREE.Color(0xccddff) },
+            viewVector: { type: "v3", value: camera.position }
+          },
+        vertexShader:   `
+        uniform vec3 viewVector;
+        uniform float c;
+        uniform float p;
+        varying float intensity;
+        void main() 
+        {
+            vec3 vNormal = normalize( normalMatrix * normal );
+          vec3 vNormel = normalize( normalMatrix * viewVector );
+          intensity = pow( c - dot(vNormal, vNormel), p );
+          
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        }
+
+        `,
+        fragmentShader: `
+          uniform vec3 glowColor;
+          varying float intensity;
+          void main() 
+          {
+            vec3 glow = glowColor * intensity;
+              gl_FragColor = vec4( glow, 1.0 );
+          }
+        `,
+        side: THREE.FrontSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+      } );
+
+
+
+
+
+
+
+
+
+
+
     const testMaterial = new THREE.MeshPhongMaterial({color: 0xff0000, flatShading: true});
 
 
@@ -326,6 +376,28 @@ class EarthView{
 
     const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, [holeMaterial, groundMaterial]);
     const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry,  [holeMaterial, cloudsMaterial]);
+    const glowMesh =  new THREE.Mesh( cloudsGeometry.clone(), glowMaterial )
+    glowMesh.scale.multiplyScalar(1.01);
+    //glowMesh.add(sprite)
+
+
+    getImageWorker('../img/glow.png')
+      .then(img=>{
+        const spriteMaterial = new THREE.SpriteMaterial(
+          {
+            map: new THREE.Texture(img, {needsUpdate: true}),
+            lights: true,
+            useScreenCoordinates: false, alignment: sphereGeometry.center,
+            color: 0xccddff, transparent: false, blending: THREE.AdditiveBlending
+          })
+        spriteMaterial.needsUpdate = true
+        spriteMaterial.map.needsUpdate = true
+        const sprite = new THREE.Sprite( spriteMaterial );
+        sprite.scale.set(10, 10, 1.0);
+
+        glowMesh.add(sprite)
+      })
+
 
     this.rotationMeshList.push(rEarthMesh, cloudsMesh);
     //this.rotationMeshList.push(rEarthMesh);
@@ -338,6 +410,8 @@ class EarthView{
 
     scene.add(rEarthMesh)
     scene.add(cloudsMesh)
+    scene.add(glowMesh)
+
     scene.add(light)
     camera.lookAt(rEarthMesh.position);
     camera.position.z = this.$$cameraDist;

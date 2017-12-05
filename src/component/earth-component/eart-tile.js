@@ -202,6 +202,7 @@ export const  getTiledImage = ({type = 'ground'}, loader) =>{
         url = `https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`;
       }else{
         url = `https://e.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`
+        //url = `https://maptiles.accuweather.com/accuweather/tiles/worldSat/f6ddc115e/1455/${z}/${x}_${y}.png`
       }
 
       getImageWorker(url)
