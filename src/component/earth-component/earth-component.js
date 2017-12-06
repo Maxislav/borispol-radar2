@@ -440,40 +440,29 @@ class EarthView{
 
 
 
-    const dx = this.tx ? e.clientX - this.tx : 0
-    const dy = this.ty ? e.clientY - this.ty : 0
-    const k = this.camera.position.z - 4;
 
-    this.rotationMeshList.forEach(mesh=>{
-      mesh.rotation.y+=(dx*.002)
-      mesh.rotation.x+=(dy*.002)
-    });
+    const dx = this.tx - e.clientX;
+    const dy = e.clientY - this.ty;
+    this.$$ax = this.tempAx + dx*0.1;
 
-    this.tx = e.clientX
-    this.ty = e.clientY
-
-    /*const dx = this.$$rx - e.clientX ;
-    const dy =  e.clientY - this.$$ry;
-    this.$$ax = this.tempAx + dy;
-    this.$$ay = this.tempAy + dx;
+    this.$$ay = this.tempAy + dy*0.1;
     const ayRad = Math.radians(this.$$ay)
     const axRad = Math.radians(this.$$ax)
 
-    this.camera.position.x = this.$$cameraDist*Math.sin(ayRad)
-    this.camera.position.z = this.$$cameraDist*Math.cos(ayRad);
-    this.camera.position.y = this.$$cameraDist*Math.sin(axRad)
+    console.log(this.$$ax)
 
-    this.camera.position.z = this.$$cameraDist*Math.cos(axRad) -(this.$$cameraDist - this.camera.position.z);
     this.camera.lookAt(this.rEarthMesh.position);
-    console.log(axRad)*/
-    this.render()
 
   }
 
   @autobind
   mousedown(e){
-    this.tx = 0
-    this.ty = 0
+    this.tx = e.clientX
+    this.ty = e.clientY
+
+    this.tempAy = this.$$ay
+    this.tempAx = this.$$ax
+    console.log('mousedown',  this.tempAy)
     this.$$el.removeEventListener('mousemove', this.mousmove);
     this.$$el.addEventListener('mousemove', this.mousmove)
   }
