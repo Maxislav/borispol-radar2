@@ -435,24 +435,26 @@ class EarthView{
 
   }
 
+  chnageCameraPosition(){
+    const ayRad = Math.radians(this.$$ay)
+    const axRad = Math.radians(this.$$ax)
+    const z1 = this.$$cameraDist*Math.cos(ayRad)
+    const y1 = this.$$cameraDist*Math.sin(ayRad)
+    const dx2 = z1 * Math.sin(axRad);
+    const dz2 = z1 * Math.cos(axRad);
+    this.camera.position.y = y1
+    this.camera.position.x = dx2
+    this.camera.position.z = dz2
+    this.camera.lookAt(this.rEarthMesh.position);
+  }
+
   @autobind
   mousmove(e){
-
-
-
-
     const dx = this.tx - e.clientX;
     const dy = e.clientY - this.ty;
     this.$$ax = this.tempAx + dx*0.1;
-
     this.$$ay = this.tempAy + dy*0.1;
-    const ayRad = Math.radians(this.$$ay)
-    const axRad = Math.radians(this.$$ax)
-
-    console.log(this.$$ax)
-
-    this.camera.lookAt(this.rEarthMesh.position);
-
+    this.chnageCameraPosition()
   }
 
   @autobind
@@ -473,18 +475,10 @@ class EarthView{
 
   @autobind
   onweel(e){
-
-    //console.log(this.$$cameraDist - this.camera.position.z+1)
-
     let dy = (e.deltaY*0.005);
     const k = this.camera.position.z - 4;
-    this.camera.position.z = this.camera.position.z+(dy*k)
-
-    //this.camera.fov +=dy
-    //this.camera.updateProjectionMatrix()
-
-
-    //this.render()
+    this.$$cameraDist = this.camera.position.z+(dy*k)
+    this.chnageCameraPosition()
   }
 
   bindEvents(){
