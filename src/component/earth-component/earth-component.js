@@ -198,7 +198,7 @@ class EarthView{
     this.$$ry = 0;
     this.$$ay = 0; this.tempAy = 0;
     this.$$ax = 0; this.tempAx = 0;
-    this.$$cameraDist  = 40;
+    this.$$cameraDist  = 20;
 
     this.rotationMeshList = [];
 
@@ -217,7 +217,7 @@ class EarthView{
     this.$$el = el;
     const scene =this.scene =  new THREE.Scene();
 
-    const camera = this.camera =  new THREE.PerspectiveCamera(12, el.clientWidth / el.clientHeight, 0.1, 1000);
+    const camera = this.camera =  new THREE.PerspectiveCamera(30, el.clientWidth / el.clientHeight, 0.1, 1000);
     const renderer = this.renderer =  new THREE.WebGLRenderer({antialias: true});
     renderer.setClearColor('#000');
     renderer.setSize(el.clientWidth, el.clientHeight);
@@ -236,7 +236,7 @@ class EarthView{
     const faces =  Math.pow(2, zoom)
 
     const sphereGeometry = new THREE.EarthGeometry(4, faces);
-    const cloudsGeometry = new THREE.EarthGeometry(4.1, faces);
+    const cloudsGeometry = new THREE.EarthGeometry(4.02, faces);
     const holeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
     const groundMaterial = new THREE.MeshPhongMaterial();
     const cloudsMaterial = new THREE.MeshPhongMaterial({transparent: true,opacity: 1});
@@ -387,7 +387,6 @@ class EarthView{
           {
             map: new THREE.Texture(img, {needsUpdate: true}),
             lights: true,
-            useScreenCoordinates: false, alignment: sphereGeometry.center,
             color: 0xccddff, transparent: false, blending: THREE.AdditiveBlending
           })
         spriteMaterial.needsUpdate = true
@@ -416,8 +415,26 @@ class EarthView{
     camera.lookAt(rEarthMesh.position);
     camera.position.z = this.$$cameraDist;
 
-    //loadIm
 
+    this.enviromentMesh;
+    getImageWorker('../img/galaxy_starfield.png')
+      .then(img=>{
+        const sphereGeometry = new THREE.SphereGeometry(300, 32, 32)
+        const texture = new THREE.Texture(img);
+        texture.needsUpdate = true;
+        const m = new THREE.MeshBasicMaterial({
+          side: THREE.BackSide,
+          map: texture,
+          clipIntersection: false
+        });
+        this.enviromentMesh = new THREE.Mesh(sphereGeometry, m);
+        ['x', 'y', 'z'].map(key => {
+          this.enviromentMesh.position[key] = this.camera.position[key]
+        })
+        scene.add( this.enviromentMesh)
+
+
+      })
 
 
     // var skyMaterial = new THREE.ShaderMaterial( {
@@ -430,8 +447,53 @@ class EarthView{
 
 
 
+    let animaDate = 0;
+    this.angle = {
+      inercia: false,
+      x:0,
+      y:0,
+      dx:0,
+      dy:0
+    };
+
     const anima = () => {
+      if(this.angle.inercia){
+        this.$$ax+=this.angle.dx
+        if(0<this.angle.dx){
+          this.angle.dx-=0.03
+        }
+        if(this.angle.dx<0){
+          this.angle.dx+=0.03
+        }
+        if(Math.abs(this.angle.dx)<0.03){
+          this.angle.dx = 0
+        }
+
+        this.$$ay+=this.angle.dy
+        if(0<this.angle.dy){
+          this.angle.dy-=0.05
+        }
+        if(this.angle.dy<0){
+          this.angle.dy+=0.05
+        }
+        if(Math.abs(this.angle.dy)<0.05){
+          this.angle.dy = 0
+        }
+        
+        
+        this.changeCameraPosition()
+      }
       renderer.render(scene, camera);
+      if(animaDate && !this.angle.inercia) {
+        const  dt = Date.now() - animaDate;
+        this.angle.dx = this.$$ax - this.angle.x
+        this.angle.dy = this.$$ay - this.angle.y
+      }
+      animaDate = Date.now();
+      this.angle.x = this.$$ax;
+      this.angle.y = this.$$ay;
+
+
       if(!this.isDestroyed)
         requestAnimationFrame(anima);
     }
@@ -460,6 +522,11 @@ class EarthView{
     this.camera.position.x = dx2
     this.camera.position.z = dz2
     this.camera.lookAt(this.rEarthMesh.position);
+    if(this.enviromentMesh){
+      ['x', 'y', 'z'].map(key=>{
+        this.enviromentMesh.position[key] = this.camera.position[key]
+      })
+    }
   }
 
   @autobind
@@ -473,18 +540,19 @@ class EarthView{
 
   @autobind
   mousedown(e){
+    this.angle.inercia = false;
     this.tx = e.clientX
     this.ty = e.clientY
-
     this.tempAy = this.$$ay
     this.tempAx = this.$$ax
-    console.log('mousedown',  this.tempAy)
     this.$$el.removeEventListener('mousemove', this.mousmove);
     this.$$el.addEventListener('mousemove', this.mousmove)
   }
   @autobind
   mouseup(e){
     this.$$el.removeEventListener('mousemove', this.mousmove)
+    this.angle.inercia = true;
+    console.log(this.angle.dx)
   }
 
   @autobind
