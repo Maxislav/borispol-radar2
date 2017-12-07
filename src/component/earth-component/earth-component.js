@@ -224,14 +224,14 @@ class EarthView{
     el.appendChild(renderer.domElement);
 
     const light	= new THREE.SpotLight( 0x888888, 1.2 )
-    light.position.set( 2, 2, 40 );
-    const light2	= new THREE.SpotLight( 0x888888,0.2 )
-    light2.position.set( -20, -10, 10 );
+    light.position.set( -20, 10, 40 );
+    const light2	= new THREE.SpotLight( 0x888888,0.5 )
+    light2.position.set( 2, 2, -20 );
     scene.add( light );
     scene.add( light2 );
 
 
-    const zoom = 5;
+    const zoom = 6;
 
     const faces =  Math.pow(2, zoom)
 
@@ -291,7 +291,7 @@ class EarthView{
 
 
 
-    const testMaterial = new THREE.MeshPhongMaterial({color: 0xff0000, flatShading: true});
+    const testMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, flatShading: true});
 
 
     getTiledImage({type:'ground'})
@@ -416,6 +416,20 @@ class EarthView{
     camera.lookAt(rEarthMesh.position);
     camera.position.z = this.$$cameraDist;
 
+    //loadIm
+
+
+
+    // var skyMaterial = new THREE.ShaderMaterial( {
+    //   fragmentShader: shader.fragmentShader,
+    //   vertexShader: shader.vertexShader,
+    //   uniforms: shader.uniforms,
+    //   depthWrite: false,
+    //   side: THREE.BackSide
+    // } );
+
+
+
     const anima = () => {
       renderer.render(scene, camera);
       if(!this.isDestroyed)
@@ -435,7 +449,7 @@ class EarthView{
 
   }
 
-  chnageCameraPosition(){
+  changeCameraPosition(){
     const ayRad = Math.radians(this.$$ay)
     const axRad = Math.radians(this.$$ax)
     const z1 = this.$$cameraDist*Math.cos(ayRad)
@@ -454,7 +468,7 @@ class EarthView{
     const dy = e.clientY - this.ty;
     this.$$ax = this.tempAx + dx*0.1;
     this.$$ay = this.tempAy + dy*0.1;
-    this.chnageCameraPosition()
+    this.changeCameraPosition()
   }
 
   @autobind
@@ -476,9 +490,9 @@ class EarthView{
   @autobind
   onweel(e){
     let dy = (e.deltaY*0.005);
-    const k = this.camera.position.z - 4;
-    this.$$cameraDist = this.camera.position.z+(dy*k)
-    this.chnageCameraPosition()
+    const k = this.$$cameraDist - 4;
+    this.$$cameraDist = this.$$cameraDist+(dy*k)
+    this.changeCameraPosition()
   }
 
   bindEvents(){

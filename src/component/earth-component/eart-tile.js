@@ -209,7 +209,7 @@ export const  getTiledImage = ({type = 'ground'}, loader) =>{
         .then(img =>{
           canvasGround.drawImage(img, x*256 , y*256)
           groundNeeded--;
-          console.log(groundNeeded)
+         // console.log(groundNeeded)
           loader && loader(groundNeeded)
           if(groundNeeded==0){
             canvasGround.getImage()
