@@ -11,7 +11,7 @@ import $ from 'jquery-lite';
 
 import {init as mySphereInit} from  './my-sphear'
 import defineload from '../../util/defineload'
-import {getTile, getTiledImage} from "./eart-tile";
+import {getTiledImage} from "./eart-tile";
 
 function evalInContext(js, context) {
   return function () {
@@ -269,15 +269,17 @@ class EarthView{
     rEarthMesh.position.x = 0;
     rEarthMesh.position.y = 0;
     rEarthMesh.position.z = 0;
-
+    rEarthMesh.rotation.y = Math.PI/2
+    cloudsMesh.rotation.y = Math.PI/2
 
     scene.add(rEarthMesh)
     scene.add(cloudsMesh)
     scene.add(glowMesh)
     scene.add(light)
     scene.add( light2 );
-    camera.lookAt(rEarthMesh.position);
+
     camera.position.z = this.$$cameraDist;
+    camera.lookAt(rEarthMesh.position);
     light2.position.set(...['x', 'y', 'z'].map(key=>camera.position[key]))
     light2.lookAt(0,0,0)
 
@@ -351,7 +353,10 @@ class EarthView{
         
         this.changeCameraPosition()
       }
+
       renderer.render(scene, camera);
+
+
       if(animaDate && !this.angle.inertia) {
         const  dt = Date.now() - animaDate;
         this.angle.dx = this.$$ax - this.angle.x
@@ -381,17 +386,9 @@ class EarthView{
 
   changeCameraPosition(){
 
-    if (this.$$ax < 0) {
-      this.$$ax = 360 + this.$$ax
-    } else if (360 < this.$$ax) {
-      this.$$ax = 360 - this.$$ax
-    }
 
-    if (90 < this.$$ay) {
-      this.$$ay = 90
-    } else if (this.$$ay < -90) {
-      this.$$ay = -90
-    }
+    if(90<this.$$ay) this.$$ay = 90
+    if(this.$$ay<-90) this.$$ay = -90
 
     const ayRad = Math.radians(this.$$ay);
     const axRad = Math.radians(this.$$ax);
@@ -413,7 +410,10 @@ class EarthView{
       this.$$lng = this.$$ax
     }
     this.$$lat = this.$$ay;
-    console.log(this.$$lng, this.$$lat)
+    //console.log(this.$$lng, this.$$lat)
+
+    //this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat)
+   // this.rEarthMesh.geometry.groupsNeedUpdate = true;
 
 
   }

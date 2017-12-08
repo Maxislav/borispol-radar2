@@ -72,6 +72,15 @@ export function init() {
             super(radius, segments, segments+2);
             this.segments = segments;
             this.earhFaces = [];
+            /**
+             *
+             * @type {{lng: number, lat: number}}
+             */
+            this.screenLngLat = {
+              lng:0,
+              lat:0
+            }
+
            // this.faceIndex();
 
 
@@ -141,6 +150,25 @@ export function init() {
               earthFace.setMaterialIndex(1)
             })
           }
+
+          setScreenLngLat(lng, lat){
+            this.screenLngLat.lng = lng;
+            this.screenLngLat.lat = lat;
+
+            const earthFace = this.earhFaces.find(face=>{
+              return face.lngMin<lng && lng<face.lngMax && face.latMax<lat && lat<face.latMin
+            })
+
+            console.log(earthFace)
+            if(earthFace){
+              earthFace.setMaterialIndex(0)
+
+            }
+
+          }
+
+
+
           getX(lngMin, zoom) {
             return (Math.radians(lngMin)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
           }

@@ -131,7 +131,6 @@ export class Canvas{
 		const canvas = this.instance = document.createElement('canvas');
 		this.width = canvas.width = width;
 		this.height = canvas.height = height;
-
 		this.context = canvas.getContext('2d');
     this.context.font = "20px Arial";
     this.context.fillStyle = "red";
@@ -143,6 +142,9 @@ export class Canvas{
 		return this;
 	}
 
+  /**
+   * @return {Promise}
+   */
 	getImage() {
 		return new Promise( (resolve, reject) => {
       const img = new  Image()
