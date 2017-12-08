@@ -16,9 +16,9 @@ export function init() {
           constructor(face1, face2, faceVertexUvs , index, faceIndex){
             this.face1 = face1;
             this.face2 = face2;
-            this.faceVertexUvs = faceVertexUvs
+            this.faceVertexUvs = faceVertexUvs;
             this.index = index;
-            this.faceIndex = faceIndex
+            this.faceIndex = faceIndex;
 
             this.latMin = 0;
             this.latMax = 0;
@@ -37,14 +37,17 @@ export function init() {
 
             this.vertexCoord = new Array(4);
 
+            this.materialIndex = 0;
             //console.log(index)
           }
 
           setMaterialIndex(i){
             this.face1.materialIndex = i;
             this.face2.materialIndex = i;
+            this.materialIndex = i;
             return this;
           }
+
 
           uvsMaping(){
             const v = this.vertexCoord
@@ -53,18 +56,14 @@ export function init() {
               new THREE.Vector2(v[2].x, v[2].y ),
               new THREE.Vector2(v[3].x, v[3].y),
               new THREE.Vector2(v[1].x, v[1].y)
-            ]
+            ];
 
             this.faceVertexUvs[this.faceIndex+1]  = [
               new THREE.Vector2(v[3].x, v[3].y),
               new THREE.Vector2(v[0].x, v[0].y),
               new THREE.Vector2(v[1].x, v[1].y)
             ]
-
-
-
           }
-
         }
 
 

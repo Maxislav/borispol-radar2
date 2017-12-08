@@ -7,11 +7,9 @@ import './earth-component.styl'
 import {autobind} from "core-decorators";
 import {$Worker} from '../../util/worker'
 import {getImageWorker, Canvas} from  '../../util/load-image-blob'
+import $ from 'jquery-lite';
 
-import {init as mySphearInit} from  './my-sphear'
-
-console.log(mySphearInit)
-
+import {init as mySphereInit} from  './my-sphear'
 import defineload from '../../util/defineload'
 import {getTile, getTiledImage} from "./eart-tile";
 
@@ -22,183 +20,30 @@ function evalInContext(js, context) {
 }
 
 let THREE = undefined;
-
-
-
-
-
-const cloudsMaterialLoader = (z, x, y) =>{
-  const sphereMaterial = new THREE.MeshPhongMaterial({
-    needsUpdate: true,
-    specular: "#ffffff",
-    color: 0xffffff,
-    shininess: 1,
-    transparent: true,
-    opacity: 1,
-    reflectivity: 10,
-
-
-   // flatShading: true,
-    bumpScale: 0.1
-  });
-
-  sphereMaterial.promise = new Promise((res, rej)=>{
-
-    let lngMin = x * 360/Math.pow(2, z);
-    let lngMax = (x+1) * 360/Math.pow(2, z);
-    let latMin = 90 - (y+2)*180/(Math.pow(2, z)+2);
-    let latMax = 90 - (y+2-1)*180/(Math.pow(2, z)+2);
-
-    if(180<lngMin){
-      lngMin = lngMin - 360
-    }
-
-    if(180 < lngMax){
-      lngMax = lngMax - 360
-    }
-
-    //if(0<=latMin && latMin<45 && 90<=lngMin && lngMin<=180)
-    getTile({
-      lngMin,
-      lngMax,
-      latMin,
-      latMax,
-      x,
-      y,
-      type: 'clouds'
-    }).then(img=>{
-      const texture = new THREE.Texture(img)
-      sphereMaterial.map = texture;
-      sphereMaterial.emissiveMap = texture
-      sphereMaterial.needsUpdate = true;
-      texture.needsUpdate = true;
-      res(sphereMaterial)
-    });
-  })
-  return sphereMaterial
-};
-
-const groundMaterialLoader = (z, x, y) =>{
-  const sphereMaterial = new THREE.MeshPhongMaterial({
-    needsUpdate: true,
-    specular: "#ffffff",
-    shininess: 1,
-    //flatShading: true,
-    //wireframe: true,
-    bumpScale: 0.1
-  });
-  sphereMaterial.needsUpdate = true;
-  sphereMaterial.promise = new Promise((res, rej)=>{
-
-    let lngMin = x * 360/Math.pow(2, z);
-    let lngMax = (x+1) * 360/Math.pow(2, z);
-    let latMin = 90 - (y+2)*180/(Math.pow(2, z)+2);
-    let latMax = 90 - (y+2-1)*180/(Math.pow(2, z)+2);
-
-    if(180<lngMin){
-      lngMin = lngMin - 360
-    }
-
-    if(180 < lngMax){
-      lngMax = lngMax - 360
-    }
-
-    //if(0<=latMin && latMin<45 && 90<=lngMin && lngMin<=180)
-    getTile({
-      lngMin,
-      lngMax,
-      latMin,
-      latMax,
-      x,
-      y,
-      type: 'ground'
-    }).then(img=>{
-      const texture = new THREE.Texture(img)
-      sphereMaterial.map = texture;
-      sphereMaterial.emissiveMap = texture
-      sphereMaterial.needsUpdate = true;
-      texture.needsUpdate = true;
-      res(sphereMaterial)
-    });
-
-
-
-
-
-
-   /* const img = new Image();
-    img.onload = function () {
-      (window.URL || window.webkitURL).revokeObjectURL(img.src);
-      const texture = new THREE.Texture(img)
-      sphereMaterial.map = texture;
-      sphereMaterial.emissiveMap = texture
-      sphereMaterial.needsUpdate = true;
-      texture.needsUpdate = true;
-      res(sphereMaterial)
-
-    };
-    img.src = canvas.toDataURL("image/png")*/
-
-   /* getImageWorker('https://maps.tilehosting.com/data/satellite/0/0/0.jpg?key=SoGrAH8cEUtj6OnMI1UY')
-      .then(img=>{
-        console.log(img)
-      })*/
-
-
-
-
-    /*const textureLoader = new THREE.TextureLoader();
-   // textureLoader.load(`http://c.tile.openstreetmap.org/${z}/${x}/${y}.png`, (texture) =>{
-    textureLoader.load(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY"`, (texture) =>{
-    //textureLoader.load(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY"`, (texture) =>{
-      sphereMaterial.map = texture;
-      sphereMaterial.emissiveMap = texture
-      sphereMaterial.needsUpdate = true;
-      res(sphereMaterial)
-    })*/
-  })
-  return sphereMaterial
-};
-
-
-const facesIndexed = (geometry, facesCount) =>{
-  let k = 1;
-  for(let i = 0 ; i<geometry.faces.length; i++ ){
-    if(facesCount-1<i && i<geometry.faces.length-facesCount){
-      geometry.faces[i].materialIndex = k
-      if(i%2){
-        k++
-      }
-    }
-  }
-
-  const faceVertexUvs = geometry.faceVertexUvs[0]
-  for (let i = 0; i< geometry.faces.length; i+=2){
-    if(facesCount-1<i && i<geometry.faces.length-facesCount){
-      faceVertexUvs[i] = [
-        new THREE.Vector2(1, 1),
-        new THREE.Vector2(0, 1),
-        new THREE.Vector2(1, 0)];
-
-      faceVertexUvs[i+1] = [
-        new THREE.Vector2(0, 1),
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(1, 0),
-      ];
-    }
-  }
-}
-
+/**
+ * {EarthView}
+ */
+let earthView;
 
 
 class EarthView{
-  constructor(){
+  constructor($data){
+    this.$data = $data;
     this.$$el = null;
     this.$$rx = 0;
     this.$$ry = 0;
     this.$$ay = 0; this.tempAy = 0;
     this.$$ax = 0; this.tempAx = 0;
     this.$$cameraDist  = 20;
+    /**
+     * @type {number}
+     */
+    this.$$lng = 0;
+    /**
+     *
+     * @type {number}
+     */
+    this.$$lat = 0;
 
     this.rotationMeshList = [];
 
@@ -219,29 +64,33 @@ class EarthView{
 
     const camera = this.camera =  new THREE.PerspectiveCamera(30, el.clientWidth / el.clientHeight, 0.1, 1000);
     const renderer = this.renderer =  new THREE.WebGLRenderer({antialias: true});
+    renderer.domElement.setAttribute('class', 'three-view')
     renderer.setClearColor('#000');
     renderer.setSize(el.clientWidth, el.clientHeight);
     el.appendChild(renderer.domElement);
 
     const light	= new THREE.SpotLight( 0x888888, 1.2 )
     light.position.set( -20, 10, 40 );
-    const light2	= new THREE.SpotLight( 0x888888,0.5 )
-    light2.position.set( 2, 2, -20 );
-    scene.add( light );
-    scene.add( light2 );
+    const light2 = this.light2	= new THREE.SpotLight( 0x888888,0.5 )
+    //light2.position.set( 2, 2, -20 );
+
+
+
+
+
 
 
     const zoom = 6;
 
     const faces =  Math.pow(2, zoom)
 
-    const sphereGeometry = new THREE.EarthGeometry(4, faces);
+    const sphereGeometry = this.sphereGeometry = new THREE.EarthGeometry(4, faces);
     const cloudsGeometry = new THREE.EarthGeometry(4.02, faces);
-    const holeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
+    const holeMaterial = new THREE.MeshBasicMaterial({ transparent: true});
     const groundMaterial = new THREE.MeshPhongMaterial();
     const cloudsMaterial = new THREE.MeshPhongMaterial({transparent: true,opacity: 1});
 
-
+    console.log(this.sphereGeometry.earhFaces)
 
     const glowMaterial = new THREE.ShaderMaterial(
       {
@@ -294,16 +143,26 @@ class EarthView{
     const testMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, flatShading: true});
 
 
-    getTiledImage({type:'ground'})
+    getTiledImage({type:'ground', zoom:4}, ({canvas, load})=>{
+      this.$data.groundLoad = parseInt(load*100) +'%'
+
+    })
       .then(img=>{
         const texture = new THREE.Texture(img);
         groundMaterial.map = texture;
         groundMaterial.emissiveMap = texture;
         groundMaterial.needsUpdate = true;
         texture.needsUpdate = true;
-      })
-    getTiledImage({type:'rain'}, () =>{
+        //this.$data.isShowGroundLoad = false
+        $(this.$$el).find('.ground-load')[0].$fadeTo(1, 0, 500)
+          .then(()=>{
+            this.$data.isShowGroundLoad = false
+          })
+        
 
+      })
+    getTiledImage({type:'rain', zoom:4}, ({load}) =>{
+      this.$data.cloudsLoad = parseInt(load*100) +'%'
     })
       .then(img=>{
         const texture = new THREE.Texture(img);
@@ -311,6 +170,11 @@ class EarthView{
         cloudsMaterial.emissiveMap = texture;
         cloudsMaterial.needsUpdate = true;
         texture.needsUpdate = true;
+
+        $(this.$$el).find('.clouds-load')[0].$fadeTo(1, 0, 500)
+          .then(()=>{
+            this.$data.isShowCloudsLoad = false
+          })
       })
 
 
@@ -410,11 +274,12 @@ class EarthView{
     scene.add(rEarthMesh)
     scene.add(cloudsMesh)
     scene.add(glowMesh)
-
     scene.add(light)
+    scene.add( light2 );
     camera.lookAt(rEarthMesh.position);
     camera.position.z = this.$$cameraDist;
-
+    light2.position.set(...['x', 'y', 'z'].map(key=>camera.position[key]))
+    light2.lookAt(0,0,0)
 
     this.enviromentMesh;
     getImageWorker('../img/galaxy_starfield.png')
@@ -449,7 +314,7 @@ class EarthView{
 
     let animaDate = 0;
     this.angle = {
-      inercia: false,
+      inertia: false,
       x:0,
       y:0,
       dx:0,
@@ -457,7 +322,7 @@ class EarthView{
     };
 
     const anima = () => {
-      if(this.angle.inercia){
+      if(this.angle.inertia){
         this.$$ax+=this.angle.dx
         if(0<this.angle.dx){
           this.angle.dx-=0.03
@@ -478,13 +343,16 @@ class EarthView{
         }
         if(Math.abs(this.angle.dy)<0.05){
           this.angle.dy = 0
+
         }
+
+        if(!this.angle.dy && !this.angle.dx) this.angle.inertia = false
         
         
         this.changeCameraPosition()
       }
       renderer.render(scene, camera);
-      if(animaDate && !this.angle.inercia) {
+      if(animaDate && !this.angle.inertia) {
         const  dt = Date.now() - animaDate;
         this.angle.dx = this.$$ax - this.angle.x
         this.angle.dy = this.$$ay - this.angle.y
@@ -512,21 +380,42 @@ class EarthView{
   }
 
   changeCameraPosition(){
-    const ayRad = Math.radians(this.$$ay)
-    const axRad = Math.radians(this.$$ax)
+
+    if (this.$$ax < 0) {
+      this.$$ax = 360 + this.$$ax
+    } else if (360 < this.$$ax) {
+      this.$$ax = 360 - this.$$ax
+    }
+
+    if (90 < this.$$ay) {
+      this.$$ay = 90
+    } else if (this.$$ay < -90) {
+      this.$$ay = -90
+    }
+
+    const ayRad = Math.radians(this.$$ay);
+    const axRad = Math.radians(this.$$ax);
     const z1 = this.$$cameraDist*Math.cos(ayRad)
     const y1 = this.$$cameraDist*Math.sin(ayRad)
     const dx2 = z1 * Math.sin(axRad);
-    const dz2 = z1 * Math.cos(axRad);
-    this.camera.position.y = y1
-    this.camera.position.x = dx2
-    this.camera.position.z = dz2
+    let dz2 = z1 * Math.cos(axRad);
+    this.camera.position.y = y1;
+    this.camera.position.x = dx2;
+    this.camera.position.z = dz2;
     this.camera.lookAt(this.rEarthMesh.position);
     if(this.enviromentMesh){
-      ['x', 'y', 'z'].map(key=>{
-        this.enviromentMesh.position[key] = this.camera.position[key]
-      })
+      this.enviromentMesh.position.set(...['x', 'y', 'z'].map(key=>this.camera.position[key]))
     }
+    this.light2.position.set(...['x', 'y', 'z'].map(key=>this.camera.position[key]))
+    if(180<this.$$ax){
+      this.$$lng =  (this.$$ax - 360)
+    }else {
+      this.$$lng = this.$$ax
+    }
+    this.$$lat = this.$$ay;
+    console.log(this.$$lng, this.$$lat)
+
+
   }
 
   @autobind
@@ -540,7 +429,7 @@ class EarthView{
 
   @autobind
   mousedown(e){
-    this.angle.inercia = false;
+    this.angle.inertia = false;
     this.tx = e.clientX
     this.ty = e.clientY
     this.tempAy = this.$$ay
@@ -551,8 +440,7 @@ class EarthView{
   @autobind
   mouseup(e){
     this.$$el.removeEventListener('mousemove', this.mousmove)
-    this.angle.inercia = true;
-    console.log(this.angle.dx)
+    this.angle.inertia = true;
   }
 
   @autobind
@@ -583,25 +471,28 @@ class EarthView{
   }
 }
 
-const earthView = new EarthView()
-
-
-
-/*
-*/
 
 
 
 export const EarthComponent = Vue.component('android-component', {
   template: template(),
   data: function () {
-    return {}
+    return {
+      groundLoad: '0%',
+      isShowGroundLoad: true,
+      cloudsLoad: '0%',
+      isShowCloudsLoad: true
+    }
   },
   mounted: function(e) {
+
+
+
+      earthView = new EarthView(this.$data)
       defineload('THREE')
         .then(t=>{
           THREE = t;
-          return mySphearInit()
+          return mySphereInit()
         })
         .then(()=>{
           earthView.init(this.$el)

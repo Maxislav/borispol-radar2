@@ -188,12 +188,14 @@ export function getTile({lngMin, lngMax, latMin, latMax, x, y, type}) {
 }
 
 
-export const  getTiledImage = ({type = 'ground'}, loader) =>{
+export const  getTiledImage = ({type = 'ground', zoom = 4}, loader) =>{
   return new Promise((resolve, reject)=>{
-    const z = 4;
+    const z = zoom;
     const canvasGround = new Canvas(Math.pow(2, z)*256, Math.pow(2, z)*256)
-    let groundNeeded = Math.pow(Math.pow(2, z),2);
-    console.log(groundNeeded);
+
+    let groundNeeded = Math.pow(Math.pow(2, z),2) ;
+    let groundLoad = groundNeeded;
+    console.log(groundLoad);
     const applyTile = (z, x, y) =>{
 
       let url;
@@ -205,21 +207,25 @@ export const  getTiledImage = ({type = 'ground'}, loader) =>{
         //url = `https://maptiles.accuweather.com/accuweather/tiles/worldSat/f6ddc115e/1455/${z}/${x}_${y}.png`
       }
 
-      getImageWorker(url)
+      getImageWorker(url, true)
         .then(img =>{
           canvasGround.drawImage(img, x*256 , y*256)
-          groundNeeded--;
-         // console.log(groundNeeded)
-          loader && loader(groundNeeded)
-          if(groundNeeded==0){
-            canvasGround.getImage()
-              .then(img=>{
-                resolve(img)
-              })
-          }
+          groundLoad--;
+          return canvasGround
         })
         .catch(err=>{
-          console.error(err)
+          groundLoad--;
+          return canvasGround
+        })
+        .then((/**@type {Canvas}*/canvas)=>{
+          loader && loader({canvas, load: 1 - (groundLoad/groundNeeded) })
+          if(groundLoad==0){
+            resolve(canvas.instance)
+            /*canvas.getImage()
+              .then(img=>{
+                resolve(img)
+              })*/
+          }
         })
     }
 

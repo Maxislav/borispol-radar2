@@ -1,1 +1,4 @@
 .earth-component
+    .tile-loader
+        .ground-load(v-if="isShowGroundLoad") Ground tiles {{groundLoad}}
+        .clouds-load(v-if="isShowCloudsLoad") Rain tiles {{cloudsLoad}}
