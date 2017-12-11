@@ -67,11 +67,20 @@ export function init() {
         }
 
 
-        THREE.EarthGeometry = class extends THREE.SphereGeometry{
+
+        class  EarthGeometry extends THREE.SphereGeometry{
           constructor(radius, segments){
             super(radius, segments, segments+2);
             this.segments = segments;
             this.earhFaces = [];
+
+            /**
+             *
+             * @type {EarthFace}
+             * @private
+             */
+            this._previousFace
+
             /**
              *
              * @type {{lng: number, lat: number}}
@@ -157,14 +166,20 @@ export function init() {
 
             const earthFace = this.earhFaces.find(face=>{
               return face.lngMin<lng && lng<face.lngMax && face.latMax<lat && lat<face.latMin
-            })
+            });
 
-            console.log(earthFace)
-            if(earthFace){
-              earthFace.setMaterialIndex(0)
 
+            if(this._previousFace && this._previousFace!=earthFace){
+              this._previousFace.setMaterialIndex(1)
             }
 
+
+            if(earthFace){
+              earthFace.setMaterialIndex(0)
+              this._previousFace = earthFace
+            }else {
+              console.log(lng, lat)
+            }
           }
 
 
@@ -177,6 +192,10 @@ export function init() {
           }
 
         };
+
+        //THREE.EarthGeometry = EarthGeometry;
+
+        Object.assign(THREE, {EarthGeometry})
         return three
       })
   }

@@ -77,7 +77,8 @@ export const  getTiledImage = ({type = 'ground', zoom = 4}, loader) =>{
        // url = `http://a.tile.thunderforest.com/landscape/${z}/${x}/${y}.png `;
         //url = `http://a.tile.openstreetmap.org/${z}/${x}/${y}.png `;
       }else if (type == 'rain'){
-        url = `https://e.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1&time=${Math.getRandom(0,10, true)}`
+        url = `https://e.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`
+        //url = `https://e.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1&time=${Math.getRandom(0,10, true)}`
         //url = `https://maptiles.accuweather.com/accuweather/tiles/worldSat/f6ddc115e/1455/${z}/${x}_${y}.png`
       }
 

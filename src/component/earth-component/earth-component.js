@@ -84,6 +84,9 @@ class EarthView{
 
     const faces =  Math.pow(2, zoom)
 
+    /**
+     * @type {EarthGeometry}
+     */
     const sphereGeometry = this.sphereGeometry = new THREE.EarthGeometry(4, faces);
     const cloudsGeometry = new THREE.EarthGeometry(4.02, faces);
     const holeMaterial = new THREE.MeshBasicMaterial({ transparent: true});
@@ -239,6 +242,7 @@ class EarthView{
     //console.log(sphereGeometry.faces[halfIndex])
 
     const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, [holeMaterial, groundMaterial]);
+    //this.rEarthMesh.geometry.groupsNeedUpdate = true;
     const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry,  [holeMaterial, cloudsMaterial]);
     const glowMesh =  new THREE.Mesh( cloudsGeometry.clone(), glowMaterial )
     glowMesh.scale.multiplyScalar(1.01);
@@ -262,7 +266,7 @@ class EarthView{
       })
 
 
-    this.rotationMeshList.push(rEarthMesh, cloudsMesh);
+    //this.rotationMeshList.push(rEarthMesh, cloudsMesh);
     //this.rotationMeshList.push(rEarthMesh);
 
 
@@ -404,16 +408,19 @@ class EarthView{
       this.enviromentMesh.position.set(...['x', 'y', 'z'].map(key=>this.camera.position[key]))
     }
     this.light2.position.set(...['x', 'y', 'z'].map(key=>this.camera.position[key]))
-    if(180<this.$$ax){
-      this.$$lng =  (this.$$ax - 360)
+    const ax = 0<this.$$ax ? (this.$$ax - parseInt(this.$$ax/360)*360) : (360*(parseInt(-this.$$ax/360)+1) + this.$$ax)
+
+    if(180<ax){
+      this.$$lng =  (ax - 360)
     }else {
-      this.$$lng = this.$$ax
+      this.$$lng = ax
     }
     this.$$lat = this.$$ay;
     //console.log(this.$$lng, this.$$lat)
 
-    //this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat)
-   // this.rEarthMesh.geometry.groupsNeedUpdate = true;
+
+    this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat)
+    this.rEarthMesh.geometry.groupsNeedUpdate = true;
 
 
   }
