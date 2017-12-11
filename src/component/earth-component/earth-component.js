@@ -90,8 +90,30 @@ class EarthView{
     const sphereGeometry = this.sphereGeometry = new THREE.EarthGeometry(4, faces);
     const cloudsGeometry = new THREE.EarthGeometry(4.02, faces);
     const holeMaterial = new THREE.MeshBasicMaterial({ transparent: true});
-    const groundMaterial = new THREE.MeshPhongMaterial();
-    const cloudsMaterial = new THREE.MeshPhongMaterial({transparent: true,opacity: 1});
+
+    const groundMaterialList = ((i)=>{
+      const m = []
+      while (0<i){
+        m.push(new THREE.MeshPhongMaterial())
+        i--
+      }
+      return m
+    })(16);
+
+
+
+
+    const cloudsMaterialList = ((i)=>{
+      const m = []
+      while (0<i){
+        m.push(new THREE.MeshPhongMaterial({transparent: true,opacity: 1}))
+        i--
+      }
+      return m
+
+    })(16)
+
+
 
     console.log(this.sphereGeometry.earhFaces)
 
@@ -152,9 +174,10 @@ class EarthView{
     })
       .then(img=>{
         const texture = new THREE.Texture(img);
-        groundMaterial.map = texture;
-        groundMaterial.emissiveMap = texture;
-        groundMaterial.needsUpdate = true;
+        const gm = groundMaterialList[4];
+        gm.map = texture;
+        gm.emissiveMap = texture;
+        gm.needsUpdate = true;
         texture.needsUpdate = true;
         //this.$data.isShowGroundLoad = false
         $(this.$$el).find('.ground-load')[0].$fadeTo(1, 0, 500)
@@ -169,11 +192,11 @@ class EarthView{
     })
       .then(img=>{
         const texture = new THREE.Texture(img);
-        cloudsMaterial.map = texture;
-        cloudsMaterial.emissiveMap = texture;
-        cloudsMaterial.needsUpdate = true;
+        const cm = cloudsMaterialList[4];
+        cm.map = texture;
+        cm.emissiveMap = texture;
+        cm.needsUpdate = true;
         texture.needsUpdate = true;
-
         $(this.$$el).find('.clouds-load')[0].$fadeTo(1, 0, 500)
           .then(()=>{
             this.$data.isShowCloudsLoad = false
@@ -241,9 +264,9 @@ class EarthView{
 
     //console.log(sphereGeometry.faces[halfIndex])
 
-    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, [holeMaterial, groundMaterial]);
+    const rEarthMesh = this.rEarthMesh = new THREE.Mesh(sphereGeometry, groundMaterialList);
     //this.rEarthMesh.geometry.groupsNeedUpdate = true;
-    const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry,  [holeMaterial, cloudsMaterial]);
+    const cloudsMesh = this.cloudsMesh = new THREE.Mesh(cloudsGeometry,  cloudsMaterialList);
     const glowMesh =  new THREE.Mesh( cloudsGeometry.clone(), glowMaterial )
     glowMesh.scale.multiplyScalar(1.01);
     //glowMesh.add(sprite)

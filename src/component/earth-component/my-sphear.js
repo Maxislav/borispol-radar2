@@ -73,6 +73,7 @@ export function init() {
             super(radius, segments, segments+2);
             this.segments = segments;
             this.earhFaces = [];
+            this._defaultMaterialIndex = 4;
 
             /**
              *
@@ -89,18 +90,7 @@ export function init() {
               lng:0,
               lat:0
             }
-
-           // this.faceIndex();
-
-
-
-
             const facesCount = this.segments;
-            /* for(let i = 0 ; i<this.faces.length; i++ ){
-             if(facesCount-1<i && i<this.faces.length-facesCount){
-             this.faces[i].materialIndex = 1
-             }
-             }*/
             let k = 0;
             const faceVertexUvs = this.faceVertexUvs[0]
             for (let i = 0; i< this.faces.length; i+=2){
@@ -152,11 +142,9 @@ export function init() {
               earthFace.vertexCoord[3] = {
                 x: this.getX(earthFace.lngMin, 0)/256,
                 y: 1- this.getY(earthFace.latMin, 0)/256
-              }
+              };
               earthFace.uvsMaping();
-
-
-              earthFace.setMaterialIndex(1)
+              earthFace.setMaterialIndex(this._defaultMaterialIndex)
             })
           }
 
@@ -170,7 +158,7 @@ export function init() {
 
 
             if(this._previousFace && this._previousFace!=earthFace){
-              this._previousFace.setMaterialIndex(1)
+              this._previousFace.setMaterialIndex(this._defaultMaterialIndex)
             }
 
 
