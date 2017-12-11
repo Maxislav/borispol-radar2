@@ -93,7 +93,7 @@ class EarthView{
 
     const groundMaterialList = ((i)=>{
       const m = []
-      while (0<i){
+      while (0<=i){
         m.push(new THREE.MeshPhongMaterial())
         i--
       }
@@ -105,7 +105,7 @@ class EarthView{
 
     const cloudsMaterialList = ((i)=>{
       const m = []
-      while (0<i){
+      while (0<=i){
         m.push(new THREE.MeshPhongMaterial({transparent: true,opacity: 1}))
         i--
       }
@@ -121,8 +121,8 @@ class EarthView{
       {
         uniforms:
           {
-            "c":   { type: "f", value: 1.0 },
-            "p":   { type: "f", value: 1.4 },
+            c:   { type: "f", value: 1.0 },
+            p:   { type: "f", value: 1.2 },
             glowColor: { type: "c", value: new THREE.Color(0xccddff) },
             viewVector: { type: "v3", value: camera.position }
           },
@@ -133,11 +133,10 @@ class EarthView{
         varying float intensity;
         void main() 
         {
-            vec3 vNormal = normalize( normalMatrix * normal );
+          vec3 vNormal = normalize( normalMatrix * normal );
           vec3 vNormel = normalize( normalMatrix * viewVector );
           intensity = pow( c - dot(vNormal, vNormel), p );
-          
-            gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
         }
 
         `,
@@ -147,7 +146,7 @@ class EarthView{
           void main() 
           {
             vec3 glow = glowColor * intensity;
-              gl_FragColor = vec4( glow, 1.0 );
+            gl_FragColor = vec4( glow, 1.0 );
           }
         `,
         side: THREE.FrontSide,

@@ -73,14 +73,19 @@ export function init() {
             super(radius, segments, segments+2);
             this.segments = segments;
             this.earhFaces = [];
+            this.earhFacesHash = []
             this._defaultMaterialIndex = 4;
 
             /**
-             *
-             * @type {EarthFace}
-             * @private
+             * @type {Array.<EarthFace>}
              */
-            this._previousFace
+            this.centralFaceList = [];
+
+            /**
+             * @private
+             * @type{EarthFace}
+             */
+            this.centralFace
 
             /**
              *
@@ -118,6 +123,9 @@ export function init() {
               earthFace.rowIndex = parseInt(i/segments);
               earthFace.colIndex = i - (earthFace.rowIndex*segments);
 
+              this.earhFacesHash[earthFace.colIndex] =  this.earhFacesHash[earthFace.colIndex] || []
+              this.earhFacesHash[earthFace.colIndex][earthFace.rowIndex] = earthFace
+
               earthFace.lngMin =  earthFace.colIndex * dLng;
               earthFace.lngMax =  (earthFace.colIndex+1) * dLng;
               if(180<=earthFace.lngMin){
@@ -146,13 +154,50 @@ export function init() {
               earthFace.uvsMaping();
               earthFace.setMaterialIndex(this._defaultMaterialIndex)
             })
+
+            console.log(this.earhFacesHash)
           }
 
           setScreenLngLat(lng, lat){
+
+            const r = 1;
+
             this.screenLngLat.lng = lng;
             this.screenLngLat.lat = lat;
+            const centralFace = this.earhFaces.find(face=>{
+              return face.lngMin<=lng && lng<face.lngMax && face.latMax<=lat && lat<face.latMin
+            });
 
-            const earthFace = this.earhFaces.find(face=>{
+            if(!centralFace) return this;
+            //console.log(centralFace.colIndex, centralFace.rowIndex)
+
+            if(this.centralFace != centralFace ){
+              this.centralFace = centralFace
+              this.centralFaceList.forEach(face=>{
+                face.setMaterialIndex(this._defaultMaterialIndex)
+              })
+            }
+
+            this.centralFaceList.length = 0;
+
+
+            for(let colIndex = this.centralFace.colIndex-r; colIndex<=this.centralFace.colIndex+r; colIndex++){
+              for(let rowIndex  = this.centralFace.rowIndex-r; rowIndex<=this.centralFace.rowIndex+r; rowIndex++){
+                let _colIndex = this.normalizeTabIndex(colIndex)
+                let _rowIndex = this.normalizeTabIndex(rowIndex)
+                if(this.earhFacesHash[_colIndex] && this.earhFacesHash[_colIndex][_rowIndex]){
+                  this.earhFacesHash[_colIndex][_rowIndex].setMaterialIndex(0)
+                  this.centralFaceList.push(this.earhFacesHash[_colIndex][_rowIndex])
+                }
+              }
+            }
+
+
+
+            //this.centralFaceList[0] =
+
+
+            /*const earthFace = this.earhFaces.find(face=>{
               return face.lngMin<lng && lng<face.lngMax && face.latMax<lat && lat<face.latMin
             });
 
@@ -167,16 +212,35 @@ export function init() {
               this._previousFace = earthFace
             }else {
               console.log(lng, lat)
+            }*/
+
+            return this
+          }
+
+
+          setCentralZoom(zoom){
+
+          }
+
+
+
+          normalizeTabIndex(index){
+            if(0<=index && index<this.segments){
+              return index
+            } else if(index<0) {
+              return this.segments + index
+            }else{
+              return this.segments - index
             }
           }
 
 
 
-          getX(lngMin, zoom) {
-            return (Math.radians(lngMin)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
+          getX(lng, zoom) {
+            return (Math.radians(lng)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
           }
-          getY(latMin, zoom) {
-            return (Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(latMin/2) )  ))* Math.pow(2, zoom)*128/Math.PI
+          getY(lat, zoom) {
+            return (Math.PI - Math.log( Math.tan( Math.PI/4 + Math.radians(lat/2) )  ))* Math.pow(2, zoom)*128/Math.PI
           }
 
         };
