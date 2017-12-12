@@ -13,19 +13,35 @@ function createCORSRequest(method, url) {
 }
 
 
-function loadPromise(url) {
+function loadPromise(name, url) {
   return new Promise((resolve, reject)=>{
     var xhr = createCORSRequest("GET", url);
     xhr.open('GET', url, true);
     xhr.responseType = 'arraybuffer';
     xhr.onerror = function (e) {
+
+      postMessage({
+        error: {
+          url: url,
+          error: xhr.status
+        },
+        name
+      })
       reject(e);
+
     };
 
     xhr.onload = function () {
       if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
         resolve(xhr.response);
       } else {
+        postMessage({
+          error: {
+            url: url,
+            error: xhr.status
+          },
+          name
+        })
         reject({
           url: url,
           error: xhr.status
@@ -39,7 +55,7 @@ function loadPromise(url) {
 
 onmessage = (e) =>{
   const {name, data} = e.data
-  loadPromise(data)
+  loadPromise(name, data)
     .then(arrayBuffer=>{
       postMessage({
         data: arrayBuffer,
@@ -47,9 +63,7 @@ onmessage = (e) =>{
       })
     })
     .catch(err=>{
-      postMessage({
-        error: err,
-        name
-      })
+
+
     })
 }

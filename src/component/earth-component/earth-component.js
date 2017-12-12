@@ -438,11 +438,10 @@ class EarthView{
       this.$$lng = ax
     }
     this.$$lat = this.$$ay;
-    //console.log(this.$$lng, this.$$lat)
 
 
-    this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat)
-    this.rEarthMesh.geometry.groupsNeedUpdate = true;
+    //this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat)
+    //this.rEarthMesh.geometry.groupsNeedUpdate = true;
 
 
   }
