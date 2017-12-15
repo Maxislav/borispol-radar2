@@ -160,7 +160,7 @@ export function init() {
 
           setScreenLngLat(lng, lat){
 
-            const r = 1;
+//            const r = 1;
 
             this.screenLngLat.lng = lng;
             this.screenLngLat.lat = lat;
@@ -173,12 +173,12 @@ export function init() {
 
             if(this.centralFace != centralFace ){
               this.centralFace = centralFace
-              this.centralFaceList.forEach(face=>{
+             /* this.centralFaceList.forEach(face=>{
                 face.setMaterialIndex(this._defaultMaterialIndex)
-              })
+              })*/
             }
 
-            this.centralFaceList.length = 0;
+            /*this.centralFaceList.length = 0;
 
 
             for(let colIndex = this.centralFace.colIndex-r; colIndex<=this.centralFace.colIndex+r; colIndex++){
@@ -190,7 +190,7 @@ export function init() {
                   this.centralFaceList.push(this.earhFacesHash[_colIndex][_rowIndex])
                 }
               }
-            }
+            }*/
 
 
 
@@ -219,6 +219,38 @@ export function init() {
 
 
           setCentralZoom(zoom){
+            console.log(zoom)
+            let r = 1;
+            switch (true){
+              case 6<zoom:
+                r = 2;
+                break;
+              case 5<zoom:
+                r = 3;
+                break;
+              case 4<zoom:
+                r = 4;
+                break;
+              default:
+                r = 5
+            }
+
+            this.centralFaceList.forEach(face=>{
+              face.setMaterialIndex(this._defaultMaterialIndex)
+            })
+
+
+            this.centralFaceList.length = 0;
+            for(let colIndex = this.centralFace.colIndex-r; colIndex<=this.centralFace.colIndex+r; colIndex++){
+              for(let rowIndex  = this.centralFace.rowIndex-r; rowIndex<=this.centralFace.rowIndex+r; rowIndex++){
+                let _colIndex = this.normalizeTabIndex(colIndex)
+                let _rowIndex = this.normalizeTabIndex(rowIndex)
+                if(this.earhFacesHash[_colIndex] && this.earhFacesHash[_colIndex][_rowIndex]){
+                  this.earhFacesHash[_colIndex][_rowIndex].setMaterialIndex(0)
+                  this.centralFaceList.push(this.earhFacesHash[_colIndex][_rowIndex])
+                }
+              }
+            }
 
           }
 

@@ -35,6 +35,7 @@ class EarthView{
     this.$$ay = 0; this.tempAy = 0;
     this.$$ax = 0; this.tempAx = 0;
     this.$$cameraDist  = 20;
+    this.$$distToGround = this.$$cameraDist - 4
     /**
      * @type {number}
      */
@@ -309,7 +310,7 @@ class EarthView{
     light2.position.set(...['x', 'y', 'z'].map(key=>camera.position[key]))
     light2.lookAt(0,0,0)
 
-    this.enviromentMesh;
+    this.setCentralLngLat()
     getImageWorker('../img/galaxy_starfield.png')
       .then(img=>{
         const sphereGeometry = new THREE.SphereGeometry(300, 32, 32)
@@ -430,20 +431,29 @@ class EarthView{
       this.enviromentMesh.position.set(...['x', 'y', 'z'].map(key=>this.camera.position[key]))
     }
     this.light2.position.set(...['x', 'y', 'z'].map(key=>this.camera.position[key]))
-    const ax = 0<this.$$ax ? (this.$$ax - parseInt(this.$$ax/360)*360) : (360*(parseInt(-this.$$ax/360)+1) + this.$$ax)
 
+
+
+    this.setCentralLngLat()
+
+    this.sphereGeometry.setCentralZoom(this.zoom)
+    this.rEarthMesh.geometry.groupsNeedUpdate = true;
+
+    //this.rEarthMesh.geometry.groupsNeedUpdate = true;
+
+
+  }
+
+  setCentralLngLat(){
+    const ax = 0<this.$$ax ? (this.$$ax - parseInt(this.$$ax/360)*360) : (360*(parseInt(-this.$$ax/360)+1) + this.$$ax)
     if(180<ax){
       this.$$lng =  (ax - 360)
     }else {
       this.$$lng = ax
     }
     this.$$lat = this.$$ay;
-
-
-    //this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat)
+    this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat)
     //this.rEarthMesh.geometry.groupsNeedUpdate = true;
-
-
   }
 
   @autobind
@@ -453,6 +463,7 @@ class EarthView{
     this.$$ax = this.tempAx + dx*0.1;
     this.$$ay = this.tempAy + dy*0.1;
     this.changeCameraPosition()
+
   }
 
   @autobind
@@ -473,11 +484,31 @@ class EarthView{
 
   @autobind
   onweel(e){
-    let dy = (e.deltaY*0.005);
-    const k = this.$$cameraDist - 4;
-    this.$$cameraDist = this.$$cameraDist+(dy*k)
+    let dy = (e.deltaY*0.002);
+    const k = this.$$cameraDist - 4.1;
+    this.$$cameraDist = this.$$cameraDist+(dy*k);
+    this.$$distToGround = this.$$cameraDist - 4
     this.changeCameraPosition()
   }
+
+  get zoom(){
+    switch (true){
+      case 10<this.$$distToGround:
+        return 4;
+      case 5<this.$$distToGround:
+        return 5;
+      case 2< this.$$distToGround:
+        return 6;
+      case 1< this.$$distToGround:
+        return 7;
+      default:
+          return 8;
+    }
+  }
+
+
+
+
 
   bindEvents(){
       this.$$el.addEventListener('mousedown', this.mousedown)
