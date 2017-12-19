@@ -435,11 +435,10 @@ class EarthView{
 
 
     this.setCentralLngLat()
-
-    this.sphereGeometry.setCentralZoom(this.zoom)
-    this.rEarthMesh.geometry.groupsNeedUpdate = true;
-
+    //TODO обновление поверхности начинается тут
+    //this.sphereGeometry.setCentralZoom(this.zoom)
     //this.rEarthMesh.geometry.groupsNeedUpdate = true;
+
 
 
   }

@@ -20,6 +20,7 @@ export const ForecastItemComponent = Vue.component('forecast-item-component', {
 				color: 'white',
 				icon: null,
 				rain: [],
+				snow: [],
 				style: null
 			}
 		});
@@ -37,12 +38,19 @@ export const ForecastItemComponent = Vue.component('forecast-item-component', {
 			this.icon =  'img/weather-ico/i01'+this.hh.weather[0].icon.match(/\D{1}$/)[0]+'.png';
 
 			const rain3h = (this.hh.rain && this.hh.rain['3h']) ?   this.hh.rain['3h'] : null;
+      const snow3h = (this.hh && this.hh.snow && this.hh.snow['3h']) ? this.hh.snow['3h'] : null
 			//let rain = [];
 			if(rain3h){
 				this.rain.length = Math.round(rain3h*10) || 1
 			}else {
 				this.rain.length = 0
 			}
+
+      if(snow3h){
+        this.snow.length = Math.round(snow3h*10) || 1
+      }
+
+
 			this.style = {
 				transform: 'scale('+this.hh.clouds.all/100+')'
 			};
