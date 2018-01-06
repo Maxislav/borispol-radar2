@@ -71,9 +71,9 @@ class EarthView{
     renderer.setSize(el.clientWidth, el.clientHeight);
     el.appendChild(renderer.domElement);
 
-    const sunLight = this.sunLight	= new THREE.SpotLight( 0x888888, 1.2 )
+    const sunLight = this.sunLight	= new THREE.SpotLight( 0x888888, 1.4 )
     sunLight.position.set( -20, 10, 40 );
-    const light2 = this.light2	= new THREE.SpotLight( 0x888888,0.2 )
+    const light2 = this.light2	= new THREE.SpotLight( 0x888888,0.4 )
     const zoom = 6;
     const faces =  Math.pow(2, zoom)
     /**
@@ -107,13 +107,13 @@ class EarthView{
 
 
 
-    console.log(this.sphereGeometry.earhFaces)
+    //console.log(this.sphereGeometry.earhFaces)
 
     const glowMaterial = new THREE.ShaderMaterial(
       {
         uniforms:
           {
-            c:   { type: "f", value: 1.0 },
+            c:   { type: "f", value: 0.9 },
             p:   { type: "f", value: 1.2 },
             glowColor: { type: "c", value: new THREE.Color(0xccddff) },
             viewVector: { type: "v3", value: camera.position }
@@ -442,16 +442,7 @@ class EarthView{
       this.enviromentMesh.position.set(...['x', 'y', 'z'].map(key=>this.camera.position[key]))
     }
     this.light2.position.set(...['x', 'y', 'z'].map(key=>this.camera.position[key]))
-
-
-
-    this.setCentralLngLat()
-    //TODO обновление поверхности начинается тут
-    //this.sphereGeometry.setCentralZoom(this.zoom)
-    //this.rEarthMesh.geometry.groupsNeedUpdate = true;
-
-
-
+    this.setCentralLngLat();
   }
 
   setCentralLngLat(){
@@ -462,7 +453,10 @@ class EarthView{
       this.$$lng = ax
     }
     this.$$lat = this.$$ay;
-    this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat)
+
+
+    //TODO обновление поверхности начинается тут
+    //this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat, this.zoom)
     //this.rEarthMesh.geometry.groupsNeedUpdate = true;
   }
 
@@ -501,18 +495,18 @@ class EarthView{
     this.changeCameraPosition()
   }
 
-  get zoom(){
-    switch (true){
-      case 10<this.$$distToGround:
+  get zoom() {
+    switch (true) {
+      case 10 < this.$$distToGround:
         return 4;
-      case 5<this.$$distToGround:
+      case 5 < this.$$distToGround:
         return 5;
-      case 2< this.$$distToGround:
+      case 2 < this.$$distToGround:
         return 6;
-      case 1< this.$$distToGround:
+      case 1 < this.$$distToGround:
         return 7;
       default:
-          return 8;
+        return 8;
     }
   }
 

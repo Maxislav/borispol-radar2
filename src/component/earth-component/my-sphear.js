@@ -73,8 +73,13 @@ export function init() {
             super(radius, segments, segments+2);
             this.segments = segments;
             this.earhFaces = [];
-            this.earhFacesHash = []
+            this.earthFacesHash = []
             this._defaultMaterialIndex = 4;
+            /**
+             *
+             * @type {number}
+             */
+            this.zoom = 4;
 
             /**
              * @type {Array.<EarthFace>}
@@ -103,17 +108,6 @@ export function init() {
                 const  earthFace = new EarthFace(this.faces[i], this.faces[i+1], faceVertexUvs, k, i);
                 this.earhFaces.push(earthFace);
                 k++;
-
-                /*faceVertexUvs[i] = [
-                 new THREE.Vector2(1, 1),
-                 new THREE.Vector2(0, 1),
-                 new THREE.Vector2(1, 0)];
-
-                 faceVertexUvs[i+1] = [
-                 new THREE.Vector2(0, 1),
-                 new THREE.Vector2(0, 0),
-                 new THREE.Vector2(1, 0),
-                 ];*/
               }
             }
 
@@ -123,8 +117,8 @@ export function init() {
               earthFace.rowIndex = parseInt(i/segments);
               earthFace.colIndex = i - (earthFace.rowIndex*segments);
 
-              this.earhFacesHash[earthFace.colIndex] =  this.earhFacesHash[earthFace.colIndex] || []
-              this.earhFacesHash[earthFace.colIndex][earthFace.rowIndex] = earthFace
+              this.earthFacesHash[earthFace.colIndex] =  this.earthFacesHash[earthFace.colIndex] || []
+              this.earthFacesHash[earthFace.colIndex][earthFace.rowIndex] = earthFace
 
               earthFace.lngMin =  earthFace.colIndex * dLng;
               earthFace.lngMax =  (earthFace.colIndex+1) * dLng;
@@ -155,71 +149,36 @@ export function init() {
               earthFace.setMaterialIndex(this._defaultMaterialIndex)
             })
 
-            console.log(this.earhFacesHash)
+            //console.log(this.earthFacesHash)
           }
 
-          setScreenLngLat(lng, lat){
+          setScreenLngLat(lng, lat, zoom){
 
-//            const r = 1;
+            let needUpdate = false
 
             this.screenLngLat.lng = lng;
             this.screenLngLat.lat = lat;
             const centralFace = this.earhFaces.find(face=>{
               return face.lngMin<=lng && lng<face.lngMax && face.latMax<=lat && lat<face.latMin
             });
-
             if(!centralFace) return this;
-            //console.log(centralFace.colIndex, centralFace.rowIndex)
-
             if(this.centralFace != centralFace ){
-              this.centralFace = centralFace
-             /* this.centralFaceList.forEach(face=>{
-                face.setMaterialIndex(this._defaultMaterialIndex)
-              })*/
+              this.centralFace = centralFace;
+              needUpdate = true
             }
-
-            /*this.centralFaceList.length = 0;
-
-
-            for(let colIndex = this.centralFace.colIndex-r; colIndex<=this.centralFace.colIndex+r; colIndex++){
-              for(let rowIndex  = this.centralFace.rowIndex-r; rowIndex<=this.centralFace.rowIndex+r; rowIndex++){
-                let _colIndex = this.normalizeTabIndex(colIndex)
-                let _rowIndex = this.normalizeTabIndex(rowIndex)
-                if(this.earhFacesHash[_colIndex] && this.earhFacesHash[_colIndex][_rowIndex]){
-                  this.earhFacesHash[_colIndex][_rowIndex].setMaterialIndex(0)
-                  this.centralFaceList.push(this.earhFacesHash[_colIndex][_rowIndex])
-                }
-              }
-            }*/
-
-
-
-            //this.centralFaceList[0] =
-
-
-            /*const earthFace = this.earhFaces.find(face=>{
-              return face.lngMin<lng && lng<face.lngMax && face.latMax<lat && lat<face.latMin
-            });
-
-
-            if(this._previousFace && this._previousFace!=earthFace){
-              this._previousFace.setMaterialIndex(this._defaultMaterialIndex)
+            if(this.zoom != zoom){
+              this.zoom = zoom;
+              needUpdate = true
             }
-
-
-            if(earthFace){
-              earthFace.setMaterialIndex(0)
-              this._previousFace = earthFace
-            }else {
-              console.log(lng, lat)
-            }*/
-
+            if(needUpdate){
+              this.setCentralZoom(zoom)
+            }
             return this
           }
 
 
           setCentralZoom(zoom){
-            console.log(zoom)
+           // console.log(zoom)
             let r = 1;
             switch (true){
               case 6<zoom:
@@ -242,28 +201,40 @@ export function init() {
 
             this.centralFaceList.length = 0;
             for(let colIndex = this.centralFace.colIndex-r; colIndex<=this.centralFace.colIndex+r; colIndex++){
+
               for(let rowIndex  = this.centralFace.rowIndex-r; rowIndex<=this.centralFace.rowIndex+r; rowIndex++){
                 let _colIndex = this.normalizeTabIndex(colIndex)
                 let _rowIndex = this.normalizeTabIndex(rowIndex)
-                if(this.earhFacesHash[_colIndex] && this.earhFacesHash[_colIndex][_rowIndex]){
-                  this.earhFacesHash[_colIndex][_rowIndex].setMaterialIndex(0)
-                  this.centralFaceList.push(this.earhFacesHash[_colIndex][_rowIndex])
+                if(this.earthFacesHash[_colIndex] && this.earthFacesHash[_colIndex][_rowIndex]){
+                  this.earthFacesHash[_colIndex][_rowIndex].setMaterialIndex(0)
+                  this.centralFaceList.push(this.earthFacesHash[_colIndex][_rowIndex])
                 }
               }
             }
+           const lngList = [].concat(...this.centralFaceList.map(face => [].concat(face.lngMin, face.lngMax)));
+           const latList = [].concat(...this.centralFaceList.map(face => [].concat(face.latMin, face.latMax)));
+
+           const lngMin = Math.min(...lngList);
+           const lngMax = Math.max(...lngList);
+
+           const latMin = Math.min(...latList);
+           const latMax = Math.max(...latList);
+
 
           }
 
 
 
           normalizeTabIndex(index){
+            let upIndex = 0;
             if(0<=index && index<this.segments){
-              return index
+              upIndex = index
             } else if(index<0) {
-              return this.segments + index
+              upIndex = this.segments + index
             }else{
-              return this.segments - index
+              upIndex = index - this.segments
             }
+            return upIndex
           }
 
 
