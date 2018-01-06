@@ -48,7 +48,8 @@ class EarthView{
 
     this.rotationMeshList = [];
 
-    this.isDestroyed = false
+    this.isDestroyed = false;
+
   }
 
   /**
@@ -70,21 +71,11 @@ class EarthView{
     renderer.setSize(el.clientWidth, el.clientHeight);
     el.appendChild(renderer.domElement);
 
-    const light	= new THREE.SpotLight( 0x888888, 1.2 )
-    light.position.set( -20, 10, 40 );
-    const light2 = this.light2	= new THREE.SpotLight( 0x888888,0.5 )
-    //light2.position.set( 2, 2, -20 );
-
-
-
-
-
-
-
+    const sunLight = this.sunLight	= new THREE.SpotLight( 0x888888, 1.2 )
+    sunLight.position.set( -20, 10, 40 );
+    const light2 = this.light2	= new THREE.SpotLight( 0x888888,0.2 )
     const zoom = 6;
-
     const faces =  Math.pow(2, zoom)
-
     /**
      * @type {EarthGeometry}
      */
@@ -292,6 +283,7 @@ class EarthView{
     //this.rotationMeshList.push(rEarthMesh, cloudsMesh);
     //this.rotationMeshList.push(rEarthMesh);
 
+    this.setSunshine()
 
     rEarthMesh.position.x = 0;
     rEarthMesh.position.y = 0;
@@ -302,7 +294,7 @@ class EarthView{
     scene.add(rEarthMesh)
     scene.add(cloudsMesh)
     scene.add(glowMesh)
-    scene.add(light)
+    scene.add(sunLight);
     scene.add( light2 );
 
     camera.position.z = this.$$cameraDist;
@@ -398,17 +390,36 @@ class EarthView{
         requestAnimationFrame(anima);
     }
     anima()
-    //this.render()
     this.bindEvents();
     return this;
   }
+
+
   @autobind
   render(){
     requestAnimationFrame(()=>{
       this.renderer.render(this.scene, this.camera);
     })
+  }
 
-
+  /**
+   * Считаем позицию sunLight источника света (типа солнца)
+   * @return {EarthView}
+   */
+  setSunshine(){
+    if(this.isDestroyed) return this;
+    const R = 40;
+    const d = new Date();
+    const sek = ((d.getHours() + d.getTimezoneOffset()/60) *3600) + (d.getMinutes()*60) + d.getSeconds();
+    const a = 360*sek/(3600*24);
+    const yearDays = (new Date(d.getFullYear(),11,31) - new Date(d.getFullYear(),0,0))/86400000;
+    const t = 23.45*Math.sin(Math.radians(360*(284+d.getDay())/yearDays));
+    const z = -1 * R * Math.cos(Math.radians(a));
+    const x = R * Math.sin(Math.radians(a));
+    const y = R*Math.sin(Math.radians(t));
+    this.sunLight.position.set(x, y, z);
+    setTimeout(this.setSunshine.bind(this), 1000);
+    return this
   }
 
   changeCameraPosition(){
