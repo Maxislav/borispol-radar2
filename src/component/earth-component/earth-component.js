@@ -71,9 +71,9 @@ class EarthView{
     renderer.setSize(el.clientWidth, el.clientHeight);
     el.appendChild(renderer.domElement);
 
-    const sunLight = this.sunLight	= new THREE.SpotLight( 0x888888, 1.4 )
+    const sunLight = this.sunLight	= new THREE.SpotLight( 0x888888, 1.8 )
     sunLight.position.set( -20, 10, 40 );
-    const light2 = this.light2	= new THREE.SpotLight( 0x888888,0.4 )
+    const light2 = this.light2	= new THREE.SpotLight( 0x888888,0.2 )
     const zoom = 6;
     const faces =  Math.pow(2, zoom)
     /**
@@ -98,7 +98,7 @@ class EarthView{
     const cloudsMaterialList = ((i)=>{
       const m = []
       while (0<=i){
-        m.push(new THREE.MeshPhongMaterial({transparent: true,opacity: 1}))
+        m.push(new THREE.MeshPhongMaterial({transparent: true,opacity: 1/*, wireframe: true*/}))
         i--
       }
       return m
@@ -456,7 +456,7 @@ class EarthView{
 
 
     //TODO обновление поверхности начинается тут
-    //this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat, this.zoom)
+   // this.sphereGeometry.setScreenLngLat(this.$$lng, this.$$lat, this.zoom)
     //this.rEarthMesh.geometry.groupsNeedUpdate = true;
   }
 

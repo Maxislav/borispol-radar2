@@ -119,4 +119,57 @@ export const  getTiledImage = ({type = 'ground', zoom = 4}, loader) =>{
       }
     }
   })
-}
+};
+
+/**
+ *
+ * @param xmin
+ * @param xmax
+ * @param ymin
+ * @param ymax
+ * @param zoom
+ * @return {Promise.<Canvas>}
+ */
+export const getTileLimit = (xmin, xmax, ymin, ymax, zoom) => {
+  return new Promise((resolve, reject) => {
+
+    const imageArr = [];
+
+    for (let y = ymin, ny = 0; y < ymax; y++, ny++) {
+      for (let x = xmin, nx = 0; x < xmax; x++, nx++) {
+        imageArr.push({
+          x,
+          y,
+          z: zoom,
+          nx,
+          ny
+
+        })
+      }
+    }
+
+    /**
+     * @type {Canvas}
+     */
+    const canvas = new Canvas((xmax - xmin) * 256, (ymax - ymin) * 256);
+
+    Promise.all(imageArr.map(({ x, y, z, nx, ny }) => {
+      return getImageWorker(`https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`)
+        .then(img => {
+          canvas.drawImage(img, nx * 256, ny * 256)
+          return img
+        })
+    }))
+      .then((imgs) => {
+        canvas.getImage()
+          .then(img=>{
+            img.style.position = 'absolute'
+            img.style.zIndex = '10'
+            img.style.top = 0
+            document.body.appendChild(img)
+          })
+        resolve(canvas)
+      })
+
+  })
+};

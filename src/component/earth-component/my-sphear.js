@@ -1,4 +1,5 @@
 import defineload from "../../util/defineload";
+import {getTileLimit} from "./eart-tile";
 /**
  * @type {THREE}
  */
@@ -202,7 +203,7 @@ export function init() {
             this.centralFaceList.length = 0;
             for(let colIndex = this.centralFace.colIndex-r; colIndex<=this.centralFace.colIndex+r; colIndex++){
 
-              for(let rowIndex  = this.centralFace.rowIndex-r; rowIndex<=this.centralFace.rowIndex+r; rowIndex++){
+              for(let rowIndex  = this.centralFace.rowIndex-r; rowIndex<this.centralFace.rowIndex+r; rowIndex++){
                 let _colIndex = this.normalizeTabIndex(colIndex)
                 let _rowIndex = this.normalizeTabIndex(rowIndex)
                 if(this.earthFacesHash[_colIndex] && this.earthFacesHash[_colIndex][_rowIndex]){
@@ -220,8 +221,45 @@ export function init() {
            const latMin = Math.min(...latList);
            const latMax = Math.max(...latList);
 
+           this.getTiles({lngMin, lngMax, latMin, latMax}, zoom)
+          }
+
+
+          /**
+           *
+           * @param {number}lngMin
+           * @param {number}lngMax
+           * @param {number}latMin
+           * @param {number}latMax
+           * @param {number}zoom
+           */
+          getTiles({lngMin, lngMax, latMin, latMax}, zoom){
+            const tilesLengthPx = Math.pow(2, zoom)*256;
+            const xMin = this.getX(lngMin, zoom);
+            const xMax = this.getX(lngMax, zoom);
+            const yMax = this.getY(latMin, zoom)
+            const yMin = this.getY(latMax, zoom)
+
+
+            const fromNx = Math.floor(xMin/256);
+            const toNx = Math.ceil(xMax/256);
+
+            const fromNy = Math.floor(yMin/256);
+            const toNy = Math.ceil(yMax/256);
+
+            console.log(fromNy, toNy)
+
+            getTileLimit(fromNx, toNx, fromNy, toNy, zoom)
+              .then(d=>{
+                console.log(d)
+              })
+
+
 
           }
+
+
+
 
 
 
@@ -236,8 +274,6 @@ export function init() {
             }
             return upIndex
           }
-
-
 
           getX(lng, zoom) {
             return (Math.radians(lng)+Math.PI)* Math.pow(2, zoom)*128/Math.PI;
