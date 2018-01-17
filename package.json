@@ -2,8 +2,8 @@
   "name": "borispol-radar-2",
   "version": "0.0.1",
   "scripts": {
-    "start": "concurrently \"npm run webpack-dev-server\"",
-    "dev": "concurrently \" npm start\" ",
+    "start": "concurrently \" npm run ws \"  \"npm run webpack-dev-server\" \"npm run server-dev\"  ",
+    "dev" : "concurrently \" npm start\" ",
     "server-dev": "node-dev server/index.js",
     "ws": "node server/ws.js",
     "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline",
