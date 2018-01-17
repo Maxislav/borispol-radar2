@@ -9,7 +9,7 @@ module.exports = function (req, res, next) {
 		path: '/radar/UKBB/UKBB_latest.png?'+new Date().toISOString(),
 		headers: req.headers
 	};
-	res.header("Access-Control-Allow-Origin", "http://localhost*");
+	res.header("Access-Control-Allow-Origin", "*");
 	const proxyRequest = http.request( opt );
 	proxyRequest.on( 'response', function ( proxyResponse ) {
 		proxyResponse.on( 'data', function ( chunk ) {
