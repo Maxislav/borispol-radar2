@@ -55,7 +55,7 @@ const getImgUrl = (bodyStr, t) => {
 
 module.exports = function(req, res) {
 
-
+  console.log('load history')
   const imgList = ((i)=>{
     const a = [];
     while (i){
@@ -64,7 +64,7 @@ module.exports = function(req, res) {
     }
     return a
   })(10);
-
+  res.header("Access-Control-Allow-Origin", "*");
   Promise.all(imgList.map((it, i)=>{
    return getBodyStr(req, i)
       .then(({data, t})=>{
@@ -80,6 +80,7 @@ module.exports = function(req, res) {
     }))
     .then((list)=>{
       res.setHeader('Content-Type', 'application/json');
+      console.log('res ->', list)
       res.send(JSON.stringify(list, null, 3));
     })
     .catch(err=>{
