@@ -3,5 +3,9 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const borispolukbb = require('./borispolukbb');
-server.listen(8081);
+const history = require('./borispolhistory.js');
+server.listen(8081, function() {
+  console.log('node server start')
+});
 app.get('/borisbolukbb', borispolukbb);
+app.get('/loadUkbbHistory', history);

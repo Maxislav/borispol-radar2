@@ -35,15 +35,15 @@ const postMessage = (text) =>{
 }
 
 window.addEventListener('load', ()=>{
-	if ('serviceWorker' in navigator) {
+	/*if ('serviceWorker' in navigator) {
 		navigator.serviceWorker.getRegistrations().then(function(registrations) {
 			for(let registration of registrations) {
 				registration.unregister()
 			}
 
-			/**
+			/!**
 			 * {ServiceWorkerContainer}
-			 */
+			 *!/
 			navigator.serviceWorker;
 			navigator.serviceWorker.register('/sw.js').then(function(registration) {
 				// Registration was successful
@@ -56,7 +56,7 @@ window.addEventListener('load', ()=>{
 				console.log('ServiceWorker registration failed: ', err);
 			});
 		})
-	}
+	}*/
 });
 
 

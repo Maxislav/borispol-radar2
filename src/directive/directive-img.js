@@ -63,7 +63,7 @@ export default Vue.directive('img', {
 				        imgLoader.$fadeTo(1, 0, 222)
 					        .then(imgLoader => {
 						        el.removeChild(imgLoader)
-                    removeStyle.call(el, 'position')
+                    //removeStyle.call(el, 'position')
                     removeStyle.call(_imgNeeded, 'position')
 
 					        });
