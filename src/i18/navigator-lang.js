@@ -7,5 +7,4 @@ export const translate ={
 	ua: require('../i18/ua').default,
 	en: require('../i18/en').default
 };
-
-export const lang = translate[_lang];
+export const lang = translate[_lang] || translate['en'];
