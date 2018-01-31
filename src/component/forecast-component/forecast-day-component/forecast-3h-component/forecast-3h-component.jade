@@ -5,7 +5,10 @@
         .img
             img(:src="icon")
             img.clouds(src="img/weather-ico/clouds.png", :style="style")
-         .water-container
-             img(src="img/waterdrop.png", v-for="d in rain")
-             img(src="img/snowflake-512.png", v-for="d in snow")
+        .water-container
+            img(src="img/waterdrop.png", v-for="d in rain")
+            img(src="img/snowflake-512.png", v-for="d in snow")
+        .wind-container
+            .wind-deg(:style="{transform:'rotate('+(wind.deg+180)+'deg)'}") &#x2191;
+            div {{wind.speed}} м/c
         .t(v-html="temp")

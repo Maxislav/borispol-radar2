@@ -22,6 +22,10 @@ export default  Vue.component('forecast-3h-component', {
 
 		const date = new Date(this.hh['dt_txt']);
 		const temp = Math.round(this.hh.main.temp);
+    const wind = {...this.hh.wind,
+      speed: this.hh.wind ? Math.toFixed(this.hh.wind.speed, 1) : 0
+  	}
+		console.log(wind.deg)
 
 
 		const HH ='hh'+ dateFormat(date, 'HH');
@@ -62,6 +66,7 @@ export default  Vue.component('forecast-3h-component', {
 			icon,
 			rain,
 			snow,
+			wind,
 			index:this.hh.index,
 			title:  title ? title: 'Clear'
 		}

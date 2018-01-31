@@ -108,7 +108,8 @@ module.exports = {
 				    loader: 'css-loader',
 				    options: {
 					    modules: false,
-				      importLoaders: 1
+				      importLoaders: 1,
+              sourceMap: NODE_ENV=='dev'
              },
 			    },
 			    {
