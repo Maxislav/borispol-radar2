@@ -25,9 +25,6 @@ export default  Vue.component('forecast-3h-component', {
     const wind = {...this.hh.wind,
       speed: this.hh.wind ? Math.toFixed(this.hh.wind.speed, 1) : 0
   	}
-		console.log(wind.deg)
-
-
 		const HH ='hh'+ dateFormat(date, 'HH');
 		const icon = 'img/weather-ico/i01'+this.hh.weather[0].icon.match(/\D{1}$/)[0]+'.png';
 		//console.log(this.hh.clouds.all);

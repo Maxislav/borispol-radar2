@@ -13,6 +13,7 @@ export default  {
 	CLOUDS : 'Clouds',
 	WIND : 'Wind',
 	RAIN : 'Rainfall 3h',
+  SNOW : 'Snowfall 3h',
 	SETTING: 'S',
   EARTH: 'Earth'
 

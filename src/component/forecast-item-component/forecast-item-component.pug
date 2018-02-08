@@ -33,11 +33,16 @@
                     td
                        .padding-5
                              span {{hh.clouds.all}} %
-                tr(v-if="hh.rain")
+                tr(v-if="hh.rain && hh.rain['3h']")
                     td.tex-right.padding-5 {{'RAIN' | translate}}
                     td
                        .padding-5
                              span {{hh.rain['3h'] || 0}} мм
+                tr(v-if="hh.snow && hh.snow['3h']")
+                    td.tex-right.padding-5 {{'SNOW' | translate}}
+                    td
+                       .padding-5
+                             span {{hh.snow['3h'] || 0}} мм
                 tr(v-if="hh.wind")
                     td.tex-right.padding-5 {{'WIND' | translate}}
                     td
