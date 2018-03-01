@@ -10,13 +10,11 @@ const mathDate = new MathDate();
 const hashDate = {};
 
 
-let timeoutClearHasId = 0;
+let timeoutClearHasId: number = 0;
 let I = 0;
 
 export const parserain = (req, res, next) =>{
     I++;
-
-    console.log(I)
     const url_parts = url.parse(req.url, true);
     /**
      * @type {{lat:number|undefined, lng:number|undefined }}
@@ -27,13 +25,7 @@ export const parserain = (req, res, next) =>{
 
     const {lat = '50.44701', lng = '30.49'} = query;
 
-    timeoutClearHasId && clearTimeout(timeoutClearHasId);
-    timeoutClearHasId = setTimeout(() => {
-        for (let key in hashDate) {
-            delete hashDate[key]
-        }
-        console.log('clear hash ->', new Date().toISOString())
-    }, 60000);
+
 
     if (!hashDate[currentHash]) {
         hashDate[currentHash] = new Deferred(I);
@@ -84,7 +76,9 @@ export const parserain = (req, res, next) =>{
         })
             .then(res => {
                 hashDate[currentHash].resolve(res)
-
+                setTimeout(()=>{
+                    delete hashDate[currentHash]
+                }, 60000)
             })
     }
     return hashDate[currentHash]
@@ -99,8 +93,6 @@ export const parserain = (req, res, next) =>{
             ip = ip.replace(/::f+:/, '');
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify(result, null, 3));
-
-
 
             console.log('resolve ->', i, 'ip:', ip, {direction:result.direction, dist: result.dist.length? result.dist[0] :[], isRainy: result.isRainy })
         })
