@@ -38,9 +38,7 @@ export class Room<User> extends Array<User>{
 
 }
 
-
 const room: Room<User>  = new Room();
-
 io.on('connect', (socket) =>{
     const user = new User(socket);
     room.addUser(user);

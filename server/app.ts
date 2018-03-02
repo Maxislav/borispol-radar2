@@ -29,4 +29,4 @@ class App{
 }
 
 export const app = new App(8085)
-export const io  = app.io
+export const io  = app.io;

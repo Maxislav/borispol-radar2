@@ -5,6 +5,8 @@ const Webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
 const dateFormat = require('dateformat');
 
 const Version = require('./plugin/version.js');
@@ -24,7 +26,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist"),
         publicPath: "",
-        filename: "borispol.radar.min.js"
+        filename: "borispol.radar.[name].min.js"
     },
     watch: NODE_ENV == 'dev',
     watchOptions: {
@@ -72,13 +74,6 @@ module.exports = {
                         plugins: ['transform-decorators-legacy' ],
                     }
                 }
-                /*query: {
-                  presets: ['es2016', 'stage-1'],
-                    cacheDirectory: true,
-                    plugins: ['transform-decorators-legacy' ],
-                }*/
-
-
             },
             {
                 test: /\.jade$/,
@@ -94,10 +89,6 @@ module.exports = {
                     pretty: NODE_ENV == 'dev'
                 }
             },
-            /*  {
-                test: /\.styl$/,
-                loader: 'style-loader!css-loader!stylus-loader'
-              },*/
             {
                 test: /[^loader]\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
                 loader: 'url-loader',
@@ -176,7 +167,9 @@ module.exports = {
 
 if (NODE_ENV == 'production') {
     module.exports.plugins.unshift(new Version({}))
-    module.exports.plugins.push(
+    module.exports.plugins.push( new UglifyJsPlugin())
+
+   /* module.exports.plugins.push(
         new Webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false,
@@ -185,5 +178,5 @@ if (NODE_ENV == 'production') {
 
             }
         })
-    )
+    )*/
 }
