@@ -20,6 +20,7 @@ const ExtendDate = require('./src/plugin/DateExtendPlugin');
 console.log(NODE_ENV);
 module.exports = {
     entry: {
+        //server: ['./server/index.js'],
         app: ["./src/extend/Math.js", "./src/extend/NodeFade.js", "./src/extend/DateExtend.js", "./src/init.js"]
         //init:['webpack-dev-server/client',__dirname+"/src/init.js"]
     },
@@ -63,6 +64,7 @@ module.exports = {
     ],
     module: {
         loaders: [
+            { test: /\.tsx?$/, loader: "ts-loader" },
             {
                 test: /\.js$/,
                 //loader: 'babel-loader',

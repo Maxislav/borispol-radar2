@@ -8,7 +8,7 @@
     "ws": "node server/ws.js",
     "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline",
     "prod": "webpack",
-    "server-ts": "./node_modules/.bin/ts-node -- ./server/index.ts",
+    "server-ts": "./node_modules/.bin/ts-node -- ./server/borispol-radar.ts",
     "parserain-ts": "./node_modules/.bin/ts-node --project tsconfig.json ./server/parserain.ts"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "jimp": "^0.2.28",
     "socket.io": "^2.0.4",
     "three": "^0.88.0",
+    "ts-loader": "^4.0.0",
     "typescript": "^2.7.2",
     "vue-router": "^2.2.1",
     "ws": "^3.2.0"
@@ -66,6 +67,7 @@
     "vue-date-filter": "^1.0.1",
     "vue-resource": "^1.2.1",
     "webpack": "^2.2.1",
+    "webpack-cli": "^2.0.10",
     "webpack-preset": "^0.2.0",
     "webpack-preset-babel": "^0.2.0",
     "webpack-preset-babel-stage-1": "^0.2.0"
