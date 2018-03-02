@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router';
 import LocalStorage from './plugin/LocalStorage'
-
+import {socket} from './service/socket'
 import './styl/index.styl'
 import './component/forecast-component/forecast-component';
 import {list} from './component/forecast-component/forecast-component';
@@ -11,7 +11,6 @@ import './directive/directive-img';
 import './directive/directive-random-background';
 import './component/forecast-component/forecast-day-component/forecast-day-component';
 
-
 import './component/ymetrika/ymetrika-component';
 import './filter/date'
 import './filter/to-fixed'
@@ -19,6 +18,7 @@ import './filter/translate'
 import './component/strip-loader/strip-loader';
 import './component/player-component/player-component'
 import './component/forecast-component/forecast-day-component/forecast-3h-component/forecast-3h-component';
+import './component/mr-metrica-component/mr-metrica-component'
 import {SettingComponent} from './component/setting-component/setting-component'
 import HomeComponent from './component/home-component/home-component'
 import IredComponent from './component/ired-component/ired-component'
@@ -103,9 +103,14 @@ router.beforeEach((to, from, next) => {
 
 console.log(NODE_ENV)
 
+const socketUrl = `${window.location.protocol}//${window.location.hostname}:${8085}`;
+
 window.onload = function () {
 	const app = new Vue({
 		router
 	}).$mount('#app');
+    socket.connect(socketUrl)
+
 
 };
+

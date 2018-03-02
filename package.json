@@ -12,12 +12,13 @@
     "parserain-ts": "./node_modules/.bin/ts-node --project tsconfig.json ./server/parserain.ts"
   },
   "dependencies": {
+    "babel-preset-es2016": "^6.24.1",
     "express": "^4.14.1",
     "firebase": "^4.3.0",
     "html-loader": "^0.4.5",
     "jade-loader": "^0.8.0",
     "jimp": "^0.2.28",
-    "socket.io": "^2.0.3",
+    "socket.io": "^2.0.4",
     "three": "^0.88.0",
     "typescript": "^2.7.2",
     "vue-router": "^2.2.1",

@@ -7,12 +7,13 @@ import {ImageColor} from './image-color.class'
 
 const path = 'http://meteoinfo.by/radar/UKBB/UKBB_latest.png';
 const mathDate = new MathDate();
-const hashDate = {};
+interface HashDate{
+    [hashCode: string]: Deferred<number>
+}
 
+const hashDate:HashDate = {};
 
-let timeoutClearHasId: number = 0;
 let I = 0;
-
 export const parserain = (req, res, next) =>{
     I++;
     const url_parts = url.parse(req.url, true);
@@ -20,7 +21,7 @@ export const parserain = (req, res, next) =>{
      * @type {{lat:number|undefined, lng:number|undefined }}
      */
     const query = url_parts.query;
-    const currentHash = mathDate.getCurrentDate().toISOString() + '.' + query.lat + '.' + query.lng;
+    const currentHash: string = mathDate.getCurrentDate().toISOString() + '.' + query.lat + '.' + query.lng;
 
 
     const {lat = '50.44701', lng = '30.49'} = query;
@@ -29,57 +30,49 @@ export const parserain = (req, res, next) =>{
 
     if (!hashDate[currentHash]) {
         hashDate[currentHash] = new Deferred(I);
-        new Promise((resolve, rej) => {
-            setTimeout(() => {
-                Jimp.read(path, function (err, image) {
-                    if (err) {
-                        console.error('meteoinfo error->', err);
-                        rej(err);
-                        return;
-                    }
 
-                    image.crop(0, 0, 505, 480);
-                    const imageMatrix = new ImageMatrix(image.bitmap.width, image.bitmap.height);
-                    image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
-                        const red = image.bitmap.data[idx];
-                        const green = image.bitmap.data[idx + 1];
-                        const blue = image.bitmap.data[idx + 2];
-                        const alpha = image.bitmap.data[idx + 3];
-                        const imageColor = new ImageColor(red, green, blue, alpha);
-                        imageColor.x = x;
-                        imageColor.y = y;
-                        imageMatrix[x][y] = imageColor;
-                    });
+        Jimp.read(path, function (err, image) {
+            if (err) {
+                console.error('meteoinfo error->', err);
+                hashDate[currentHash].reject(err);
+                return;
+            }
 
-                    /**
-                     * Удаление мусора
-                     */
-                    for(let x = 20; x<26; x++){
-                        for(let y = 460; y<480;y++){
-                            imageMatrix[x][y] =  new ImageColor(204, 204, 204, 244);
-                        }
-                    }
+            image.crop(0, 0, 505, 480);
+            const imageMatrix = new ImageMatrix(image.bitmap.width, image.bitmap.height);
+            image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
+                const red = image.bitmap.data[idx];
+                const green = image.bitmap.data[idx + 1];
+                const blue = image.bitmap.data[idx + 2];
+                const alpha = image.bitmap.data[idx + 3];
+                const imageColor = new ImageColor(red, green, blue, alpha);
+                imageColor.x = x;
+                imageColor.y = y;
+                imageMatrix[x][y] = imageColor;
+            });
 
-                    resolve({
-                        direction : imageMatrix.getDirection(),
-                        dist: imageMatrix.distByLatLng({lat: Number.parseFloat(lat), lng: Number.parseFloat(lng)}) ,
-                        isRainy: imageMatrix.isRainy()
-                    })
+            /**
+             * Удаление мусора
+             */
+            for(let x = 20; x<26; x++){
+                for(let y = 460; y<480;y++){
+                    imageMatrix[x][y] =  new ImageColor(204, 204, 204, 244);
+                }
+            }
 
-                    imageMatrix.clear();
-                    //delete imageMatrix;
+            hashDate[currentHash].resolve({
+                direction : imageMatrix.getDirection(),
+                dist: imageMatrix.distByLatLng({lat: Number.parseFloat(lat), lng: Number.parseFloat(lng)}) ,
+                isRainy: imageMatrix.isRainy()
+            })
 
-                })
-            }, 20)
-
+            imageMatrix.clear();
+            hashDate[currentHash].resolve(res)
+            setTimeout(()=>{
+                delete hashDate[currentHash]
+            }, 60000)
 
         })
-            .then(res => {
-                hashDate[currentHash].resolve(res)
-                setTimeout(()=>{
-                    delete hashDate[currentHash]
-                }, 60000)
-            })
     }
     return hashDate[currentHash]
         .promise
@@ -95,6 +88,7 @@ export const parserain = (req, res, next) =>{
             res.send(JSON.stringify(result, null, 3));
 
             console.log('resolve ->', i, 'ip:', ip, {direction:result.direction, dist: result.dist.length? result.dist[0] :[], isRainy: result.isRainy })
+            return true
         })
         .catch(err => {
             res.status(500).send({error: 'meteoinfo error'});

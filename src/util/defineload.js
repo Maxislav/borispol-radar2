@@ -2,7 +2,7 @@ const moduleMap = {
   'THREE': './lib/three.js'
 };
 
-const module = {};
+const moduleM = {};
 
 
 
@@ -53,9 +53,9 @@ function loadPromise(url) {
  */
 export default function defineload(name, callback) {
   return new Promise((resolve, reject)=>{
-    if(module[name]){
-      resolve(module[name])
-      if(callback) callback(module[name])
+    if(moduleM[name]){
+      resolve(moduleM[name])
+      if(callback) callback(moduleM[name])
     } else {
       loadPromise(moduleMap[name])
         .then(arrayBuf=>{
@@ -63,9 +63,9 @@ export default function defineload(name, callback) {
           reader.onload = () => {
             //console.log(reader.result);
             const text = reader.result;
-            evalInContext(`(function(global) {let module; ` +text+ `;}).call(this)`, module)
-            resolve(module[name])
-            if(callback) callback(module[name])
+            evalInContext(`(function(global) {let module; ` +text+ `;}).call(this)`, moduleM)
+            resolve(moduleM[name])
+            if(callback) callback(moduleM[name])
           };
           reader.readAsText(new Blob([new Uint8Array(arrayBuf)]));
         })

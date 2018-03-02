@@ -8,9 +8,6 @@
     "no-consecutive-blank-lines": false,
     "no-console": {
       "options": [
-        "debug",
-        "info",
-        "log",
         "time",
         "timeEnd",
         "trace"

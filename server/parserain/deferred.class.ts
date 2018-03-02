@@ -1,11 +1,10 @@
-export class Deferred{
+export class Deferred<T>{
     private _i: number;
-    private _res: null | Function;
     private _res: null | Function;
     private _rej: null | Function;
     private _d: any;
     private _j: any;
-    private _promise: Promise;
+    private _promise: Promise<T>;
 
 
     constructor(i){
@@ -24,17 +23,19 @@ export class Deferred{
         });
     }
 
-    resolve(d){
+    resolve(d: any){
         if(this._res){
             this._res(d);
         } else {
             this._d = d;
         }
+        return this
     }
 
-    reject(j){
+    reject(j): Deferred<T>{
         if(this._rej) this._rej(j)
         else this._j = j;
+        return this
     }
 
     get promise(){
