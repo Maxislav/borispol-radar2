@@ -1,11 +1,25 @@
 import { Room } from './user-room';
+import { hashGen } from './keygen';
+import { Deferred } from '../parserain/deferred.class';
 
 
 export class User{
     id: string;
-    room:  Room<User>
-    constructor(private socket){
-        this.id = socket.id
+    public key: string;
+
+    constructor(private socket, public room: Room<User>){
+        this.id = socket.id;
+        room.addUser(this)
+        console.log('connect', room.length)
+        this.socket.on('keygen', ({key}) =>{
+            this.key = key || hashGen();
+            this.emit('keygen', ({key: this.key}))
+            this.room.emitAll('uniq', ({uniq: room.getUniqCount(), connection: room.length}))
+        })
+        this.on('disconnect', ()=>{
+            this.room.delUser(this)
+            this.room.emitAll('uniq', ({uniq: room.getUniqCount(), connection: room.length}))
+        })
     }
 
     on(eName: string, callback: Function){
@@ -18,10 +32,4 @@ export class User{
         return this;
     }
 
-
-
-    setRoom(room: Room<User>){
-        this.room = room;
-        return this
-    }
 }

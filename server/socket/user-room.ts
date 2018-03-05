@@ -1,5 +1,6 @@
 import { io } from '../app';
 import { User} from './user';
+import { autobind } from 'core-decorators';
 
 
 export class Room<User> extends Array<User>{
@@ -11,10 +12,9 @@ export class Room<User> extends Array<User>{
         const i = this.indexOf(user)
         if(i < 0){
             this.push(user)
-            user.setRoom(this)
         }
         this.emitAllOnline();
-        console.log('connect', this.length)
+
         return this
     }
 
@@ -23,9 +23,18 @@ export class Room<User> extends Array<User>{
             const i = this.indexOf(user)
             this.splice(i, 1)
         }
-        this.emitAllOnline()
-        console.log('disconnect', this.length)
         return this
+    }
+
+
+    getUniqCount(): number{
+        const u: Array<number> = [];
+        this.forEach(user=>{
+            if( user.key && u.indexOf(user.key) == -1 ){
+                u.push(user.key)
+            }
+        })
+        return u.length
     }
 
     emitAllOnline(){
@@ -39,10 +48,7 @@ export class Room<User> extends Array<User>{
 }
 
 const room: Room<User>  = new Room();
+
 io.on('connect', (socket) =>{
-    const user = new User(socket);
-    room.addUser(user);
-    user.on('disconnect', () =>{
-        room.delUser(user)
-    })
+     new User(socket, room);
 })

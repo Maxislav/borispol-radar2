@@ -6,6 +6,7 @@
     "no-bitwise": true,
     "no-conditional-assignment": true,
     "no-consecutive-blank-lines": false,
+    "experimentalDecorators": true,
     "no-console": {
       "options": [
         "time",

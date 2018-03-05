@@ -12,13 +12,13 @@ class App{
 
     constructor(private port: number){
         this.express = express();
-        this.server = http.Server(this.express);
+        this.server = new http.Server(this.express);
         this.io = socketIo(this.server)
         this.server.listen(port, this.serverStart)
     }
 
     @autobind
-    private serverStart(): void{
+    serverStart(): void{
         console.log(`node server start on port: ${this.port}`)
     }
 
