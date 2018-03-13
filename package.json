@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/core-decorators": "^0.20.0",
+    "@types/es6-promise": "^3.3.0",
     "@types/express": "^4.11.1",
     "@types/node": "^9.4.6",
     "babel": "^6.23.0",
