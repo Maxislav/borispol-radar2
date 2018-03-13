@@ -4,6 +4,8 @@ import * as http  from 'http';
 import * as fs from 'fs';
 import * as dateFormat from 'dateformat';
 import * as path from "path";
+//import * as request from 'request';
+import * as  https from 'https'
 
 const irDir = path.resolve(__dirname, '../src', 'img', 'ir')
 const viDir = path.resolve(__dirname, '../src', 'img', 'vi')
@@ -35,18 +37,30 @@ const writeFile = (url: string, fileName: string): Promise<any> => {
 		fs.exists(fileName, (bool: boolean) =>  {
 			if(!bool) {
 				const file = fs.createWriteStream(fileName);
-				const request = http
-				.get(url, function(response) {
-				  response.pipe(file);
-				  file.on('end', function() {
-				      file.close();
-				      res(fileName)  // close() is async, call cb after close completes.
-				    })
-				  .on('error', (err: Error) =>{
-					rej(err)
-				  })
+				let client;
+				if(url.match(/^https/)){
+					client = https
+				}else {
+					client = http
+				}
+				client.get(url, function(response) {
+					console.log(response.statusCode)
+					if(response.statusCode === 200) {
+						response.pipe(file);
+						  file.on('close', function() {
+						      res(fileName)  // close() is async, call cb after close completes.
+						    })
+						  .on('error', (err: Error) =>{
+							rej(err)
+						  })
+						}else{
+
+							rej(`Error status code -> ${response.statusCode}`)
+						}
+				  
 
 				})
+				
 				.on('error', (err: Error) => {
 					console.error('Error -> ', err)
 					rej(err)
@@ -67,6 +81,7 @@ creteDir(irDir)
 	})
 	.then(fileName => {
 		return writeFile("http://www.sat24.com/image2.ashx?region=eu&ir=true", fileName)
+		//return writeFile("https://en.sat24.com/image?type=visual&region=eu", fileName)
 	})
 	.then((fileName) => {
 		console.log(`Success ${fileName}`)
@@ -83,7 +98,8 @@ creteDir(viDir)
 		return path.resolve(viDir, dateFormat(dd, 'yyyymmddHH').concat('00.gif')) 
 	})
 	.then(fileName => {
-		return writeFile("http://en.sat24.com/image?type=visual&region=eu", fileName)
+		return writeFile("https://en.sat24.com/image?type=visual&region=eu", fileName)
+		//return writeFile("http://www.sat24.com/image2.ashx?region=eu&ir=true", fileName)
 	})
 	.then((fileName) => {
 		console.log(`Success ${fileName}`)
