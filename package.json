@@ -9,6 +9,7 @@
     "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline",
     "prod": "webpack",
     "server-ts": "./node_modules/.bin/ts-node -- ./server/index.ts",
+    "cron-ts": "./node_modules/.bin/ts-node -- ./server/save-image.cron.ts",
     "parserain-ts": "./node_modules/.bin/ts-node --project tsconfig.json ./server/parserain.ts"
   },
   "dependencies": {
@@ -62,7 +63,7 @@
     "vue": "^2.1.10",
     "vue-date-filter": "^1.0.1",
     "vue-resource": "^1.2.1",
-    "webpack": "^2.2.1",
+    "webpack": "3.x.x",
     "webpack-preset": "^0.2.0",
     "webpack-preset-babel": "^0.2.0",
     "webpack-preset-babel-stage-1": "^0.2.0"
