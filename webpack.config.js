@@ -58,6 +58,9 @@ module.exports = {
             {
                 from: './src/util/load-image.worker.js',
                 to: './worker'
+            },
+            {
+                from: './src/cron.sh'
             }
         ], {copyUnmodified: true})
 

@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-cd /var/www/php
-php saveimgs.php
+cd ~/www/borispol-radar2
+./node_modules/.bin/ts-node -- ./server/save-image.cron.ts
