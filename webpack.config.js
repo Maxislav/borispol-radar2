@@ -37,7 +37,7 @@ module.exports = {
     plugins: [
 
         new Webpack.DefinePlugin({
-            NODE_ENV: JSON.stringify(NODE_ENV)
+            NODE_ENV: JSON.stringify(NODE_ENV),
         }),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './index.pug')
@@ -62,7 +62,7 @@ module.exports = {
             {
                 from: './src/cron.sh'
             }
-        ], {copyUnmodified: true})
+        ], {copyUnmodified: true}),
 
     ],
     module: {
