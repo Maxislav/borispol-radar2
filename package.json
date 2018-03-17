@@ -7,7 +7,7 @@
     "server-dev": "node-dev server/index.js",
     "ws": "node server/ws.js",
     "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline",
-    "prod": "webpack",
+    "prod": "./node_modules/.bin/webpack",
     "server-ts": "./node_modules/.bin/ts-node -- ./server/index.ts",
     "cron-ts": "./node_modules/.bin/ts-node -- ./server/save-image.cron.ts",
     "parserain-ts": "./node_modules/.bin/ts-node --project tsconfig.json ./server/parserain.ts"

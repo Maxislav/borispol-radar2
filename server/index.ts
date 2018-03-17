@@ -14,8 +14,6 @@ class A extends Array{
 }
 
 const a = new A(2)
-console.log(a.getFirst())
-
 
 app
     .get('/borisbolukbb', borispolukbb)
