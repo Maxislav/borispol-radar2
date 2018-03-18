@@ -1,24 +1,35 @@
 import { io } from '../app';
-import { User} from './user';
+import { User } from './user';
 import { autobind } from 'core-decorators';
 
 
-export class Room<User> extends Array<User>{
+declare const T: any
+export class Room extends Array{
+
+    today: Date;
+
+    todayUserList: User[] = [];
+
     constructor(){
         super()
+        this.defineTodayDate()
     }
 
     addUser(user: User){
         const i = this.indexOf(user)
-        if(i < 0){
+        if(i == -1){
             this.push(user)
         }
         this.emitAllOnline();
-
         return this
     }
 
-    delUser(user: User): Room<User>{
+    defineTodayDate(): Date{
+        const d = new Date()
+        return this.today = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+    }
+
+    delUser(user: User): Room{
         while (-1<this.indexOf(user)){
             const i = this.indexOf(user)
             this.splice(i, 1)
@@ -43,6 +54,37 @@ export class Room<User> extends Array<User>{
 
     emitAll(name, value){
        this.forEach(user => user.emit(name, value))
+    }
+
+    defineUser(user: User){
+        this.defineTodayDate()
+        this.clearTodayUser()
+        const index = this.todayUserList.findIndex(_user => _user.key == user.key)
+        if(index == -1){
+            this.todayUserList.push(user)
+        }
+    }
+
+    clearTodayUser(){
+        for(let i = 0; i< this.todayUserList.length;i++ ){
+            const user = this.todayUserList[i]
+            if(user.date.getDate() !=  this.today.getDate()){
+                this.todayUserList.splice(i, 1)
+                return this.clearTodayUser()
+            }
+        }
+    }
+
+    getUserList(userList: Room | Array<any>  = this):Array<any>{
+        return userList.map(user=>({
+            id: user.id,
+            key: user.key,
+            date: user.date
+        }))
+    }
+
+    getTodayUserList(){
+        return this.getUserList(this.todayUserList)
     }
 
 }

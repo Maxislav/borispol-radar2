@@ -11,7 +11,7 @@ const storage = create('user')
 
 
 const user ={
-    connection: 0,
+    today: 0,
     uniq: 0
 };
 
@@ -23,9 +23,9 @@ class User{
             key: storage.getItem('key') || null
         }))
 
-        socket.on('uniq', ({uniq = 0, connection = 0})=>{
+        socket.on('uniq', ({uniq = 0, today = 0})=>{
             user.uniq = uniq;
-            user.connection = connection;
+            user.today = today;
         })
 
         socket.on('keygen', ({key}) =>{
