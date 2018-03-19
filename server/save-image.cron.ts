@@ -242,12 +242,12 @@ const buildImage = ({
 
 const streamA = buildImage({
     srcDir: irDir,
-    networkUrl: 'https://en.sat24.com/image?type=visual&region=eu'
+    networkUrl: 'http://www.sat24.com/image2.ashx?region=eu&ir=true'
 })
 
 const streamB = buildImage({
     srcDir: viDir,
-    networkUrl: 'http://www.sat24.com/image2.ashx?region=eu&ir=true'
+    networkUrl: 'https://en.sat24.com/image?type=visual&region=eu'
 })
 
 
