@@ -92,6 +92,8 @@ export const FileUploadComponent = Vue.component('file-upload-component', {
                     console.log(res)
                     fileSelect.value = '';
                     uploadButton.innerHTML = 'Отправить';
+                    const nFile = parseInt(res.data);
+                    console.log(nFile)
                     $this.urls[parseInt(res.data)].src = $this.urls[parseInt(res.data)].src + '?d='+new Date();
                     elSelectFile.innerHTML = 'Выбрать файл';
 				})
