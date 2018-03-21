@@ -1,7 +1,20 @@
 import { Room } from './user-room';
 import { hashGen } from './keygen';
 import { autobind } from 'core-decorators';
+import { fileUpload } from './file-upload'
 
+type status = 1 | 2 | 3
+enum STATUS {
+    PENDING = 0,
+    RESOLVE = 1,
+    REJECT = 2
+}
+interface socketData{
+    status: status
+    hash: string
+    error: Error
+    data: any
+}
 export class User{
     public id: string;
     public key: string;
@@ -24,7 +37,28 @@ export class User{
                 today: room.getTodayUserList().length
             }))
         })
+        this.socket.on('file', (d) => {
+            fileUpload(d)
+                .then(fileName => {
+                    const resD: socketData =  {
+                        status: STATUS.RESOLVE,
+                        hash: d.hash,
+                        error: null,
+                        data: fileName
+                    }
 
+                    socket.emit('file', resD)
+                })
+                .catch(err=> {
+                    console.error(err)
+                    socket.emit('file', {
+                        status:  STATUS.REJECT,
+                        hash: d.hash,
+                        error:  err,
+                        data: null
+                    })
+                })
+        })
         this.on('disconnect', ()=>{
             room.delUser(this)
             console.log('disconnect', JSON.stringify(room.getUserList(), null))

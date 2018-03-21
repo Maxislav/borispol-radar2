@@ -8,7 +8,7 @@
     "ws": "node server/ws.js",
     "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline",
     "prod": "webpack",
-    "server-ts": "./node_modules/.bin/ts-node -- ./server/borispol-radar.ts",
+    "server-ts": "./node_modules/.bin/ts-node -- ./server/borispol-radar.ts --rootdir ../src",
     "cron-ts": "./node_modules/.bin/ts-node -- ./server/save-image.cron.ts --rootdir ../src",
     "parserain-ts": "./node_modules/.bin/ts-node --project tsconfig.json ./server/parserain.ts"
   },

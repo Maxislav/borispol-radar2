@@ -103,13 +103,13 @@ router.beforeEach((to, from, next) => {
 
 console.log(NODE_ENV)
 
-const socketUrl =  NODE_ENV == 'dev' ? `${window.location.protocol}//${window.location.hostname}:${8085}` : 'http://178.62.44.54:8085';
+//const socketUrl =  NODE_ENV == 'dev' ? `${window.location.protocol}//${window.location.hostname}:${8085}` : 'http://178.62.44.54:8085';
 
 window.onload = function () {
 	const app = new Vue({
 		router
 	}).$mount('#app');
-    socket.connect(socketUrl)
+    //socket.connect(socketUrl)
 
 
 };

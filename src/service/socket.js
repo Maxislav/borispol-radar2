@@ -1,29 +1,33 @@
 import * as socketIo from 'socket.io-client';
 import {Deferred} from "../util/deferred";
+import {socketUrl} from "../constant/constant-url";
 
+let hash = 0;
 
-export class Socket {
-    constructor() {
-        this._deferred = new Deferred(0);
-        this.socket = null;
-    }
+const onName = {}
+const deferredHash = {}
 
+export const socket = socketIo.connect(socketUrl)
+socket.promise = Promise.resolve(socket)
+socket.$get = (name, data, opts) => {
+    const tHash = hash++;
+    const def = new Deferred()
+    deferredHash[tHash] = def
 
-    connect(url) {
-        this.socket = socketIo.connect(url);
-        Object.assign(this, this.socket)
-        Object.setPrototypeOf(this, Object.getPrototypeOf(this.socket))
-        this._deferred.resolve(this)
-        return this
-    }
+    onName[name] = onName[name] || (() =>{
+        socket.on(name, ({data, error, hash}) => {
+            if(error){
+                deferredHash[hash].reject({data, error})
+            }else {
+                deferredHash[hash].resolve({data, error})
+            }
 
-    get promise() {
-        return this._deferred.promise
-    }
+        })
 
-
+        return true
+    })()
+    socket.emit(name, (Object.assign({hash: tHash}, data)));
+    return deferredHash[tHash].promise
 }
-
-export const socket = new Socket()
 
 

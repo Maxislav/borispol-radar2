@@ -64,6 +64,9 @@ module.exports = {
             }
         ], {copyUnmodified: true}),
 
+        new Webpack.WatchIgnorePlugin([
+            path.resolve(__dirname, './src/img/'),
+        ]),
     ],
     module: {
         loaders: [
