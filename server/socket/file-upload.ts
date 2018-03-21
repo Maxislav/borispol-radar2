@@ -3,8 +3,7 @@ import * as Jimp from "jimp";
 import * as fs from 'fs';
 import { getConsoleKey } from '../utils/console-key';
 
-const rootDir = getConsoleKey('rootdir');
-
+const rootDir = getConsoleKey('rootdir') || '../';
 
 
 
@@ -48,6 +47,7 @@ export const fileUpload = ({file}): Promise<string> => {
                         if (err) {
                             return reject(err)
                         }
+                        console.log(`file save at -> ${path.resolve(pathToFile, replaceFile)}`)
                         resolve(replaceFile)
                     }))
                 })
