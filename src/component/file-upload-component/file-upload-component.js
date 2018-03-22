@@ -6,7 +6,6 @@ import './file-upload-component.styl';
 import {urlCron} from  '../../config/congig-url'
 import {bg} from '../../directive/directive-random-background';
 
-let socketHash = 0;
 export const FileUploadComponent = Vue.component('file-upload-component', {
 	template: template({action: urlCron.upload}),
 
@@ -25,74 +24,55 @@ export const FileUploadComponent = Vue.component('file-upload-component', {
 		}while (1<=i);
 		return {
 			load: 0,
-			urls
+			urls,
+			selectedFileName: 'Выбрать файл',
+			onSendText: 'Отправить',
+			selectedFile: null
 		};
 	},
 	methods: {
 		click: function (com) {
-
 			bg.src = com.src;
+		},
+		onSelectFile: function (e) {
+            e.preventDefault();
+            this.$refs['file-select'].click()
+        },
+        onSend: function (e){
+            e.preventDefault();
+            this.selectedFileName = '...загрузка...'
+            const formData = new FormData();
+            formData.append('afile', this.selectedFile, localStorage.hash );
+            const file = formData.getAll('afile')[0]
+
+            socket.$get('file',({file: file}))
+                .catch(err => {
+                    console.log(err)
+					alert('Ошибка загрузки')
+                    return null
+                })
+                .then(res=>{
+                    if(res){
+                        console.log(res)
+                        const nFile = parseInt(res.data)-1;
+                        console.log(nFile)
+                        this.urls[nFile].src = this.urls[nFile].src.replace(/\?d.+$/, `?d=${new Date().toISOString()}`)
+					}
+                    this.selectedFileName = 'Выбрать файл'
+                })
+
 		}
 	},
 	mounted: function () {
-
-		var $this = this;
-		var form = document.getElementById('file-form');
-
-		var elSelectFile = form.getElementsByTagName('button')[0];
-
-		var fileSelect = document.getElementById('file-select');
-		var uploadButton = document.getElementById('upload-button');
-		var files = null;
-		var formData;
-		var fileName = null;
-
-
-		fileSelect.addEventListener('change', function (e) {
-			if(!this.files.length) return;
-			console.log(this.files[0].name);
-			elSelectFile.innerHTML = this.files[0].name;
-			fileName = this.files[0].name;
-			if(!fileName.match(/(\.jpg)|(\.JPG)$/)){
-				alert('Разрешен только jpg')
-			}
-		});
-		elSelectFile.addEventListener('click', selectFile);
-		function selectFile(e) {
-			e.preventDefault();
-			this.parentElement.getElementsByTagName('input')[1].click()
-		}
-
-		form.onsubmit = function(event) {
-			event.preventDefault();
-			if(!fileName.match(/(\.jpg)|(\.JPG)$/)){
-				alert('Разрешен только jpg')
-				return;
-			}
-			console.log('send');
-			files = fileSelect.files;
-			formData = new FormData();
-			formData.append('afile', files[0], localStorage.hash );
-            const f = formData.getAll('afile')[0]
-            uploadButton.innerHTML = 'Загрузка...';
-            socket.$get('file',({file: f}))
-				.catch(err => {
-					console.log(err)
-					return null
-				})
-				.then(res=>{
-					if(res)
-                    console.log(res)
-                    fileSelect.value = '';
-                    uploadButton.innerHTML = 'Отправить';
-                    const nFile = parseInt(res.data);
-                    console.log(nFile)
-                    $this.urls[parseInt(res.data)].src = $this.urls[parseInt(res.data)].src + '?d='+new Date();
-                    elSelectFile.innerHTML = 'Выбрать файл';
-				})
-
-		};
-
+		this.$refs['file-select'].addEventListener('change',  (e) =>{
+			const fileName =  this.$refs['file-select'].files[0].name
+            if(!fileName.match(/(\.jpg)|(\.JPG)$/)){
+                alert('Разрешен только jpg')
+				return
+            }
+            this.selectedFile = this.$refs['file-select'].files[0]
+			this.selectedFileName = this.selectedFile.name
+        })
 
 		function isNumber (o) {
 			return ! isNaN (o-0) && o !== null && o !== "" && o !== false;

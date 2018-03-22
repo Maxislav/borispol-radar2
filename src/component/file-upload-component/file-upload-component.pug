@@ -3,9 +3,9 @@
     .action-container.padding-15
         form(id="file-form",  enctype="multipart/form-data", action=action, method="POST")
             input(type="hidden"  name="afile" value="30000")
-            input(name="afile" id="file-select" type="file" style="visibility: hidden")
-            button Выбрать файл
-            button(type="submit" id="upload-button" value="Send File") Отправить
+            input(name="afile" type="file" style="visibility: hidden" ref='file-select')
+            button(@click='onSelectFile' ref='select-file') {{selectedFileName}}
+            button(type="button" id="upload-button" value="Send File" @click="onSend") {{onSendText}}
 
 
     .images-container.padding-15

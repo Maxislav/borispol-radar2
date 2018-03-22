@@ -15,11 +15,6 @@ function removeStyle(name) {
 
 export default Vue.directive('img', {
     inserted: function (el, binding) {
-
-       //console.log(binding.value.$watch);
-
-
-
         const loaderDiv = document.createElement('div');
         loaderDiv.innerHTML = templateLoader({loader:img64loader});
 
@@ -85,8 +80,6 @@ export default Vue.directive('img', {
 
 
       if(typeof binding.value === 'object'){
-	     // imgNeeded.src = binding.value.src;
-
 	      getImage(binding.value.src)
 		      .then(d=>{
 		      	onLoad(d)
