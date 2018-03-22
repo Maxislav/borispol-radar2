@@ -1,4 +1,4 @@
-import './constatn/console-color'
+import './constant/console-color'
 import { getConsoleKey } from './utils/console-key';
 import * as fs from 'fs';
 import * as path from 'path'
