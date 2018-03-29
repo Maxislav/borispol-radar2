@@ -38,6 +38,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.post('/', (req, res) => {
+    console.log('ololo', req.url)
+})
+
 app.use(main);
 let timer = timerFoo();
 function timerFoo() {
