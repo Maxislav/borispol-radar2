@@ -5,24 +5,24 @@
 ***
 ## Setup
 
-### Required: any static server, php;
+### Required: Node;
 ***
 
 ### Copy
 Download files from ~/dist/* to you work dir
 
 ### Cron task
-edit cron.sh
+edit server/cron.sh
 ```
 #!/usr/bin/env bash
-cd ~/www/borispol.radar/php
-php saveimgs.php
+cd ~/www/borispol-radar2
+./node_modules/.bin/ts-node -- ./server/save-image.cron.ts --rootdir ../
 ```
 
 ~$ crontab -e 
 add line 
 ```
-0 * * * * sh ~www/borispol.radar/cron.sh
+1 * * * * sh ~www/borispol.radar/server/cron.sh
 ```
 ***
 
@@ -48,11 +48,15 @@ add line
 
 ```
 
-### Setup Ymetrika 
+### Run you site on port 8080
+```
+//
+npm run server-static-ts
 
-file config.json
-```json
-{
-  "y-metrika":"{you_id}"
-}
+```
+
+
+### Run you site on port 80
+```
+./node_modules/.bin/ts-node -- ./server/static.ts --rootdir ../dist --port 80
 ```
