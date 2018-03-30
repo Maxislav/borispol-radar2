@@ -94,7 +94,7 @@ module.exports = {
                 test: /\.pug/,
                 loader: 'pug-loader',
                 query: {
-                    pretty: NODE_ENV == 'dev'
+                    pretty: true
                 }
             },
             {
