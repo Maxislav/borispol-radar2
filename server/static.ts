@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path'
 
 
-console.log('olololl')
+
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 let express = require('express'),
@@ -41,9 +41,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.post('/', (req, res) => {
-    console.log('ololo', req.url)
-})
+
 
 app.use(main);
 let timer = timerFoo();
@@ -56,6 +54,8 @@ function timerFoo() {
 function main(request, response) {
     clearTimeout(timer);
     timer = timerFoo();
+
+    console.log('oloevera')
 
     const uri = url.parse(request.url).pathname;
     if (!checkAccess(request)) {
