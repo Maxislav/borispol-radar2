@@ -120,6 +120,9 @@ function sendFileSave(filePath, res, timeLong) {
                     }
                 });
         })
+            .catch(err=>{
+                console.log('Error 1326 - >' , err)
+            })
     })(deepCopy(rootDir))
 }
 
