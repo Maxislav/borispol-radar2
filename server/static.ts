@@ -3,6 +3,9 @@ import { getConsoleKey } from './utils/console-key';
 import * as fs from 'fs';
 import * as path from 'path'
 
+
+console.log('olololl')
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 let express = require('express'),
     http = require('http'),
