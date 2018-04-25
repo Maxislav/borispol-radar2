@@ -73,10 +73,12 @@ export const  getTiledImage = ({type = 'ground', zoom = 4}, loader) =>{
       let url;
 
       if(type == 'ground'){
-        url = `https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=SoGrAH8cEUtj6OnMI1UY`;
+        url = ` http://mt1.google.com/vt/lyrs=y&x=${x}&y=${y}&z=${z}`;
+        //url = `https://maps.tilehosting.com/data/satellite/${z}/${x}/${y}.jpg?key=RAuP21B0giTgs7R7HXfl`;
        // url = `http://a.tile.thunderforest.com/landscape/${z}/${x}/${y}.png `;
         //url = `http://a.tile.openstreetmap.org/${z}/${x}/${y}.png `;
       }else if (type == 'rain'){
+        //url = `https://c.maps.owm.io/map/clouds_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`
         url = `https://d.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1`
         //url = `https://e.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=19e738728f18421f2074f369bdb54e81`
         //url = `https://e.maps.owm.io/map/precipitation_new/${z}/${x}/${y}?appid=b1b15e88fa797225412429c1c50c122a1&time=${Math.getRandom(0,10, true)}`

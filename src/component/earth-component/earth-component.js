@@ -414,9 +414,10 @@ class EarthView{
     const a = 360*sek/(3600*24);
     const yearDays = (new Date(d.getFullYear(),11,31) - new Date(d.getFullYear(),0,0))/86400000;
     const t = 23.45*Math.sin(Math.radians(360*(284+d.getDay())/yearDays));
+
     const z = -1 * R * Math.cos(Math.radians(a));
     const x = R * Math.sin(Math.radians(a));
-    const y = R*Math.sin(Math.radians(t));
+    const y = - R*Math.sin(Math.radians(t));
     this.sunLight.position.set(x, y, z);
     setTimeout(this.setSunshine.bind(this), 1000);
     return this
