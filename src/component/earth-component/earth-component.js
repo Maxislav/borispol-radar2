@@ -410,14 +410,22 @@ class EarthView{
     if(this.isDestroyed) return this;
     const R = 40;
     const d = new Date();
+
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+    const oneDay = 1000 * 60 * 60 * 24;
+    const dayOfYear = Math.floor(diff / oneDay);
+
+
     const sek = ((d.getHours() + d.getTimezoneOffset()/60) *3600) + (d.getMinutes()*60) + d.getSeconds();
     const a = 360*sek/(3600*24);
     const yearDays = (new Date(d.getFullYear(),11,31) - new Date(d.getFullYear(),0,0))/86400000;
-    const t = 23.45*Math.sin(Math.radians(360*(284+d.getDay())/yearDays));
+    const t = 23.45*Math.sin(Math.radians(360*(284+dayOfYear)/yearDays));
 
     const z = -1 * R * Math.cos(Math.radians(a));
     const x = R * Math.sin(Math.radians(a));
-    const y = - R*Math.sin(Math.radians(t));
+    const y = R*Math.sin(Math.radians(t));
     this.sunLight.position.set(x, y, z);
     setTimeout(this.setSunshine.bind(this), 1000);
     return this
