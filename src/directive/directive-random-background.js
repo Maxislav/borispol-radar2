@@ -41,8 +41,8 @@ export default Vue.directive('random-background', {
             {r: 115, g: 111, b: 126},
             {r: 101, g: 98, b: 119},
             {r: 65, g: 67, b: 92},
-            {r: 8,  g: 8, b: 8},
-        ]
+            {r: 8, g: 8, b: 8},
+        ];
 
         //radial-gradient(at center center, rgb(255, 255, 255) 0px, rgb(242, 255, 195) 70%, rgb(214, 181, 181) 80%, rgb(69, 49, 212) 100%)
         // утро
@@ -50,18 +50,16 @@ export default Vue.directive('random-background', {
             {r: 255, g: 255, b: 255},
             {r: 242, g: 255, b: 195},
             {r: 214, g: 181, b: 181},
-            {r: 69,  g: 49, b: 212},
-        ]
+            {r: 69, g: 49, b: 212},
+        ];
 
         //день
         const rgb2 = [
             {r: 255, g: 255, b: 255},
             {r: 244, g: 253, b: 237},
             {r: 232, g: 249, b: 180},
-            {r: 96,  g: 212, b: 86},
-        ]
-
-
+            {r: 96, g: 212, b: 86},
+        ];
 
 
         const setStyle = (c) => {
@@ -70,7 +68,7 @@ export default Vue.directive('random-background', {
             rgb(${c[1].r}, ${c[1].g}, ${c[1].b}) 70%, 
             rgb(${c[2].r}, ${c[2].g}, ${c[2].b}) 80%, 
             rgb(${c[3].r}, ${c[3].g}, ${c[3].b}) 100%)`
-        }
+        };
 
 
         bg.$watch(() => bg.src, (val) => {
@@ -79,7 +77,7 @@ export default Vue.directive('random-background', {
                 .then(onUpdate)
 
 
-        })
+        });
 
         const d = new Date()
 
@@ -88,26 +86,40 @@ export default Vue.directive('random-background', {
 
         const k = 360 / (3600 * 24)
         const elapseTime = (Date.now() - startDayDate.getTime()) / 1000
-        const a = k * elapseTime - 90; //угол 0 - 180
+        let a = k * elapseTime - 90; //угол 0 - 180
 
-        if(0<a && a<180){
+        const now = new Date();
+        const start = new Date(now.getFullYear(), 0, 0);
+        const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+        const oneDay = 1000 * 60 * 60 * 24;
+        const dayOfYear = Math.floor(diff / oneDay);
+        const yearDays = (new Date(d.getFullYear(),11,31) - new Date(d.getFullYear(),0,0))/86400000;
+        const t = 23.45*Math.sin(Math.radians(360*(284+dayOfYear)/yearDays));
+
+        console.log(t)
+
+
+        if (-t < a && a < 180+t) {
             let p;
-            if(a<90){
-                p = a/90
-            }else {
-                p = Math.abs(180 - a)/90
+            if (a < 90) {
+                p = a / 90
+            } else {
+                p = Math.abs(180 - a) / 90
             }
-            const c = rgb1.map((color1, index)=>{
-                const color2 = rgb2[index]
+
+            p+=(t/90)
+            console.log(p)
+            const c = rgb1.map((color1, index) => {
+                const color2 = rgb2[index];
                 const res = {};
-                ['r', 'g', 'b'].map(key =>{
-                    res[key] = parseInt((color2[key] -color1[key])*p + color1[key]);
-                })
+                ['r', 'g', 'b'].map(key => {
+                    res[key] = parseInt((color2[key] - color1[key]) * p + color1[key]);
+                });
 
                 return res
             });
             setStyle(c)
-        }else {
+        } else {
             setStyle(rgb0)
         }
 

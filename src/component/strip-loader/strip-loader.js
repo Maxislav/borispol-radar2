@@ -23,10 +23,10 @@ export default Vue.component('strip-loader', {
     },
     watch:{
         load: function () {
-            if(0<this.load && this.load<99){
+            if(0<this.load && this.load<99.99){
                 this.opacity = 1
             }else{
-                this.opacity =0
+                this.opacity = 0
             }
         }
     }

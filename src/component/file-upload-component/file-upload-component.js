@@ -44,11 +44,22 @@ export const FileUploadComponent = Vue.component('file-upload-component', {
             const formData = new FormData();
             formData.append('afile', this.selectedFile, localStorage.hash );
             const file = formData.getAll('afile')[0]
+            let i = 10, k = 0
+
+			const timer = setInterval(()=>{
+				i+=(10 - i/10);
+				this.load = i;
+			},200)
 
             socket.$get('file',({file: file}))
                 .catch(err => {
                     console.log(err)
 					alert('Ошибка загрузки')
+                    this.load = 100
+					clearInterval(timer)
+                    setTimeout(()=>{
+                        this.load = 0
+                    },200)
                     return null
                 })
                 .then(res=>{
@@ -59,6 +70,11 @@ export const FileUploadComponent = Vue.component('file-upload-component', {
                         this.urls[nFile].src = this.urls[nFile].src.replace(/\?d.+$/, `?d=${new Date().toISOString()}`)
 					}
                     this.selectedFileName = 'Выбрать файл'
+                    this.load = 100;
+                    clearInterval(timer)
+					setTimeout(()=>{
+                        this.load = 0
+					},200)
                 })
 
 		}
