@@ -13,5 +13,6 @@ export default {
 	RAIN : 'Опады за 3год',
   SHOW : 'Снiг за год',
 	SETTING: 'S',
-  EARTH: 'Планета'
+  EARTH: 'Планета',
+    RESET: 'Reset'
 };

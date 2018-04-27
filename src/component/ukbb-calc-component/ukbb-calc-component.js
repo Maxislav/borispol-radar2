@@ -187,6 +187,17 @@ export default {
         }
 	},
 	methods: {
+        onReset: function (e) {
+            this.iam.x = 680;
+            this.iam.y = 0;
+            const origin = this.toOriginal();
+            this.original.x = origin.x;
+            this.original.y = origin.y;
+            this.lngLat.lat = toLngLat.lat(this.original.y);
+            this.lngLat.lng = toLngLat.lng(this.original.x);
+            this.canvasDirection.clear()
+            this._mouseup()
+        },
 		mousemove: function (e) {
 			if (!this.drag) return;
 			const position = {
@@ -231,7 +242,7 @@ export default {
 			if(e instanceof TouchEvent){
 				const touch = e.changedTouches[0]
 				this.layer.x = touch.clientX-position(e.target).x;
-				this.layer.y = touch.clientY-position(e.target).y
+				this.layer.y = touch.clientY-position(e.target).y;
 				this.drag = true;
 			}else{
 				this.layer.x = e.layerX - (document.body.scrollLeft || 0);

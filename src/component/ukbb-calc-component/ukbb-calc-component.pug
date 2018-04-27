@@ -12,6 +12,7 @@
                 .flex.align-items-center
                     input(type="checkbox", v-model="showFlag")
                     .margin-0-15(@click="showFlag = !showFlag") Показать флажок
+                    button.reset(type='button', @click="onReset") {{'RESET' | translate}}
 
         ukbb-component(:staticLoad="onload")
         .marker(:style="{top:iam.y+'px', left:iam.x+'px'}", v-if="showFlag", @mousedown="mousedown", @touchstart="mousedown")

@@ -53,6 +53,11 @@ export class CanvasDirection{
 
 	}
 
+	clear(){
+        const ctx =this._context;
+        ctx.clearRect(0, 0, this.el.width, this.el.height);
+	}
+
 	drawCircle(center){
 		const ctx =this._context;
 		ctx.beginPath();

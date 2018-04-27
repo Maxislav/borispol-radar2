@@ -47,7 +47,8 @@ export const FileUploadComponent = Vue.component('file-upload-component', {
             let i = 10, k = 0
 
 			const timer = setInterval(()=>{
-				i+=(10 - i/10);
+				//i+=(10 - i/10);
+                i+=((5 - i/20));
 				this.load = i;
 			},200)
 
