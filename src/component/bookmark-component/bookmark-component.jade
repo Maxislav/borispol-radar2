@@ -6,7 +6,9 @@
 	router-link(to='/meteosat') Meteosat
 	router-link(to='/infomometr') {{'INFOMOMETRS' | translate}}
 	router-link(to='/earth') {{'EARTH' | translate}}
+	router-link(to='/sunshine') Sunshine
 	router-link.android(to='/android') Android
+
 	.list-btn
 		.btn(@click="onMenu($event)" v-img='listIco' )
 	.list(@click="$event.stopPropagation()" v-if='isMenuShow')

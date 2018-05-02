@@ -33,6 +33,7 @@ import {ForecastItemComponent} from './component/forecast-item-component/forecas
 import {DialogComponent} from './component/dialog-component/dialog-component'
 import {EarthComponent} from './component/earth-component/earth-component'
 import VueResource from 'vue-resource'
+import {SunshineComponent} from "./component/sunshine-component/sunshine-component";
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
@@ -52,6 +53,7 @@ const routes = [
 	{path: '/fileupload', component: FileUploadComponent},
 	{path: '/infomometr', component: InfomometrComponent},
 	{path: '/earth', component: EarthComponent},
+	{path: '/sunshine', component: SunshineComponent},
 	{
 		path: '/forecast-item/:index',
 		name: 'forecast-item',
