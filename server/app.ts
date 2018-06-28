@@ -22,8 +22,8 @@ class App{
         console.log(`node server start on port: ${this.port}`)
     }
 
-    public get(...args): App{
-        this.express.get(...args)
+    public get(url, callback): App{
+        this.express.get(url, callback)
         return this
     }
 }

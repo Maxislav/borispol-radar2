@@ -3,8 +3,7 @@ import { User } from './user';
 import { autobind } from 'core-decorators';
 
 
-declare const T: any
-export class Room extends Array{
+export class Room<T> extends Array{
 
     today: Date;
 
@@ -29,7 +28,7 @@ export class Room extends Array{
         return this.today = new Date(d.getFullYear(), d.getMonth(), d.getDate())
     }
 
-    delUser(user: User): Room{
+    delUser(user: User): Room<any>{
         while (-1<this.indexOf(user)){
             const i = this.indexOf(user)
             this.splice(i, 1)
@@ -75,7 +74,7 @@ export class Room extends Array{
         }
     }
 
-    getUserList(userList: Room | Array<any>  = this):Array<any>{
+    getUserList(userList: Room<any> | Array<any>  = this):Array<any>{
         return userList.map(user=>({
             id: user.id,
             key: user.key,

@@ -7,7 +7,7 @@ import {getDirection} from './get-direction'
 /**
  * @extends Array
  */
-export class ImageMatrix<T> extends Array<number>{
+export class ImageMatrix<T> extends Array<any>{
     private _width: number;
     private _height: number;
     private _scale: number;
@@ -33,7 +33,7 @@ export class ImageMatrix<T> extends Array<number>{
 
     }
 
-    toArray(): Array {
+    toArray(): Array<any> {
         if (!this.list) {
             this.list = [];
             for (let x = 0; x < this._width; x++) {

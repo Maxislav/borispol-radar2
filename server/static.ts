@@ -3,7 +3,14 @@ import { getConsoleKey } from './utils/console-key';
 import * as fs from 'fs';
 import * as path from 'path'
 
-
+declare global {
+    interface String {
+        green(length : number) : string;
+        yellow(length : number) : string;
+        red(length : number) : string;
+        blue(length : number) : string;
+    }
+}
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -189,7 +196,8 @@ function sendFile(file, filePath, res, timeLong) {
     });
 }
 
-function videoSend(file, filename, res, timeLong) {
+function videoSend(...args) {
+    const [file, filename, res, timeLong] = args
     res.sendFile(filename);
     const resTime = `${new Date().getTime() - timeLong}ms`;
     console.log(`${filename} : ${resTime}`);

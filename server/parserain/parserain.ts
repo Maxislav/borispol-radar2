@@ -4,11 +4,13 @@ import {Deferred} from "./deferred.class";
 import * as Jimp from 'jimp';
 import {ImageMatrix} from './image-matrix.class'
 import {ImageColor} from './image-color.class'
+import {UrlWithParsedQuery} from "url";
+import {ParsedUrlQuery} from "querystring";
 
 const path = 'http://meteoinfo.by/radar/UKBB/UKBB_latest.png';
 const mathDate = new MathDate();
 interface HashDate{
-    [hashCode: string]: Deferred<number>
+    [hashCode: string]: Deferred<any>
 }
 
 const hashDate:HashDate = {};
@@ -16,17 +18,18 @@ const hashDate:HashDate = {};
 let I = 0;
 export const parserain = (req, res, next) =>{
     I++;
-    const url_parts = url.parse(req.url, true);
+    const url_parts: UrlWithParsedQuery = url.parse(req.url, true);
     /**
      * @type {{lat:number|undefined, lng:number|undefined }}
      */
-    const query = url_parts.query;
+    const query: ParsedUrlQuery = url_parts.query;
     const currentHash: string = mathDate.getCurrentDate().toISOString() + '.' + query.lat + '.' + query.lng;
 
 
-    const {lat = '50.44701', lng = '30.49'} = query;
+    //const {lat: sting| number = '50.44701', lng = '30.49'} = query;
 
-
+    const lat: string  =  query['lat'] ? query['lat'].toString() : '50.44701';
+    const lng: string  = query['lng'] ? query['lng'].toString() : '50.44701';
 
     if (!hashDate[currentHash]) {
         hashDate[currentHash] = new Deferred(I);
@@ -76,7 +79,7 @@ export const parserain = (req, res, next) =>{
     }
     return hashDate[currentHash]
         .promise
-        .then(result => {
+        .then((result: {direction: any, dist: any, isRainy: any}) => {
             const i = hashDate[currentHash].i;
             let ip =  req.headers['x-forwarded-for'] ||
                 req.connection.remoteAddress ||
@@ -87,7 +90,7 @@ export const parserain = (req, res, next) =>{
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify(result, null, 3));
 
-            console.log('resolve ->', i, 'ip:', ip, {direction:result.direction, dist: result.dist.length? result.dist[0] :[], isRainy: result.isRainy })
+            console.log('resolve ->', i, 'ip:', ip, {direction: result.direction, dist: result.dist.length? result.dist[0] :[], isRainy: result.isRainy })
             return true
         })
         .catch(err => {
