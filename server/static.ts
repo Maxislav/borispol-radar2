@@ -2,6 +2,7 @@ import './constant/console-color'
 import { getConsoleKey } from './utils/console-key';
 import * as fs from 'fs';
 import * as path from 'path'
+import { defaultSetting } from './phplike/settingborispolradar';
 
 declare global {
     interface String {
@@ -35,6 +36,7 @@ http.createServer(app).listen(app.get('port'), () => {
 });
 
 
+
 app.use((req, res, next) => {
     const uri = url.parse(req.url).pathname;
     for (let i = 0; i < config.proxies.length; i++) {
@@ -48,6 +50,8 @@ app.use((req, res, next) => {
     next();
 });
 
+app
+    .get('/php/settingborispolradar.php', defaultSetting);
 
 
 app.use(main);
@@ -261,3 +265,5 @@ function deepCopy(oldObj) {
     }
     return newObj;
 }
+
+export { app as appStatic }

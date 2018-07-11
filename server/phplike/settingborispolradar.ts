@@ -1,9 +1,13 @@
 
-export function defaultSettiong(req, res) {
+export function defaultSetting(req, res) {
 
-    console.log(req)
     res.send({
-        title1: 'Borispol'
+        'title1' : "Borispol",
+        'title2' : "Infrared",
+        'title3' : "Visible",
+        'url1' : "http://meteoinfo.by/radar/UKBB/UKBB_latest.png",
+        'url2' : "http://www.sat24.com/image2.ashx?region=eu&ir=true",
+        'url3' : "http://www.sat24.com/image2.ashx?region=eu"
     })
 }
 
