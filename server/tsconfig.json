@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "ES6",
+    "lib": ["ES5",
+      "ES2015",
+      "DOM",
+      "ScriptHost"]
+  },
+
+  "files": [
+    "makeModule.ts"
+  ],
+  "exclude": [
+    "server/dist",
+    "node_modules"
+  ]
+}

@@ -1,8 +1,9 @@
 import * as path from "path";
-import * as Jimp from "jimp";
+//import * as Jimp from "jimp";
+var Jimp = require("jimp");
 import * as fs from 'fs';
 import { getConsoleKey } from '../utils/console-key';
-
+import {Promise} from 'es6-promise'
 const rootDir = getConsoleKey('rootdir') || '../';
 
 

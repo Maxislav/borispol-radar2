@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as http from 'http';
-import { autobind } from 'core-decorators';
+import { autobind } from '../node_modules/core-decorators/lib/core-decorators';
 import {Express} from "express";
 import * as socketIo from 'socket.io';
 
@@ -28,5 +28,5 @@ class App{
     }
 }
 
-export const app = new App(8085)
+export const app = new App(8084)
 export const io  = app.io;

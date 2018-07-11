@@ -1,7 +1,8 @@
 import {MathDate} from "./math-date.class";
 import * as url from 'url';
 import {Deferred} from "./deferred.class";
-import * as Jimp from 'jimp';
+//import * as Jimp from 'jimp';
+var Jimp = require("jimp");
 import {ImageMatrix} from './image-matrix.class'
 import {ImageColor} from './image-color.class'
 import {UrlWithParsedQuery} from "url";
