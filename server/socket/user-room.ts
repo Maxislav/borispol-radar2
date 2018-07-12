@@ -8,11 +8,12 @@ export class Room<T> extends Array {
 
     today: Date;
 
-    todayUserList: any;//Array<User> = [];
+    todayUserList: any; //Array<User> = [];
 
     constructor() {
         super();
         this.defineTodayDate();
+        this.todayUserList = []
     }
 
     addUser(user: User) {
