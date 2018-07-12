@@ -6,6 +6,9 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "ES6",
+    "types": [
+      "node"
+    ],
     "lib": ["ES5",
       "ES2015",
       "DOM",
