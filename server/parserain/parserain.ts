@@ -1,8 +1,8 @@
 import {MathDate} from "./math-date.class";
 import * as url from 'url';
 import {Deferred} from "./deferred.class";
-//import * as Jimp from 'jimp';
-var Jimp = require("jimp");
+import * as Jimp from 'jimp';
+//var Jimp = require("jimp");
 import {ImageMatrix} from './image-matrix.class'
 import {ImageColor} from './image-color.class'
 import {UrlWithParsedQuery} from "url";
@@ -42,7 +42,7 @@ export const parserain = (req, res, next) =>{
                 return;
             }
 
-            image.crop(0, 0, 505, 480);
+            image.crop(0, 0, 505, image.bitmap.height-1);
             const imageMatrix = new ImageMatrix(image.bitmap.width, image.bitmap.height);
             image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
                 const red = image.bitmap.data[idx];
