@@ -6,15 +6,14 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "ES6",
-    "types": [
-      "node"
-    ],
-    "lib": ["ES5",
+    "lib": [
+      "ES5",
       "ES2015",
       "DOM",
-      "ScriptHost"]
-  },
+      "ScriptHost"
+    ]
 
+  },
   "files": [
     "makeModule.ts"
   ],

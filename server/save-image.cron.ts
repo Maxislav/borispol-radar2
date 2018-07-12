@@ -1,5 +1,5 @@
-declare const process: any;
-process.env.TZ = 'UTC';
+/*declare const process: any;
+process.env.TZ = 'UTC';*/
 import * as http  from 'http';
 import * as fs from 'fs';
 import * as dateFormat from 'dateformat';
@@ -9,8 +9,8 @@ import { getConsoleKey } from './utils/console-key';
 const patternDate = '(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})';
 
 const rootDir = getConsoleKey('rootdir');
-const irDir = path.resolve(__dirname, rootDir, 'img', 'ir')
-const viDir = path.resolve(__dirname, rootDir, 'img', 'vi')
+const irDir = path.resolve(__dirname, rootDir, 'img', 'ir');
+const viDir = path.resolve(__dirname, rootDir, 'img', 'vi');
 // 0 * * * * sh /home/max/www/borispol-radar2/server/cron.sh
 
 
@@ -120,7 +120,7 @@ const buildImage = ({
                     files.forEach( (file: string) => {
                         const matches: number[] = file.match(new RegExp(patternDate)).slice(1).map(Number);
                         if(matches[1]) matches[1]--;
-                        const d: number = new Date(...matches).getTime();
+                        const d: number = new Date(matches[0], matches[1], matches[2], matches[3], matches[4], matches[5], matches[6]).getTime();
                         if((new Date().getTime() - d) > 24*3600*1000){
                             filesForDel.push(file)
                         }
