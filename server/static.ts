@@ -37,7 +37,7 @@ http.createServer(app).listen(app.get('port'), () => {
 
 
 app
-    .get('*/php/settingborispolradar.php', defaultSetting)
+    .use('*/php/settingborispolradar.php', defaultSetting)
     .use((req, res, next) => {
     const uri = url.parse(req.url).pathname;
     for (let i = 0; i < config.proxies.length; i++) {
