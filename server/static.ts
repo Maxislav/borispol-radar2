@@ -51,10 +51,10 @@ app.use((req, res, next) => {
 });
 
 app
-    .get('/dist/php/settingborispolradar.php', defaultSetting);
+    .get('*/dist/php/settingborispolradar.php', defaultSetting)
+    .use(main);
 
 
-app.use(main);
 let timer = timerFoo();
 function timerFoo() {
     return setTimeout(() => {
@@ -66,7 +66,7 @@ function main(request, response) {
     clearTimeout(timer);
     timer = timerFoo();
 
-    console.log('oloevera')
+    //console.log('oloevera')
 
     const uri = url.parse(request.url).pathname;
     if (!checkAccess(request)) {
