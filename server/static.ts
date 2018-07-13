@@ -36,8 +36,9 @@ http.createServer(app).listen(app.get('port'), () => {
 });
 
 
-
-app.use((req, res, next) => {
+app
+    .get('*/php/settingborispolradar.php', defaultSetting)
+    .use((req, res, next) => {
     const uri = url.parse(req.url).pathname;
     for (let i = 0; i < config.proxies.length; i++) {
         const proxiRegex = new RegExp(config.proxies[i].source);
@@ -48,11 +49,10 @@ app.use((req, res, next) => {
         }
     }
     next();
-});
+})
+   .use(main);
+///var/www/borispol-radar/dist/php/settingborispolradar.php:
 
-app
-    .get('*/dist/php/settingborispolradar.php', defaultSetting)
-    .use(main);
 
 
 let timer = timerFoo();
