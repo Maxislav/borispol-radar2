@@ -51,7 +51,7 @@ app.use((req, res, next) => {
 });
 
 app
-    .get('/php/settingborispolradar.php', defaultSetting);
+    .get('/dist/php/settingborispolradar.php', defaultSetting);
 
 
 app.use(main);

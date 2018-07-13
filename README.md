@@ -60,4 +60,7 @@ npm run server-static-ts
 ### Run you site on port 80
 ```
 ./node_modules/.bin/ts-node  --project ./server/tsconfig.json ./server/save-image.cron.ts --rootdir ../dist
+
+ ts-node --project ./server/tsconfig.json ./server/borispol-radar.ts --rootdir ../dist --port 80
+
 ```

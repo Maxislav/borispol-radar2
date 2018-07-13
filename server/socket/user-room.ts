@@ -12,6 +12,8 @@ export class Room<T> extends Array {
 
     constructor() {
         super();
+       // console.log(this.defineTodayDate)
+
         this.defineTodayDate();
         this.todayUserList = []
     }
@@ -25,7 +27,7 @@ export class Room<T> extends Array {
         return this;
     }
 
-    private defineTodayDate(): Date {
+    defineTodayDate(): Date {
         const d = new Date();
         return this.today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
     }
@@ -35,7 +37,7 @@ export class Room<T> extends Array {
             const i = this.indexOf(user);
             this.splice(i, 1);
         }
-        return this;
+        return <Room<any>>this;
     }
 
 
