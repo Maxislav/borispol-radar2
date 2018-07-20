@@ -14,9 +14,13 @@ const UkbbComponent = Vue.component('ukbb-component',	{
 		data: function () {
 
 
-		 const vm = 	new Vue({
+		 const vm = new Vue({
 				data: {
-					src:urlCron.ukbb, callback:this.staticLoad
+					src: urlCron.ukbb,
+					callback: this.staticLoad,
+					onerror: (e) => {
+						console.log('dsjasduh')
+					}
 				}
 			});
 

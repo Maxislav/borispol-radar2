@@ -7,7 +7,7 @@
     "ws": "node server/ws.js",
     "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline",
     "prod": "webpack",
-    "server-ts": "ts-node %NODE_DEBUG_OPTION% --ignore false --project ./tsconfig.json  --  ./server/borispol-radar.ts --rootdir ../src --port 8080",
+    "server-ts": "ts-node --project ./tsconfig.json  --  ./server/borispol-radar.ts --rootdir ../src --port 8888",
     "server-static-ts": "./node_modules/.bin/ts-node -- ./server/static.ts --rootdir ../dist --port 8080",
     "cron-ts": "./node_modules/.bin/ts-node -- ./server/save-image.cron.ts --rootdir ../src",
     "parserain-ts": "./node_modules/.bin/ts-node --project tsconfig.json ./server/parserain.ts"
@@ -27,6 +27,7 @@
     "typescript": "^2.9.2",
     "vue-router": "^2.2.1",
     "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.0.0",
     "ws": "^3.2.0"
   },
   "devDependencies": {

@@ -72,6 +72,23 @@ export default Vue.directive('img', {
 	        }
         };
 
+        const onerror = (e) => {
+            const div = document.createElement('div')
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.justifyContent = 'center';
+            div.style.height = '100%';
+
+
+
+            el.appendChild(div);
+            div.innerHTML = 'Not Found'
+            imgLoader.$fadeTo(1, 0, 222)
+                .then(imgLoader => {
+                    el.removeChild(imgLoader)
+                })
+        };
+
 
         imgNeeded.onload = () => {
 	        onLoad(imgNeeded)
@@ -83,7 +100,14 @@ export default Vue.directive('img', {
 	      getImage(binding.value.src)
 		      .then(d=>{
 		      	onLoad(d)
-		      });
+		      })
+              .catch(e => {
+                  binding.value
+                  if(binding.value.onerror){
+                      binding.value.onerror(e)
+                  }
+                  onerror(e)
+              });
 
 	      binding.value.$watch('src', (val)=>{
 	      	console.log(val)
