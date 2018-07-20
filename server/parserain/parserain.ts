@@ -30,7 +30,7 @@ export const parserain = (req, res, next) =>{
     //const {lat: sting| number = '50.44701', lng = '30.49'} = query;
 
     const lat: string  =  query['lat'] ? query['lat'].toString() : '50.44701';
-    const lng: string  = query['lng'] ? query['lng'].toString() : '50.44701';
+    const lng: string  = query['lng'] ? query['lng'].toString() : '30.49';
 
     if (!hashDate[currentHash]) {
         hashDate[currentHash] = new Deferred(I);

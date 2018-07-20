@@ -106,7 +106,7 @@ export class ImageMatrix<T> extends Array<any>{
         const colors = [];
 
 
-        return filterByDirection
+        const f = filterByDirection
             .filter(function (value, index, arr) {
                 const find = colors.find((val) => {
                     return Math.abs(value.dec - val) < 10
@@ -126,6 +126,7 @@ export class ImageMatrix<T> extends Array<any>{
                     y: it.y
                 }
             })
+        return f
     }
     isRainy(){
         return this._isRainy
