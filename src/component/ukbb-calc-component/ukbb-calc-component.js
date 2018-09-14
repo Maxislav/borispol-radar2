@@ -235,18 +235,16 @@ export default {
 
 		},
 		mousedown: function (e) {
-			//console.log(e)
 
-			window.E = e
-
+			window.E = e;
 			if(e instanceof TouchEvent){
 				const touch = e.changedTouches[0]
 				this.layer.x = touch.clientX-position(e.target).x;
 				this.layer.y = touch.clientY-position(e.target).y;
 				this.drag = true;
 			}else{
-				this.layer.x = e.layerX - (document.body.scrollLeft || 0);
-				this.layer.y = e.layerY - (document.body.scrollTop || 0);
+				this.layer.x = e.layerX - (document.documentElement.scrollLeft || 0);
+				this.layer.y = e.layerY - (document.documentElement.scrollTop || 0);
 				this.drag = true;
 			}
 

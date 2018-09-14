@@ -7,7 +7,7 @@ import { autobind } from '../../node_modules/core-decorators/src/core-decorators
 export class Room<T> extends Array {
 
     today: Date;
-
+    //defineTodayDate:
     todayUserList: any; //Array<User> = [];
 
     constructor() {

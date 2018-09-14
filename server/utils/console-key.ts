@@ -1,3 +1,4 @@
+declare const process: any;
 export const getConsoleKey = (key: string): string | undefined =>{
     const regexp = new RegExp('\-\-'.concat(key).concat('$'))
     const index = process.argv.findIndex(it  => !!it.match(regexp));

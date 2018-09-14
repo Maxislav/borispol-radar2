@@ -1,36 +1,36 @@
-import * as path from "path";
+import * as path from 'path';
 //import * as Jimp from "jimp";
-var Jimp = require("jimp");
+var Jimp = require('jimp');
 import * as fs from 'fs';
 import { getConsoleKey } from '../utils/console-key';
-import {Promise} from 'es6-promise'
-const rootDir = getConsoleKey('rootdir') || '../';
+import { Promise } from 'es6-promise';
 
+const rootDir = getConsoleKey('rootdir') || '../';
 
 
 const getFileList = (p) => {
     return new Promise((resolve, reject) => {
         fs.readdir(p, (err, fileList) => {
-            if(err){
-               return reject(err)
+            if (err) {
+                return reject(err);
             }
 
-            Promise.all(fileList.map(f=>{
+            Promise.all(fileList.map(f => {
                 return new Promise((resolve, reject) => {
                     fs.lstat(path.resolve(p, f), (err, stat) => {
-                        const resObj = {filename: f}
-                        Object.setPrototypeOf(resObj, Object.getPrototypeOf(stat))
+                        const resObj: any = {filename: f};
+                        (<any>Object).setPrototypeOf(resObj, Object.getPrototypeOf(stat));
 
-                        resolve(Object.assign(resObj, stat))
-                    })
-                })
+                        resolve((<any>Object).assign(resObj, stat));
+                    });
+                });
             }))
-                .then(resolve)
+                .then(resolve);
 
-        })
-    })
+        });
+    });
 
-}
+};
 
 
 export const fileUpload = ({file}): Promise<string> => {
@@ -39,22 +39,22 @@ export const fileUpload = ({file}): Promise<string> => {
         getFileList(pathToFile)
             .then((list: Array<any>) => {
                 list.sort((a, b) => {
-                    return a.ctime - b.ctime
+                    return a.ctime - b.ctime;
                 });
                 const replaceFile: string = list[0].filename;
                 Jimp.read(file, function (err, image) {
-                    if(err) return reject(err);
+                    if (err) return reject(err);
                     image.write(path.resolve(pathToFile, replaceFile), (err => {
                         if (err) {
-                            return reject(err)
+                            return reject(err);
                         }
-                        console.log(`file save at -> ${path.resolve(pathToFile, replaceFile)}`)
-                        resolve(replaceFile)
-                    }))
-                })
+                        console.log(`file save at -> ${path.resolve(pathToFile, replaceFile)}`);
+                        resolve(replaceFile);
+                    }));
+                });
             })
             .catch(err => {
-                return reject(err)
-            })
-    })
+                return reject(err);
+            });
+    });
 };

@@ -70,7 +70,7 @@ module.exports = {
     ],
     module: {
         loaders: [
-            { test: /\.tsx?$/, loader: "ts-loader" },
+            {test: /\.tsx?$/, loader: "ts-loader"},
             {
                 test: /\.js$/,
                 //loader: 'babel-loader',
@@ -79,7 +79,7 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['es2016', 'stage-1'],
-                        plugins: ['transform-decorators-legacy' ],
+                        plugins: ['transform-decorators-legacy'],
                     }
                 }
             },
@@ -166,6 +166,12 @@ module.exports = {
                 pathRewrite: {
                     'upload.php': ''
                 }
+            },
+            '/img/ir': {
+                target: 'http://meteo-radar.info'
+            },
+            '/img/vi': {
+                target: 'http://meteo-radar.info'
             }
         }
 
@@ -175,16 +181,16 @@ module.exports = {
 
 if (NODE_ENV == 'production') {
     module.exports.plugins.unshift(new Version({}))
-    module.exports.plugins.push( new UglifyJsPlugin())
+    module.exports.plugins.push(new UglifyJsPlugin())
 
-   /* module.exports.plugins.push(
-        new Webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false,
-                drop_console: false,
-                unsafe: true
+    /* module.exports.plugins.push(
+         new Webpack.optimize.UglifyJsPlugin({
+             compress: {
+                 warnings: false,
+                 drop_console: false,
+                 unsafe: true
 
-            }
-        })
-    )*/
+             }
+         })
+     )*/
 }

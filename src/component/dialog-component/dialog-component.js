@@ -21,11 +21,11 @@ export const DialogComponent = Vue.component('dialog-component', {
 	data: function () {
 		const dialogs = [];
 
-		setTimeout(()=>{
+		/*setTimeout(()=>{
 			dialogs.push({
 				title: 'ololo'
 			})
-		}, 1000)
+		}, 1000)*/
 		return {
 			dialogs
 		}

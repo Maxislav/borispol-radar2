@@ -1,2 +1,2 @@
 div()
-    dialog-item-component(v-for="dialog in dialogs", :options="dialog")
+    dialog-item-component(v-for="dialog in dialogs", :options="dialog" :key="dialog.id")
