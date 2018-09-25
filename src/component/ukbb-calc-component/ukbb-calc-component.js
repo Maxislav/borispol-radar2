@@ -4,189 +4,190 @@ import './ukbb-calc-component.styl';
 import constantRadarColor from '../../constant/constant-radar-color'
 //import $ from 'jquery-lite';
 import $ from 'jquery-lite/src/event';
-import {position} from  '../../util/position';
-import {CanvasDirection} from  './canvas-direction';
+import {position} from '../../util/position';
+import {CanvasDirection} from './canvas-direction';
 import {getDirection} from './get-direction';
-import { pixelArray, toRain} from './pixel-data';
+import {pixelArray, toRain} from './pixel-data';
+
 const TouchEvent = window.TouchEvent || window.Touch || Array;
 
 const toLngLat = {
-	lng: (x) => {
-		return x * (33.89 - 27.9) / 515 + 27.9
-	},
-	lat: (y) => {
-		return (470 - y) * (52.14 - 48.35) / 470 + 48.35
-	}
+    lng: (x) => {
+        return x * (33.89 - 27.9) / 515 + 27.9
+    },
+    lat: (y) => {
+        return (470 - y) * (52.14 - 48.35) / 470 + 48.35
+    }
 };
 
 
 const filter = (rain, original, a) => {
 
 
-	if (a) {
-		a = Math.normalizeDegree(a);
-		const {x, y} = original;
-		rain = rain.filter(p => {
-			let _a;
-			if (x < p.x && p.y < y) {
-				_a = (Math.atan((p.x - x) / (y - p.y)))
-			} else if (x < p.x && y < p.y) {
-				_a = (Math.atan((p.y - y) / (p.x - x))) + Math.PI / 2
-			} else if (p.x < x && y < p.y) {
-				_a = (Math.atan((x - p.x) / (p.y - y))) + Math.PI
-			} else {
-				_a = (Math.atan((y - p.y ) / (x - p.x))) + 3 * Math.PI / 2
-			}
-			_a = Math.degrees(_a);
-			return Math.abs(a - _a) < 15
-		})
-	}
+    if (a) {
+        a = Math.normalizeDegree(a);
+        const {x, y} = original;
+        rain = rain.filter(p => {
+            let _a;
+            if (x < p.x && p.y < y) {
+                _a = (Math.atan((p.x - x) / (y - p.y)))
+            } else if (x < p.x && y < p.y) {
+                _a = (Math.atan((p.y - y) / (p.x - x))) + Math.PI / 2
+            } else if (p.x < x && y < p.y) {
+                _a = (Math.atan((x - p.x) / (p.y - y))) + Math.PI
+            } else {
+                _a = (Math.atan((y - p.y) / (x - p.x))) + 3 * Math.PI / 2
+            }
+            _a = Math.degrees(_a);
+            return Math.abs(a - _a) < 15
+        })
+    }
 
-	const filterByColor = rain.filter((item) => {
-		if(item.colorHex != '#cccccc'){
-			//console.log(item.colorHex)
-			//console.log('%c '+item.colorHex, 'background: '+item.colorHex+'; color: #ffffff');
-		}
-		return constantRadarColor.find((val) => {
-			const find = Math.abs(item.colorDec - val.colorDec) < 1000;
-			if (find) {
-				item.text = val.text;
-				item.id = val.id;
-				//console.log(item.id)
-			}
-			return find
-		});
-	});
+    const filterByColor = rain.filter((item) => {
+        if (item.colorHex != '#cccccc') {
+            //console.log(item.colorHex)
+            //console.log('%c '+item.colorHex, 'background: '+item.colorHex+'; color: #ffffff');
+        }
+        return constantRadarColor.find((val) => {
+            const find = Math.abs(item.colorDec - val.colorDec) < 1000;
+            if (find) {
+                item.text = val.text;
+                item.id = val.id;
+                //console.log(item.id)
+            }
+            return find
+        });
+    });
 
-	filterByColor.forEach(r => {
-		r.distFrom(original.x, original.y)
-	});
+    filterByColor.forEach(r => {
+        r.distFrom(original.x, original.y)
+    });
 
-	filterByColor.sort((a, b) => {
-		if (a.dist < b.dist) {
-			return -1
-		}
-		if (b.dist < a.dist) {
-			return 1
-		}
-		if (a.dist == b.dist) {
-			return 0
-		}
-	});
+    filterByColor.sort((a, b) => {
+        if (a.dist < b.dist) {
+            return -1
+        }
+        if (b.dist < a.dist) {
+            return 1
+        }
+        if (a.dist == b.dist) {
+            return 0
+        }
+    });
 
-	const colors = [];
+    const colors = [];
 
 
-	return filterByColor.filter(function (value, index, arr) {
-		const find = colors.indexOf(value.id);
+    return filterByColor.filter(function (value, index, arr) {
+        const find = colors.indexOf(value.id);
 
-		//console.log(find.colorHex)
-		if (find==-1 && (100 < value.r || 100 < value.g || 100 < value.b )) {
-			colors.push(value.id);
+        //console.log(find.colorHex)
+        if (find == -1 && (100 < value.r || 100 < value.g || 100 < value.b)) {
+            colors.push(value.id);
 
-			return true
-		}
-		return false
-	});
+            return true
+        }
+        return false
+    });
 
 };
 
 
 export default {
-	template: template(),
-	data: function () {
+    template: template(),
+    data: function () {
 
-		//console.log(this.$storage.getItem('show-flag'))
-        if(this.$storage.getItem('show-flag')===undefined){
+        //console.log(this.$storage.getItem('show-flag'))
+        if (this.$storage.getItem('show-flag') === undefined) {
             this.$storage.setItem('show-flag', true)
-		}
+        }
 
-		let showFlag =  this.$storage.getItem('show-flag');
+        let showFlag = this.$storage.getItem('show-flag');
 
-		this.drag = false;
-		this.layer = {
-			x: 0,
-			y: 0
-		};
+        this.drag = false;
+        this.layer = {
+            x: 0,
+            y: 0
+        };
 
-		this.windDirection = null;
+        this.windDirection = null;
 
-		this.original = {
-			x: 0,
-			y: 0
-		};
+        this.original = {
+            x: 0,
+            y: 0
+        };
 
-		this.image = null;
-		const iam = {
-			x: this.$storage.getItem('flag-x') || 680,
-			y: this.$storage.getItem('flag-y') || 0
-		};
-
-
-		this._rain = [];
-
-		this.toOriginal = () => {
-			return {
-				x: (this.iam.x + 0) * (this.image.naturalWidth / this.image.width)-1,
-				y: (this.iam.y + 22) * (this.image.naturalHeight / this.image.height)
-			}
-		};
+        this.image = null;
+        const iam = {
+            x: this.$storage.getItem('flag-x') || 680,
+            y: this.$storage.getItem('flag-y') || 0
+        };
 
 
-		const lngLat = {
-			lng: toLngLat.lng(iam.x +0),
-			lat: toLngLat.lat(iam.y + 22)
-		};
+        this._rain = [];
 
-		const onload = (image) => {
-			this.image = image;
-			const canvas = document.createElement("canvas");
-			canvas.width = image.naturalWidth;
-			canvas.height = image.naturalHeight;
-			if (this.canvasDirection) this.canvasDirection.destroy()
-			this.canvasDirection = new CanvasDirection(canvas);
-			image.parentNode.appendChild(this.canvasDirection.el);
+        this.toOriginal = () => {
+            return {
+                x: (this.iam.x + 0) * (this.image.naturalWidth / this.image.width) - 1,
+                y: (this.iam.y + 22) * (this.image.naturalHeight / this.image.height)
+            }
+        };
 
-			const context = canvas.getContext("2d");
-			context.drawImage(image, 0, 0);
-			context.clearRect(20,470, 10,10);
-			const imageData = context.getImageData(0, 0, 500, canvas.height);
-			context.clearRect(0, 0, canvas.width, canvas.height);
-			context.putImageData(imageData, 0, 0);
 
-			const data = pixelArray(imageData);
-			this.windDirection = getDirection(data);
-			//console.log('windDirection', this.windDirection)
-			this._rain.length = 0;
-			toRain(data, this._rain);
-			if (this.iam.x < 500) {
-				const origin = this.toOriginal();
-				this.original.x = origin.x;
-				this.original.y = origin.y;
-				if (this.windDirection != null) {
-					this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection + 180);
-				}
-				this.rain.length = 0;
-				filter(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
-			}
+        const lngLat = {
+            lng: toLngLat.lng(iam.x + 0),
+            lat: toLngLat.lat(iam.y + 22)
+        };
 
-			//console.log(this.rain)
-		};
+        const onload = (image) => {
+            this.image = image;
+            const canvas = document.createElement("canvas");
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            if (this.canvasDirection) this.canvasDirection.destroy()
+            this.canvasDirection = new CanvasDirection(canvas);
+            image.parentNode.appendChild(this.canvasDirection.el);
 
-		return {
-			onload,
-			lngLat,
-			rain: [],
-			iam,
+            const context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0);
+            context.clearRect(20, 470, 10, 10);
+            const imageData = context.getImageData(0, 0, 500, canvas.height);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.putImageData(imageData, 0, 0);
+
+            const data = pixelArray(imageData);
+            this.windDirection = getDirection(data);
+            //console.log('windDirection', this.windDirection)
+            this._rain.length = 0;
+            toRain(data, this._rain);
+            if (this.iam.x < 500) {
+                const origin = this.toOriginal();
+                this.original.x = origin.x;
+                this.original.y = origin.y;
+                if (this.windDirection != null) {
+                    this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection + 180);
+                }
+                this.rain.length = 0;
+                filter(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
+            }
+
+            //console.log(this.rain)
+        };
+
+        return {
+            onload,
+            lngLat,
+            rain: [],
+            iam,
             showFlag
-		}
-	},
-	watch:{
+        }
+    },
+    watch: {
         showFlag: function (val) {
             this.$storage.setItem('show-flag', val)
         }
-	},
-	methods: {
+    },
+    methods: {
         onReset: function (e) {
             this.iam.x = 680;
             this.iam.y = 0;
@@ -198,90 +199,97 @@ export default {
             this.canvasDirection.clear()
             this._mouseup()
         },
-		mousemove: function (e) {
-			if (!this.drag) return;
-			const position = {
-				X: 0,
-				Y:0
-			};
-			if(e instanceof TouchEvent){
-				e.stopPropagation();
-				e.preventDefault();
+        mousemove: function (e) {
 
-				const touch = e.changedTouches[0]
-				position.X = touch.clientX
-				position.Y = touch.clientY
-			}else {
-				position.X = e.clientX
-				position.Y = e.clientY
-			}
 
-			this.iam.x = position.X - this.container.x - this.layer.x;
-			this.iam.y = position.Y- this.container.y - this.layer.y;
+            if (!this.drag) return;
+            const position = {
+                X: 0,
+                Y: 0
+            };
+            if (e instanceof TouchEvent) {
+                e.stopPropagation();
+                e.preventDefault();
 
-			const origin = this.toOriginal();
-			this.original.x = origin.x;
-			this.original.y = origin.y;
+                const touch = e.changedTouches[0]
+                position.X = touch.clientX;
+                position.Y = touch.clientY;
+            } else {
+                position.X = e.clientX;
+                position.Y = e.clientY;
+            }
 
-			this.lngLat.lat = toLngLat.lat(this.original.y);
-			this.lngLat.lng = toLngLat.lng(this.original.x);
+            this.iam.x = position.X - this.container.x - this.layer.x;
+            this.iam.y = position.Y - this.container.y - this.layer.y;
 
-			if (this.windDirection != null)
-				this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection + 180);
+            // console.log( e.clientY)
 
-			this.rain.length = 0;
-			if (this.iam.x < 500)
-				filter(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
+            const origin = this.toOriginal();
+            this.original.x = origin.x;
+            this.original.y = origin.y;
 
-		},
-		mousedown: function (e) {
+            this.lngLat.lat = toLngLat.lat(this.original.y);
+            this.lngLat.lng = toLngLat.lng(this.original.x);
 
-			window.E = e;
-			if(e instanceof TouchEvent){
-				const touch = e.changedTouches[0]
-				this.layer.x = touch.clientX-position(e.target).x;
-				this.layer.y = touch.clientY-position(e.target).y;
-				this.drag = true;
-			}else{
-				this.layer.x = e.layerX - (document.documentElement.scrollLeft || 0);
-				this.layer.y = e.layerY - (document.documentElement.scrollTop || 0);
-				this.drag = true;
-			}
+            if (this.windDirection != null)
+                this.canvasDirection.draw(this.original.x, this.original.y, this.windDirection + 180);
 
-		}
-	},
-	beforeDestroy: function () {
-		document.removeEventListener('mouseup', this._mouseup)
-		document.removeEventListener('touchend', this._mouseup)
-		window.removeEventListener('resize',this._resize)
-	},
-	mounted: function () {
+            this.rain.length = 0;
+            if (this.iam.x < 500)
+                filter(this._rain, this.original, this.windDirection !== null ? this.windDirection + 180 : null).forEach(r => this.rain.push(r))
 
-		this.container = $(this.$el).find('.drawable-container');
-		this.container.x = position(this.container[0]).x;
-		this.container.y = position(this.container[0]).y;
-		this._mouseup = (e) => {
-			this.drag = false;
-			this.$storage.setItem('flag-x', this.iam.x);
-			this.$storage.setItem('flag-y', this.iam.y)
-		};
+        },
+        mousedown: function (e) {
+            window.E = e;
+            this.container.y = position(this.container[0]).y;
+            this.container.x = position(this.container[0]).x;
+            if (e instanceof TouchEvent) {
+                const touch = e.changedTouches[0]
+                this.layer.x = touch.clientX - position(e.target).x;
+                this.layer.y = touch.clientY - position(e.target).y;
+                this.drag = true;
+            } else {
+                this.layer.x = e.offsetX;
+                this.layer.y = e.offsetY;
+                this.drag = true;
+            }
 
-		document.addEventListener('mouseup', this._mouseup)
-		document.addEventListener('touchend', this._mouseup)
+        }
+    },
+    beforeDestroy: function () {
+        document.removeEventListener('mouseup', this._mouseup)
+        document.removeEventListener('touchend', this._mouseup)
+        window.removeEventListener('resize', this._resize)
+    },
+    mounted: function () {
 
-		this._resize = ()=>{
-			this.container.x = position(this.container[0]).x;
-			this.container.y = position(this.container[0]).y;
-		}
+        this.container = $(this.$el).find('.drawable-container');
+        this.container.x = position(this.container[0]).x;
+        this.container.y = position(this.container[0]).y;
 
-		window.addEventListener('resize',this._resize)
+        console.log(this.container.x, this.container.y)
+        this._mouseup = (e) => {
+            this.drag = false;
+            this.$storage.setItem('flag-x', this.iam.x);
+            this.$storage.setItem('flag-y', this.iam.y)
+        };
 
-	},
-	updated: function () {
-		const img = $(this.$el).find('img')
-	},
-	componentUpdated: function () {
-		//console.log('dsds')
-	}
+        document.addEventListener('mouseup', this._mouseup)
+        document.addEventListener('touchend', this._mouseup)
+
+        this._resize = () => {
+            this.container.x = position(this.container[0]).x;
+            this.container.y = position(this.container[0]).y;
+        }
+
+        window.addEventListener('resize', this._resize)
+
+    },
+    updated: function () {
+        const img = $(this.$el).find('img')
+    },
+    componentUpdated: function () {
+        //console.log('dsds')
+    }
 
 }
