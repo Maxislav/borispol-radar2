@@ -253,7 +253,6 @@ export default {
                 this.layer.y = e.offsetY;
                 this.drag = true;
             }
-
         }
     },
     beforeDestroy: function () {
