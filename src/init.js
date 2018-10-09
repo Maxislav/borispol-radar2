@@ -10,6 +10,7 @@ import './component/bookmark-component/bookmark-component'
 import './directive/directive-img';
 import './directive/directive-random-background';
 import './component/forecast-component/forecast-day-component/forecast-day-component';
+import './directive/drag-and-drop.directive';
 
 import './component/ymetrika/ymetrika-component';
 import './filter/date'

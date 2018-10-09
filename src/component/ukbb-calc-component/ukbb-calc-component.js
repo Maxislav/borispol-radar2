@@ -240,6 +240,7 @@ export default {
 
         },
         mousedown: function (e) {
+            e.stopPropagation();
             window.E = e;
             this.container.y = position(this.container[0]).y;
             this.container.x = position(this.container[0]).x;

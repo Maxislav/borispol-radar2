@@ -16,12 +16,12 @@ head
             display: none;
         }
 body
-    h4(name='app-name') Meteo-radar Release date: 2018.09.25 18:59:16
+    h4(name='app-name') Meteo-radar Release date: 2018.10.09 15:40:47
     #app.size-100
         metrica-component
         dialog-component
-        .random-background(v-random-background='')
-        .app.absolute.size-100.flex.align-items-center
+        .random-background(v-random-background='' )
+        .app.absolute(v-drag-and-drop='')
             .app-container.size-100
                 div
                     forecast-component

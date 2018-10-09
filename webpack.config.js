@@ -142,6 +142,8 @@ module.exports = {
         }
     },
     devServer: {
+        port: 9000,
+
         proxy: {
             '/ppp/**': {
                 target: 'http://localhost:8085',
