@@ -481,6 +481,7 @@ class EarthView{
 
   @autobind
   mousedown(e){
+    e.stopPropagation();
     this.angle.inertia = false;
     this.tx = e.clientX
     this.ty = e.clientY
