@@ -27,7 +27,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist"),
         publicPath: "",
-        filename: "borispol.radar.[name].min.js"
+        filename: "borispol.radar.[name].[chunkhash].min.js",
+        //chunkFilename: "borispol.radar.[name].[chunkhash].min.js"
     },
     watch: NODE_ENV == 'dev',
     watchOptions: {
