@@ -10,24 +10,38 @@ export const bg = new Vue({
 });
 
 
+
+export const backgroundService =  new class {
+    constructor(){
+        this.image = null
+    }
+
+    $fadeTo(from, to, delay){
+       this.image.style.opacity = from;
+       return this.image.$fadeTo(from, to, delay)
+    }
+
+};
+
+
 export default Vue.directive('random-background', {
     inserted: function (el, binding) {
-        let image;
+        //let image = backgroundService.imgage ;
 
         const onLoad = (img) => {
             img.style.opacity = 0;
             el.appendChild(img);
-            image = img;
+            backgroundService.image = img;
             img.$fadeTo(0, 1, 2000).then();
-        }
+        };
 
         const onUpdate = (img) => {
             img.style.opacity = 0;
-            image.$fadeTo(1, 0, 222)
+            backgroundService.image.$fadeTo(1, 0, 222)
                 .then(d => {
-                    el.removeChild(image)
-                    image = img
-                    el.appendChild(image)
+                    el.removeChild(backgroundService.image)
+                    backgroundService.image = img;
+                    el.appendChild(backgroundService.image)
                     img.$fadeTo(0, 1, 500).then();
 
 
