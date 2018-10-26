@@ -35,10 +35,14 @@ import {DialogComponent} from './component/dialog-component/dialog-component'
 import {EarthComponent} from './component/earth-component/earth-component'
 import VueResource from 'vue-resource'
 import {SunshineComponent} from "./component/sunshine-component/sunshine-component";
+import { ToastPlugin } from "./plugin/ToastPlugin/toast.plugin";
+
+
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
 Vue.use(LocalStorage, {prefix: 'radar'});
+Vue.use(ToastPlugin);
 
 
 //import {forecast5} from './service/open-weather-map-service';
@@ -111,7 +115,8 @@ console.log(NODE_ENV)
 window.onload = function () {
 	const app = new Vue({
 		router
-	}).$mount('#app');
+	}).$mount('#app')
+
     //socket.connect(socketUrl)
 
 

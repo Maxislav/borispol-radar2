@@ -71,6 +71,15 @@ module.exports = {
     ],
     module: {
         loaders: [
+            {
+                test: /\.(html)$/,
+                use: {
+                    loader: 'html-loader',
+                    options: {
+                        attrs: [':data-src']
+                    }
+                }
+            },
             {test: /\.tsx?$/, loader: "ts-loader"},
             {
                 test: /\.js$/,

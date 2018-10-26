@@ -37,7 +37,8 @@ const UkbbComponent = Vue.component('ukbb-component',	{
 				onload: (val) => {
 					this.load = val
 				},
-				suffix: ''
+				suffix: '',
+				err: 'По техническим причинам МРЛ не работает.'
 			}
 		},
 		compiled: function () {
