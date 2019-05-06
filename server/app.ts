@@ -28,5 +28,5 @@ class App{
     }
 }
 
-export const app = new App(8084)
+export const app = new App(8084);
 export const io  = app.io;

@@ -31,6 +31,7 @@ import {AndroidComponent} from './component/android-component/android-component'
 import {FileUploadComponent} from './component/file-upload-component/file-upload-component'
 import {InfomometrComponent} from './component/infomometr-component/infomometr-component'
 import {ForecastItemComponent} from './component/forecast-item-component/forecast-item-component'
+import {GLComponent} from './component/gl-component/gl-component';
 import {DialogComponent} from './component/dialog-component/dialog-component'
 import {EarthComponent} from './component/earth-component/earth-component'
 import VueResource from 'vue-resource'
@@ -59,6 +60,7 @@ const routes = [
 	{path: '/infomometr', component: InfomometrComponent},
 	{path: '/earth', component: EarthComponent},
 	{path: '/sunshine', component: SunshineComponent},
+	{path: '/gl', component: GLComponent},
 	{
 		path: '/forecast-item/:index',
 		name: 'forecast-item',

@@ -36,7 +36,6 @@ Vue.directive('drag-and-drop', {
 
         const scope = getScope(el);
 
-        console.log(scope)
 
         el.style.visibility = 'visible';
         const windwSize = getWindowSize();

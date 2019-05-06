@@ -12,8 +12,6 @@ const UkbbComponent = Vue.component('ukbb-component',	{
 		template: template(),
 		props:['staticLoad'],
 		data: function () {
-
-
 		 const vm = new Vue({
 				data: {
 					src: urlCron.ukbb,
