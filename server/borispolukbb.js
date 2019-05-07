@@ -1,31 +1,18 @@
-
 const http = require( "http" );
-
-
-
-
+const DomParser = require('dom-parser');
 function httpGet(url){
     return new Promise((res, rej)=> {
         http.get(url, (resp) => {
-            let data = '';
-            let dataJson = {};
-
-            // A chunk of data has been recieved.
+            const chunks = [];
             resp.on('data', (chunk) => {
-                data += chunk;
+                chunks.push(chunk)
             });
+
             resp.on('end', () => {
-
-                try {
-                    dataJson = JSON.parse(data)
-                } catch (e) {
-                    console.error(e);
-                    rej(e)
-                }
-
-                res(dataJson)
-
-                // const {times} = dataJson;
+                res(Buffer.concat(chunks))
+            });
+            resp.on('error', function (err) {
+                rej(err)
             });
         })
     })
@@ -38,14 +25,19 @@ function httpGet(url){
 module.exports = function (req, res, next) {
 
 
-    httpGet('http://veg.by/meteoradar/kiev/update.json?readonly=1')
+    httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
 		.then(data => {
-			const {times} = data;
+			const body = data.toString();
+            const parser = new DomParser();
+            const xmlDoc = parser.parseFromString(body);
+            const rdr = xmlDoc.getElementById('rdr');
+            let imgUrl = rdr.getElementsByTagName('img')[0].getAttribute('src');
+            imgUrl = imgUrl.replace(/^\.\//, '')
             let opt = {
                 port: 80,
-                hostname: 'veg.by',
+                hostname: 'meteoinfo.by',
                 method: 'GET',
-                path: `/meteoradar/data/ukbb/images/${times[times.length - 1]}.png`,
+                path: '/radar/' + imgUrl
                // headers: req.headers
             };
             res.header("Access-Control-Allow-Origin", "*");

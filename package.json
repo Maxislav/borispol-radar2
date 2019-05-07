@@ -17,6 +17,7 @@
     "compression": "^1.7.2",
     "concurrently": "^3.3.0",
     "dateformat": "^2.0.0",
+    "dom-parser": "^0.1.6",
     "express": "^4.14.1",
     "html-loader": "^0.4.5",
     "jade-loader": "^0.8.0",
