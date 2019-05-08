@@ -1,117 +1,197 @@
-function resizeCanvasToDisplaySize(canvas, multiplier) {
-    multiplier = multiplier || 1;
-    var width  = canvas.clientWidth  * multiplier | 0;
-    var height = canvas.clientHeight * multiplier | 0;
-    if (canvas.width !== width ||  canvas.height !== height) {
-        canvas.width  = width;
-        canvas.height = height;
-        return true;
-    }
-    return false;
-}
+import { getImageWorker } from "../../util/load-image-blob";
+import { urlCron } from "../../config/congig-url";
 
-
-function createShader(gl, type, source) {
-    var shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-    if (success) {
-        return shader;
-    }
-
-    console.log(gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-}
-
-
-function createProgram(gl, vertexShader, fragmentShader) {
-    var program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-    var success = gl.getProgramParameter(program, gl.LINK_STATUS);
-    if (success) {
-        return program;
-    }
-
-    console.log(gl.getProgramInfoLog(program));
-    gl.deleteProgram(program);
-}
 
 export function mounted(canvas) {
     var gl = canvas.getContext("webgl");
 
-    const vertexShaderSource = `
-    attribute vec4 a_position;
-        void main() {
-        // gl_Position is a special variable a vertex shader
-        // is responsible for setting
-        gl_Position = a_position;
-    }`;
+    const width = canvas.width;
+    const height = canvas.height;
 
 
-    const fragmentShaderSource = `
-  // fragment shaders don't have a default precision so we need
-  // to pick one. mediump is a good default
-  precision mediump float;
 
-  void main() {
-    // gl_FragColor is a special variable a fragment shader
-    // is responsible for setting
-    gl_FragColor = vec4(1, 0, 0.5, 1); // return redish-purple
-  }`;
 
-    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-    var program = createProgram(gl, vertexShader, fragmentShader);
+    /*var vertices = [
+        -0.5,0.5,
+        0.5,0.5,
+        0.5,-0.5,
 
-    var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-    var positionBuffer = gl.createBuffer();
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-    var positions = [
-        0, 0,
-        0, 0.5,
-        0.7, 0,
+        0.5,-0.5,
+        -0.5,-0.5,
+        -0.5,0.5
     ];
 
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-    resizeCanvasToDisplaySize(gl.canvas);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.useProgram(program);
-    gl.enableVertexAttribArray(positionAttributeLocation);
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    var colors = [
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0,
 
-    var size = 2;          // 2 components per iteration
-    var type = gl.FLOAT;   // the data is 32bit floats
-    var normalize = false; // don't normalize the data
-    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0;        // start at the beginning of the buffer
-    gl.vertexAttribPointer(
-        positionAttributeLocation, size, type, normalize, stride, offset)
+        0.0, 0.0, 1.0,
+        1.0, 0.0, 1.0,
+        1.0, 0.0, 0.0,
+    ];*/
 
-    // draw
-    var primitiveType = gl.TRIANGLES;
-    var offset = 0;
-    var count = 3;
-    gl.drawArrays(primitiveType, offset, count);
+    getImageWorker('../img/1342970542_meteoradar_borispol.png')
+        .then(image => {
+
+            const canvas = document.createElement("canvas");
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            const context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0);
+            const imageData = context.getImageData(0, 0, 500, canvas.height);
+            imageData.data;
+
+            let dx = 15, dy = 15;
+
+            let points = [];
+            let colors = [];
+            let vertices = [];
+            for(let x = 0; x< 500; x+=dx){
+
+                for(let y = 0; y<canvas.height; y+=dy){
+                    const vertex = [
+                        x, y,
+                        x+dx, y,
+                        x+dx, y+dy,
+
+                        x+dx, y+dy,
+                        x, y+dy,
+                        x, y
+                    ];
+                    points = points.concat(vertex)
+
+                    let _color = [];
+
+                    for(let i = 0; i<vertex.length; i+=2){
+                        const x = vertex[i];
+                        const y = vertex[i+1];
+
+                        const d = context.getImageData(x, y, 1, 1).data;
+                        _color = _color.concat(d[0]/255, d[1]/255, d[2]/255)
+                    }
+
+                    colors = colors.concat(_color)
+
+                }
+
+            }
+
+            for(let i = 0; i<points.length; i+=2){
+                const x = points[i];
+                const y = points[i+1];
+                const xFactor = 2/500;
+                const yFactor = 2/ canvas.height;
+
+
+                const xx = x*xFactor - 1;
+                const yy = 1 - y*yFactor ;
+                vertices.push(xx);
+                vertices.push(yy);
+
+            }
+
+            const indices = [0,1,2]
+
+            var vertex_buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+            gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+            const colorBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+            gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 
 
-    gl.clearColor(1, 1, 1, 0.5);
-    gl.colorMask(true, true, true, true);
-    gl.clear(gl.COLOR_BUFFER_BIT);
 
-    //gl.enable(gl.GL_BLEND)
-    //gl.blendFuncSeparate(gl.ONE, gl.ZERO, gl.ONE, gl.ZERO)
-   // gl.clear(gl.COLOR_BUFFER_BIT)
-    //gl.glEnable(gl.GL_BLEND);
-    //glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            var vertCode =
+                'precision mediump float;' +
+                'attribute vec2 coordinates;' +
+                'attribute vec3 color;' +
+                'varying vec3 vColor;' +
+                'void main(void) {' +
+                'vColor = color;' +
+                ' gl_Position = vec4(coordinates, 0.0, 1.0);' +
+                ' ' +
+                '}';
+
+            var fragCode =
+                'precision mediump float;' +
+                'varying vec3 vColor;' +
+                'void main(void) {' +
+                ' gl_FragColor = vec4(vColor, 1.0);' +
+                '}';
+
+            var vertShader = gl.createShader(gl.VERTEX_SHADER);
+            var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+            gl.shaderSource(vertShader, vertCode);
+            gl.shaderSource(fragShader, fragCode);
+
+            gl.compileShader(vertShader);
+            gl.compileShader(fragShader);
+
+
+
+
+            var shaderProgram = gl.createProgram();
+
+            gl.attachShader(shaderProgram, vertShader);
+
+            gl.attachShader(shaderProgram, fragShader);
+
+            gl.linkProgram(shaderProgram);
+
+            gl.useProgram(shaderProgram);
+
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+
+            var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+            gl.vertexAttribPointer(coord, 2, gl.FLOAT, gl.FALSE, 0, 0);
+            gl.enableVertexAttribArray(coord);
+
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+
+            /* let i = 0
+             setInterval(() => {
+                 color2[12] = i+=0.01;
+                 const colorBuffer2 = gl.createBuffer();
+                 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer2);
+                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(color2), gl.STATIC_DRAW);
+                 gl.bindBuffer(gl.ARRAY_BUFFER, null);
+                 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer2);
+                 gl.clearColor(0.5, 0.5, 0.5, 0.9);
+                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                 var color = gl.getAttribLocation(shaderProgram, "color");
+                 gl.vertexAttribPointer(color, 3, gl.FLOAT, gl.FALSE, 3 * Float32Array.BYTES_PER_ELEMENT, 0);
+                 gl.enableVertexAttribArray(color);
+                 gl.drawArrays(gl.TRIANGLES, 0, 6);
+             }, 100)*/
+
+            var color = gl.getAttribLocation(shaderProgram, "color");
+            gl.vertexAttribPointer(color, 3, gl.FLOAT, gl.FALSE, 3 * Float32Array.BYTES_PER_ELEMENT, 0);
+            gl.enableVertexAttribArray(color);
+
+
+            gl.clearColor(0.5, 0.5, 0.5, 0.9);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            gl.viewport(0,0,canvas.width,canvas.height);
+
+            gl.drawArrays(gl.TRIANGLES, 0, vertices.length);
+
+            //gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT,0);
+
+
+        })
+
+
+
+
 
 
 }
