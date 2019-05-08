@@ -32,7 +32,7 @@ export function mounted(canvas) {
         1.0, 0.0, 0.0,
     ];*/
 
-    getImageWorker('../img/1342970542_meteoradar_borispol.png')
+    getImageWorker('../img/meteoradar_borispol.png')
         .then(image => {
 
             const canvas = document.createElement("canvas");
@@ -43,7 +43,7 @@ export function mounted(canvas) {
             const imageData = context.getImageData(0, 0, 500, canvas.height);
             imageData.data;
 
-            let dx = 15, dy = 15;
+            let dx = 20, dy = 20
 
             let points = [];
             let colors = [];
@@ -52,13 +52,22 @@ export function mounted(canvas) {
 
                 for(let y = 0; y<canvas.height; y+=dy){
                     const vertex = [
+                        x+dx/2, y+dy/2,
                         x, y,
                         x+dx, y,
-                        x+dx, y+dy,
 
+                        x+dx/2, y+dy/2,
+                        x+dx, y+dy,
+                        x+dx, y,
+
+                        x+dx/2, y+dy/2,
                         x+dx, y+dy,
                         x, y+dy,
-                        x, y
+
+                        x+dx/2, y+dy/2,
+                        x, y,
+                        x, y+dy
+
                     ];
                     points = points.concat(vertex)
 
@@ -115,7 +124,7 @@ export function mounted(canvas) {
                 'void main(void) {' +
                 'vColor = color;' +
                 ' gl_Position = vec4(coordinates, 0.0, 1.0);' +
-                ' ' +
+                ' gl_PointSize = 4.0;' +
                 '}';
 
             var fragCode =
@@ -184,7 +193,9 @@ export function mounted(canvas) {
 
             gl.drawArrays(gl.TRIANGLES, 0, vertices.length);
 
-            //gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT,0);
+            console.log(vertices.splice(0,24))
+            console.log(colors.splice(0,36))
+            //gl.drawElements(gl.TRIANGLES, 100, gl.UNSIGNED_SHORT,0);
 
 
         })
