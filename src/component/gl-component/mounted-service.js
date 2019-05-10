@@ -2,6 +2,34 @@ import { getImageWorker } from "../../util/load-image-blob";
 import { urlCron } from "../../config/congig-url";
 
 
+function getRoundColor(x, y, d, context) {
+    const list = [];
+
+    for(let _x = x-d/2; _x<x+d/2; _x++){
+        for(let _y= y-d/2; _y<y+d/2; _y++){
+            const color = context.getImageData(_x, _y, 1, 1).data;
+
+            list.push(color)
+        }
+    }
+
+    const res = []
+    for(let i = 0; i<3; i++){
+        let sum=0;
+        list.forEach(rgba => {
+            sum+=rgba[i]
+        });
+        const avg = sum/list.length
+        res.push(avg)
+    }
+
+    return res
+
+
+
+
+}
+
 export function mounted(canvas) {
     var gl = canvas.getContext("webgl");
 
@@ -43,7 +71,11 @@ export function mounted(canvas) {
             const imageData = context.getImageData(0, 0, 500, canvas.height);
             imageData.data;
 
-            let dx = 20, dy = 20
+            //let dx = 20, dy = 43;
+
+            let dx = 20;
+            let dy = dx*Math.pow(3, 1/2);
+
 
             let points = [];
             let colors = [];
@@ -52,22 +84,21 @@ export function mounted(canvas) {
 
                 for(let y = 0; y<canvas.height; y+=dy){
                     const vertex = [
-                        x+dx/2, y+dy/2,
-                        x, y,
-                        x+dx, y,
+                        x, y+dy/2,
+                        x+dx/2, y,
+                        x+dx, y+dy/2,
 
-                        x+dx/2, y+dy/2,
-                        x+dx, y+dy,
-                        x+dx, y,
+                        x+dx/2, y,
+                        x+dx+dx/2, y,
+                        x+dx, y+dy/2,
 
-                        x+dx/2, y+dy/2,
-                        x+dx, y+dy,
-                        x, y+dy,
+                        x+dx, y+dy/2,
+                        x+dx+dx/2, y+dy,
+                        x+dx/2, y+dy,
 
-                        x+dx/2, y+dy/2,
-                        x, y,
-                        x, y+dy
-
+                        x, y+dy/2,
+                        x+dx, y+dy/2,
+                        x+dx/2, y+dy
                     ];
                     points = points.concat(vertex)
 
@@ -78,6 +109,7 @@ export function mounted(canvas) {
                         const y = vertex[i+1];
 
                         const d = context.getImageData(x, y, 1, 1).data;
+                       // const d = getRoundColor(x, y, dx, context);
                         _color = _color.concat(d[0]/255, d[1]/255, d[2]/255)
                     }
 
