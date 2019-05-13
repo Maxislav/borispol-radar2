@@ -12,8 +12,8 @@ export const GLComponent = Vue.component('gl-component', {
         const h = this.$el.parentElement.clientHeight;
         const w = this.$el.parentElement.clientWidth;
         const canvas = this.$el.getElementsByTagName('canvas').item(0);
-        canvas.width = w;
-        canvas.height = h;
+        canvas.width = 500;
+        canvas.height = 479;
         mounted(canvas)
 
     }
