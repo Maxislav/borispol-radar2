@@ -130,7 +130,6 @@ export function mounted(canvas) {
     var vertCode =
         'precision mediump float;' +
 
-        'attribute float dxdyf;' +
         'attribute vec2 coordinates;' +
         'attribute vec3 color;' +
         'varying vec3 vColor;' +
@@ -187,7 +186,7 @@ export function mounted(canvas) {
             gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
             const coord = gl.getAttribLocation(shaderProgram, "coordinates");
-            gl.vertexAttribPointer(coord, 2, gl.FLOAT, gl.FALSE, 0, 0);
+            gl.vertexAttribPointer(coord, 2, gl.FLOAT, gl.FALSE, 2 * Float32Array.BYTES_PER_ELEMENT, 0);
             gl.enableVertexAttribArray(coord);
 
 /*
@@ -211,7 +210,7 @@ export function mounted(canvas) {
 
             gl.clearColor(0.5, 0.5, 0.5, 0.9);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            gl.drawArrays(gl.TRIANGLES, 0, vertices.length);
+            gl.drawArrays(gl.TRIANGLES, 0, vertices.length/2);
 
             // console.log(vertices.splice(0,24))
                 // console.log(colors.splice(0,36))
