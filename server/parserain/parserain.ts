@@ -41,7 +41,9 @@ export const parserain = (req, res, next) =>{
                 hashDate[currentHash].reject(err);
                 return;
             }
-
+            if(!image || !image.crop){
+                return;
+            }
             image.crop(0, 0, 505, image.bitmap.height-1);
             const imageMatrix = new ImageMatrix(image.bitmap.width, image.bitmap.height);
             image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
