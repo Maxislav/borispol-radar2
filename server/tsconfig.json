@@ -11,12 +11,12 @@
       "ES2015",
       "DOM",
       "ScriptHost"
-    ]
+    ],
+    "rootDir": "server",
+    "outDir": "./"
 
   },
-  "files": [
-    "makeModule.ts"
-  ],
+
   "exclude": [
     "server/dist",
     "node_modules"

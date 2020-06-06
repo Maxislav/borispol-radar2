@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "rootDir": "./server",
+    "outDir": "server/",
+    "typeRoots" : ["./typings"],
+    "types": [
+      "node"
+    ]
+
+  },
+  "filesGlob": [
+    "./src/types.d.ts",
+    "!./node_modules/**/*.ts"
+  ],
+
+  "exclude": [
+    "src",
+    "dist",
+    "lib",
+    "@angular",
+    "**/node_modules/*",
+    "./node_modules/*",
+    "node_modules"
+  ]
+}
