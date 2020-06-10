@@ -10,8 +10,8 @@ const https = require("https");
 const console_key_1 = require("./utils/console-key");
 const patternDate = '(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})';
 const rootDir = console_key_1.getConsoleKey('rootdir');
-const irDir = path.resolve(__dirname, rootDir, 'img', 'ir');
-const viDir = path.resolve(__dirname, rootDir, 'img', 'vi');
+const irDir = path.resolve(__dirname, rootDir || './dist', 'img', 'ir');
+const viDir = path.resolve(__dirname, rootDir || './dist', 'img', 'vi');
 // 0 * * * * sh /home/max/www/borispol-radar2/server/cron.sh
 class FileSystem {
     constructor() {
@@ -138,12 +138,16 @@ const buildImage = ({ srcDir, networkUrl }) => {
         return Promise.reject(err);
     });
 };
-const streamA = buildImage({
-    srcDir: irDir,
-    networkUrl: 'http://www.sat24.com/image2.ashx?region=eu&ir=true'
-});
-const streamB = buildImage({
-    srcDir: viDir,
-    networkUrl: 'https://en.sat24.com/image?type=visual&region=eu'
-});
+exports.streamA = () => {
+    buildImage({
+        srcDir: irDir,
+        networkUrl: 'http://www.sat24.com/image2.ashx?region=eu&ir=true'
+    });
+};
+exports.streamB = () => {
+    buildImage({
+        srcDir: viDir,
+        networkUrl: 'https://en.sat24.com/image?type=visual&region=eu'
+    });
+};
 //# sourceMappingURL=save-image.cron.js.map

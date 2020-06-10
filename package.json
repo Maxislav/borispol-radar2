@@ -7,7 +7,7 @@
     "ws": "node server/ws.js",
     "webpack-dev-server": "NODE_ENV=dev webpack-dev-server --inline",
     "build-prod": "webpack",
-    "server": "webpack",
+    "server-prod": "node server/borispol-radar.js --rootdir ../dist",
     "server-ts": "ts-node --project ./server/tsconfig.json  --  ./server/borispol-radar.ts --rootdir ../src --port 8888",
     "server-static-ts": "./node_modules/.bin/ts-node -- ./server/static.ts --rootdir ../dist --port 8080",
     "cron-ts": "./node_modules/.bin/ts-node -- ./server/save-image.cron.ts --rootdir ../src",

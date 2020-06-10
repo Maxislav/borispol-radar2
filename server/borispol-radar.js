@@ -6,6 +6,7 @@ const borispolukbb = require("./borispolukbb");
 const history = require("./borispolhistory.js");
 const parserain_1 = require("./parserain/parserain");
 require("./static");
+require("./cron");
 app_1.app
     .get('/borisbolukbb', borispolukbb)
     .get('/loadUkbbHistory', history)
