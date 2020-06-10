@@ -11,21 +11,6 @@
 ### Copy
 Download files from ~/dist/* to you work dir
 
-### Cron task
-edit server/cron.sh
-```
-#!/usr/bin/env bash
-cd ~/www/borispol-radar2
-./node_modules/.bin/ts-node -- ./server/save-image.cron.ts --rootdir ../
-```
-
- 
-~$ crontab -e 
-add line 
-```
-1 * * * * sh ~www/borispol.radar/server/cron.sh
-```
-***
 
 ## Develop
 
@@ -59,8 +44,6 @@ npm run server-static-ts
 
 ### Run you site on port 80
 ```
-./node_modules/.bin/ts-node  --project ./server/tsconfig.json ./server/save-image.cron.ts --rootdir ../dist
-
- ts-node --project ./server/tsconfig.json ./server/borispol-radar.ts --rootdir ../dist --port 80
+node ./server/borispol-radar.js --rootdir ../dist --port 80
 
 ```
