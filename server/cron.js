@@ -8,7 +8,7 @@ class Alarmer {
     }
     tick() {
         this.alarmDate = this.getAlarmDate();
-        this.timeout = new Date().getMilliseconds() - this.getAlarmDate().getMilliseconds();
+        this.timeout = new Date().getTime() - this.getAlarmDate().getTime();
         setTimeout(() => {
             save_image_cron_1.streamA();
             save_image_cron_1.streamB();

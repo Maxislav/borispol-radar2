@@ -11,7 +11,7 @@
     "server-ts": "ts-node --project ./server/tsconfig.json  --  ./server/borispol-radar.ts --rootdir ../src --port 8888",
     "server-static-ts": "./node_modules/.bin/ts-node -- ./server/static.ts --rootdir ../dist --port 8080",
     "cron-ts": "./node_modules/.bin/ts-node -- ./server/save-image.cron.ts --rootdir ../src",
-     "tsc-be:w": "tsc -w --project tsconfig-be.json",
+    "tsc-be:w": "tsc -w --project tsconfig-be.json",
     "parserain-ts": "./node_modules/.bin/ts-node --project tsconfig.json ./server/parserain.ts"
   },
   "dependencies": {
