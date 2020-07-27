@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const http = require("http");
 const DomParser = require('dom-parser');
 function httpGet(url) {
@@ -16,9 +18,9 @@ function httpGet(url) {
         });
     });
 }
-module.exports = function (req, res, next) {
+function borispolukbb(req, res, next) {
     httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
-        .then(data => {
+        .then((data) => {
         const body = data.toString();
         const parser = new DomParser();
         const xmlDoc = parser.parseFromString(body);
@@ -62,5 +64,7 @@ module.exports = function (req, res, next) {
         });
     });
     //http://meteoinfo.by/radar/UKBB/UKBB_latest.png?v=288
-};
+}
+exports.borispolukbb = borispolukbb;
+;
 //# sourceMappingURL=borispolukbb.js.map

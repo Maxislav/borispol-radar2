@@ -20,11 +20,9 @@ function httpGet(url) {
 }
 
 
-module.exports = function (req, res, next) {
-
-
+export function borispolukbb (req: any, res: any, next: any) {
     httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
-        .then(data => {
+        .then((data: any) => {
             const body = data.toString();
             const parser = new DomParser();
             const xmlDoc = parser.parseFromString(body);
@@ -34,7 +32,7 @@ module.exports = function (req, res, next) {
             }
             let imgUrl = rdr.getElementsByTagName('img')[0]
                 .getAttribute('src');
-            imgUrl = imgUrl.replace(/^\.\//, '')
+            imgUrl = imgUrl.replace(/^\.\//, '');
             let opt = {
                 port: 80,
                 hostname: 'meteoinfo.by',
@@ -44,8 +42,8 @@ module.exports = function (req, res, next) {
             };
             res.header("Access-Control-Allow-Origin", "*");
             const proxyRequest = http.request(opt);
-            proxyRequest.on('response', function (proxyResponse) {
-                proxyResponse.on('data', function (chunk) {
+            proxyRequest.on('response', function (proxyResponse: any) {
+                proxyResponse.on('data', function (chunk: any) {
                     res.write(chunk, 'binary');
                 });
                 proxyResponse.on('end', function () {
@@ -56,11 +54,11 @@ module.exports = function (req, res, next) {
                 // res.writeHead("Access-Control-Allow-Origin: http://178.62.44.54");
                 // res.header("Access-Control-Allow-Origin", "http://178.62.44.54");
             });
-            proxyRequest.on('error', function (err) {
+            proxyRequest.on('error', function (err: any) {
                 res.statusCode = 204;
                 res.end('No connect');
             });
-            req.on('data', function (chunk) {
+            req.on('data', function (chunk: any) {
                 proxyRequest.write(chunk, 'binary');
             });
             req.on('end', function () {
