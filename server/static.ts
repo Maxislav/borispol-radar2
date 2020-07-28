@@ -6,10 +6,13 @@ import { defaultSetting } from './phplike/settingborispolradar';
 
 declare global {
     interface String {
-        green(length : number) : string;
-        yellow(length : number) : string;
-        red(length : number) : string;
-        blue(length : number) : string;
+        green(length: number): string;
+
+        yellow(length: number): string;
+
+        red(length: number): string;
+
+        blue(length: number): string;
     }
 }
 
@@ -20,15 +23,17 @@ let express = require('express'),
     url = require('url'),
     https = require('https'),
     mime = require('mime'),
-    compression = require('compression')
+    compression = require('compression');
 const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'server.config.json'), 'utf8').toString());
 const port = getConsoleKey('port') || config.port;
-const rootDir = getConsoleKey('rootdir') ?  [getConsoleKey('rootdir')] :  deepCopy(config.rootPath);
+const rootDir = getConsoleKey('rootdir') ? [getConsoleKey('rootdir')] : deepCopy(config.rootPath);
 const app = express();
 app.set('port', port);
-app.use(compression({filter: ()=>{
+app.use(compression({
+    filter: () => {
         return true
-    }}))
+    }
+}));
 
 
 http.createServer(app).listen(app.get('port'), () => {
@@ -39,23 +44,23 @@ http.createServer(app).listen(app.get('port'), () => {
 app
     .use('*/php/settingborispolradar.php', defaultSetting)
     .use((req, res, next) => {
-    const uri = url.parse(req.url).pathname;
-    for (let i = 0; i < config.proxies.length; i++) {
-        const proxiRegex = new RegExp(config.proxies[i].source);
-        if (proxiRegex.test(uri)) {
-            console.log(uri);
-            proxiServ(req, res, config.proxies[i], new Date().getTime());
-            return;
+        const uri = url.parse(req.url).pathname;
+        for (let i = 0; i < config.proxies.length; i++) {
+            const proxiRegex = new RegExp(config.proxies[i].source);
+            if (proxiRegex.test(uri)) {
+                console.log(uri);
+                proxiServ(req, res, config.proxies[i], new Date().getTime());
+                return;
+            }
         }
-    }
-    next();
-})
-   .use(main);
+        next();
+    })
+    .use(main);
 ///var/www/borispol-radar/dist/php/settingborispolradar.php:
 
 
-
 let timer = timerFoo();
+
 function timerFoo() {
     return setTimeout(() => {
         console.log('=======================+++++++++++++++++++++=========================='.green)
@@ -131,8 +136,8 @@ function sendFileSave(filePath, res, timeLong) {
                     }
                 });
         })
-            .catch(err=>{
-                console.log('Error 1326 - >' , err)
+            .catch(err => {
+                console.log('Error 1326 - >', err)
             })
     })(deepCopy(rootDir))
 }
@@ -255,6 +260,7 @@ function proxiServ(request, response, _options, timeLong) {
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
 function deepCopy(oldObj) {
     let newObj = oldObj;
     if (oldObj && typeof oldObj === 'object') {

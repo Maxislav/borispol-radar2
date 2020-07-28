@@ -13,9 +13,11 @@ const rootDir = console_key_1.getConsoleKey('rootdir') ? [console_key_1.getConso
 const app = express();
 exports.appStatic = app;
 app.set('port', port);
-app.use(compression({ filter: () => {
+app.use(compression({
+    filter: () => {
         return true;
-    } }));
+    }
+}));
 http.createServer(app).listen(app.get('port'), () => {
     console.log((`Server start on port: ${port}`).green);
 });
