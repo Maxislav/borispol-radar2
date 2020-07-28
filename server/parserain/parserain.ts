@@ -97,6 +97,7 @@ export const parserain = (req, res, next) =>{
             return true
         })
         .catch(err => {
+            console.error('meteoinfo error', err);
             res.status(500).send({error: 'meteoinfo error'});
         })
 };

@@ -50,7 +50,7 @@ export class User{
                     socket.emit('file', resD)
                 })
                 .catch(err=> {
-                    console.error(err)
+                    console.error(err);
                     socket.emit('file', {
                         status:  STATUS.REJECT,
                         hash: d.hash,
@@ -60,24 +60,24 @@ export class User{
                 })
         })
         this.on('disconnect', ()=>{
-            room.delUser(this)
-            console.log('disconnect', JSON.stringify(room.getUserList(), null))
+            room.delUser(this);
+            console.log('disconnect', JSON.stringify(room.getUserList(), null));
             room.emitAll('uniq', ({
                 uniq: room.getUniqCount(),
                 today: room.getTodayUserList().length
             }))
-        })
+        });
 
         this.on('error', this.error)
     }
 
     on(eName: string, callback: Function){
-        this.socket.on(eName, callback)
+        this.socket.on(eName, callback);
         return this;
     }
 
     emit(eName: string, value: any){
-        this.socket.emit(eName, value)
+        this.socket.emit(eName, value);
         return this;
     }
 

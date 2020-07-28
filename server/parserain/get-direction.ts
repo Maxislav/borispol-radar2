@@ -33,7 +33,7 @@ const xy = (_center, a) =>{
     }
 
     return {x,y}
-}
+};
 
 /**
  *

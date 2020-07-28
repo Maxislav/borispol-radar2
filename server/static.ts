@@ -125,6 +125,7 @@ function sendFileSave(filePath, res, timeLong) {
                     return sendFile(file, filePath, res, timeLong);
                 })
                 .catch((obj) => {
+                    console.log('Error 1322 - >', obj);
                     errList.push(obj)
                     if (_rootDir.length) {
                         return zz(_rootDir)

@@ -107,11 +107,12 @@ const buildImage = ({
             // return writeFile("https://en.sat24.com/image?type=visual&region=eu", fileName)
         })
         .then((fileName) => {
-            console.log(`Success ${fileName}`)
+            console.log(`Success ${fileName}`);
             return fileName
         })
         .catch(err => {
-            console.log(err)
+            console.log(err);
+            return Promise.reject(err);
         })
         .then(()=>{
             return new Promise((resolve)=>{
@@ -137,7 +138,7 @@ const buildImage = ({
             }))
         })
         .catch(err=>{
-            console.error(err)
+            console.error(err);
             return Promise.reject(err)
         });
 }

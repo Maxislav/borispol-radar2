@@ -109,6 +109,7 @@ const buildImage = ({ srcDir, networkUrl }) => {
     })
         .catch(err => {
         console.log(err);
+        return Promise.reject(err);
     })
         .then(() => {
         return new Promise((resolve) => {

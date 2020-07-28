@@ -22,7 +22,10 @@ const getFileList = (p) => {
                     });
                 });
             }))
-                .then(resolve);
+                .then(resolve)
+                .catch(err => {
+                console.error('getFileList 1 err', err);
+            });
         });
     });
 };
@@ -40,6 +43,7 @@ exports.fileUpload = ({ file }) => {
                     return reject(err);
                 image.write(path.resolve(pathToFile, replaceFile), (err => {
                     if (err) {
+                        console.error('getFileList error 3', err);
                         return reject(err);
                     }
                     console.log(`file save at -> ${path.resolve(pathToFile, replaceFile)}`);
@@ -48,6 +52,7 @@ exports.fileUpload = ({ file }) => {
             });
         })
             .catch(err => {
+            console.error('getFileList error 2', err);
             return reject(err);
         });
     });
