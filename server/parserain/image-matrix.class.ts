@@ -1,13 +1,12 @@
-import {constantRadarColor} from './color.const'
-import {MyMath} from './my-math';
-import {getDirection} from './get-direction'
-
+import { constantRadarColor } from './color.const'
+import { MyMath } from './my-math';
+import { getDirection } from './get-direction'
 
 
 /**
  * @extends Array
  */
-export class ImageMatrix<T> extends Array<any>{
+export class ImageMatrix<T> extends Array<any> {
     private _width: number;
     private _height: number;
     private _scale: number;
@@ -61,17 +60,17 @@ export class ImageMatrix<T> extends Array<any>{
                 if (find) {
                     item.text = val.text;
                     item.intensity = val.intensity
-                    if(!this._isRainy) this._isRainy = true
+                    if (!this._isRainy) this._isRainy = true
                 }
                 return find
             });
         });
 
-        const filterByDirection = filterByColor.filter(p=>{
-            if(a) {
+        const filterByDirection = filterByColor.filter(p => {
+            if (a) {
                 a = MyMath.normalizeDegree(a);
                 let _a;
-                const {x, y} = origin;
+                const { x, y } = origin;
                 if (x < p.x && p.y < y) {
                     _a = (Math.atan((p.x - x) / (y - p.y)))
                 } else if (x < p.x && y < p.y) {
@@ -79,12 +78,11 @@ export class ImageMatrix<T> extends Array<any>{
                 } else if (p.x < x && y < p.y) {
                     _a = (Math.atan((x - p.x) / (p.y - y))) + Math.PI
                 } else {
-                    _a = (Math.atan((y - p.y ) / (x - p.x))) + 3 * Math.PI / 2
+                    _a = (Math.atan((y - p.y) / (x - p.x))) + 3 * Math.PI / 2
                 }
                 _a = MyMath.degrees(_a);
                 return Math.abs(a - _a) < 15
-            }
-            else return true;
+            } else return true;
         });
 
         filterByDirection.forEach(r => {
@@ -104,14 +102,12 @@ export class ImageMatrix<T> extends Array<any>{
         });
 
         const colors = [];
-
-
-        const f = filterByDirection
+        return filterByDirection
             .filter(function (value, index, arr) {
                 const find = colors.find((val) => {
                     return Math.abs(value.dec - val) < 10
                 });
-                if (!find && (100 < value.r || 100 < value.g || 100 < value.b )) {
+                if (!find && (100 < value.r || 100 < value.g || 100 < value.b)) {
                     colors.push(value.dec);
                     return true
                 }
@@ -125,42 +121,44 @@ export class ImageMatrix<T> extends Array<any>{
                     x: it.x,
                     y: it.y
                 }
-            })
-        return f
+            });
     }
-    isRainy(){
+
+    isRainy() {
         return this._isRainy
     }
 
 
-    public getDirection(){
-        if(this._direction === undefined){
+    public getDirection() {
+        if (this._direction === undefined) {
             this._direction = getDirection(this)
         }
         return this._direction;
     }
 
 
-    distByLatLng(origin: {lng: number, lat: number}){
-        const  direction = this.getDirection();
+    distByLatLng(origin: { lng: number, lat: number }) {
+        const direction = this.getDirection();
 
         const a = direction ? direction + 180 : null;
 
-        const x = (this._width/(33.8-27.9)) *(origin.lng - 27.9);
-        const y = (this._height/(52-48.8))* (52 - origin.lat);
+        const x = (this._width / (33.8 - 27.9)) * (origin.lng - 27.9);
+        const y = (this._height / (52 - 48.8)) * (52 - origin.lat);
 
-        console.log('lng lat - >', origin.lng+", " +origin.lat, " x: "+ x, "y: "+y)
+        console.log('lng lat - >', origin.lng + ", " + origin.lat, " x: " + x, "y: " + y);
 
-        return this.distByPixel({x,y}, a);
-    }
-
-    clear(){
-        while (this.length){
-            this.pop()
+        try {
+            return this.distByPixel({ x, y }, a);
+        } catch (error) {
+            console.error('distByPixel err', error);
         }
     }
 
-
+    clear() {
+        while (this.length) {
+            this.pop()
+        }
+    }
 
 
 }

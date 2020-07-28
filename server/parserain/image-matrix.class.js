@@ -90,7 +90,7 @@ class ImageMatrix extends Array {
             }
         });
         const colors = [];
-        const f = filterByDirection
+        return filterByDirection
             .filter(function (value, index, arr) {
             const find = colors.find((val) => {
                 return Math.abs(value.dec - val) < 10;
@@ -110,7 +110,6 @@ class ImageMatrix extends Array {
                 y: it.y
             };
         });
-        return f;
     }
     isRainy() {
         return this._isRainy;
@@ -127,7 +126,12 @@ class ImageMatrix extends Array {
         const x = (this._width / (33.8 - 27.9)) * (origin.lng - 27.9);
         const y = (this._height / (52 - 48.8)) * (52 - origin.lat);
         console.log('lng lat - >', origin.lng + ", " + origin.lat, " x: " + x, "y: " + y);
-        return this.distByPixel({ x, y }, a);
+        try {
+            return this.distByPixel({ x, y }, a);
+        }
+        catch (error) {
+            console.error('distByPixel err', error);
+        }
     }
     clear() {
         while (this.length) {
