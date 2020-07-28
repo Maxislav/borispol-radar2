@@ -45,5 +45,6 @@ npm run server-static-ts
 ### Run you site on port 80
 ```
 node ./server/borispol-radar.js --rootdir ../dist --port 80
+pm2 start 'node /var/www/borispol-radar2/server/borispol-radar.js --rootdir ../dist' --name borispol  --max-memory-restart 5000M
 
 ```

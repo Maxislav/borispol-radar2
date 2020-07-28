@@ -53,7 +53,6 @@ export class ImageMatrix<T> extends Array<any> {
      */
     distByPixel(origin, a): Array<any> {
         let rain = this.toArray();
-        console.log('distByPixel 1'.blue)
         const filterByColor = rain.filter((item) => {
             return constantRadarColor.find((val) => {
                 const find = Math.abs(item.dec - val.colorDec) < 1000;
@@ -65,7 +64,6 @@ export class ImageMatrix<T> extends Array<any> {
                 return find
             });
         });
-        console.log('distByPixel 2'.blue)
         const filterByDirection = filterByColor.filter(p => {
             if (a) {
                 a = MyMath.normalizeDegree(a);
@@ -84,11 +82,9 @@ export class ImageMatrix<T> extends Array<any> {
                 return Math.abs(a - _a) < 15
             } else return true;
         });
-        console.log('distByPixel 3'.blue)
         filterByDirection.forEach(r => {
             r.setDistFrom(origin.x, origin.y)
         });
-
         filterByDirection.sort((a, b) => {
             if (a.dist < b.dist) {
                 return -1
@@ -102,7 +98,6 @@ export class ImageMatrix<T> extends Array<any> {
         });
 
         const colors = [];
-        console.log('distByPixel 4'.blue)
         return filterByDirection
             .filter(function (value, index, arr) {
                 const find = colors.find((val) => {
@@ -128,7 +123,6 @@ export class ImageMatrix<T> extends Array<any> {
     isRainy() {
         return this._isRainy
     }
-
 
     public getDirection() {
         if (this._direction === undefined) {

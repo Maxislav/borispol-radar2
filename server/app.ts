@@ -19,8 +19,7 @@ class App{
 
     @autobind
     serverStart(): void{
-        console.log(`->>>>>>>>>>>>>>>>>>>>> node server start on port: ${this.port}`);
-        console.error(`node server start on port: ${this.port}`);
+        console.log(`->>>>>>>>>>>>>>>>>>>>> node server start on port: ${this.port} <<<<<<<<<<<<<<<<<<<<<<`.blue);
     }
 
     public get(url, callback): App{
