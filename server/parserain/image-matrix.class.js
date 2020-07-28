@@ -127,7 +127,9 @@ class ImageMatrix extends Array {
         const y = (this._height / (52 - 48.8)) * (52 - origin.lat);
         console.log('lng lat - >', origin.lng + ", " + origin.lat, " x: " + x, "y: " + y);
         try {
-            return this.distByPixel({ x, y }, a);
+            const dist = this.distByPixel({ x, y }, a);
+            console.log('distByPixel ->', dist);
+            return dist;
         }
         catch (error) {
             console.error('distByPixel err', error);

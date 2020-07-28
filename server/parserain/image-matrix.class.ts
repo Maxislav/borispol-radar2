@@ -51,7 +51,7 @@ export class ImageMatrix<T> extends Array<any> {
      * @param {number | null} a угол ветра
      * @return {Array}
      */
-    distByPixel(origin, a) {
+    distByPixel(origin, a): Array<any> {
         let rain = this.toArray();
 
         const filterByColor = rain.filter((item) => {
@@ -148,7 +148,9 @@ export class ImageMatrix<T> extends Array<any> {
         console.log('lng lat - >', origin.lng + ", " + origin.lat, " x: " + x, "y: " + y);
 
         try {
-            return this.distByPixel({ x, y }, a);
+            const dist = this.distByPixel({ x, y }, a);
+            console.log('distByPixel ->', dist);
+            return dist
         } catch (error) {
             console.error('distByPixel err', error);
         }
