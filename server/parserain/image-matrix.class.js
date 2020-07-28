@@ -40,6 +40,7 @@ class ImageMatrix extends Array {
      */
     distByPixel(origin, a) {
         let rain = this.toArray();
+        console.log('distByPixel 1'.blue);
         const filterByColor = rain.filter((item) => {
             return color_const_1.constantRadarColor.find((val) => {
                 const find = Math.abs(item.dec - val.colorDec) < 1000;
@@ -52,6 +53,7 @@ class ImageMatrix extends Array {
                 return find;
             });
         });
+        console.log('distByPixel 2'.blue);
         const filterByDirection = filterByColor.filter(p => {
             if (a) {
                 a = my_math_1.MyMath.normalizeDegree(a);
@@ -75,6 +77,7 @@ class ImageMatrix extends Array {
             else
                 return true;
         });
+        console.log('distByPixel 3'.blue);
         filterByDirection.forEach(r => {
             r.setDistFrom(origin.x, origin.y);
         });
@@ -90,6 +93,7 @@ class ImageMatrix extends Array {
             }
         });
         const colors = [];
+        console.log('distByPixel 4'.blue);
         return filterByDirection
             .filter(function (value, index, arr) {
             const find = colors.find((val) => {
