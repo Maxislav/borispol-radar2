@@ -37,7 +37,7 @@ app.use(compression({
 
 
 http.createServer(app).listen(app.get('port'), () => {
-    console.log((`Server start on port: ${port}`).green);
+    console.log((`>>>>>>>>>>>>>> Static Server start on port: ${port} <<<<<<<<<<<<<<<<`).blue);
 });
 
 
