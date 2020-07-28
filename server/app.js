@@ -22,7 +22,7 @@ class App {
         this.server.listen(port, this.serverStart);
     }
     serverStart() {
-        console.log(`node server start on port: ${this.port}`);
+        console.log(`->>>>>>>>>>>>>>>>>>>>>  node server start on port: ${this.port}`);
         console.error(`node server start on port: ${this.port}`);
     }
     get(url, callback) {

@@ -65,6 +65,9 @@ export function borispolukbb (req: any, res: any, next: any) {
                 proxyRequest.end();
             });
         })
+        .catch(err => {
+            console.error('borispolukbb err -> ', err);
+        })
 
 
     //http://meteoinfo.by/radar/UKBB/UKBB_latest.png?v=288
