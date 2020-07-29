@@ -22,29 +22,30 @@ Download files from ~/dist/* to you work dir
 ```
 ### Build Prod
 ```
-~$ webpack
+~$ webpack --mode production
 ```
 
 ### Debug   //localhost:8080
 
 ```
 ~$ npm i webpack-dev-server -g
-~$ npm i
-~$ npm start
+~$ webpack-dev-server
+~$ node server/borispol-radar.ts --rootdir ../dist  --port 8090
+~$ npm run tsc-be:w
 
 ```
 
-### Run you site on port 8080
-```
-//
-npm run server-static-ts
 
-```
 
 
 ### Run you site on port 80
-```
+```shell script
 node ./server/borispol-radar.js --rootdir ../dist --port 80
-pm2 start 'node /var/www/borispol-radar2/server/borispol-radar.js --rootdir ../dist' --name borispol  --max-memory-restart 5000M
 
+
+```
+
+### prod pm2
+```shell script
+pm2 start 'node /var/www/borispol-radar2/server/borispol-radar.js --rootdir ../dist' --name borispol  --max-memory-restart 5000M
 ```
