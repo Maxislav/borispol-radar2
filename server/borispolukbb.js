@@ -40,7 +40,8 @@ function borispolukbb(req, res, next) {
         };
         res.header("Access-Control-Allow-Origin", "*");
         httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
-            .then(data => {
+            .then((data) => {
+            console.log('buf.length -> ', data.length);
             res.end(data);
         })
             .catch(err => {

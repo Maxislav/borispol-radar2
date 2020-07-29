@@ -43,7 +43,8 @@ export function borispolukbb(req: any, res: any, next: any) {
             res.header("Access-Control-Allow-Origin", "*");
 
             httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
-                .then(data => {
+                .then((data: Buffer) => {
+                    console.log('buf.length -> ', data.length);
                     res.end(data)
                 })
                 .catch(err => {
