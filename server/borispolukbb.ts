@@ -20,7 +20,7 @@ function httpGet(url) {
 }
 
 
-export function borispolukbb (req: any, res: any, next: any) {
+export function borispolukbb(req: any, res: any, next: any) {
     httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
         .then((data: any) => {
             const body = data.toString();
@@ -41,7 +41,17 @@ export function borispolukbb (req: any, res: any, next: any) {
                 // headers: req.headers
             };
             res.header("Access-Control-Allow-Origin", "*");
-            const proxyRequest = http.request(opt);
+
+            httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
+                .then(data => {
+                    res.end(data)
+                })
+                .catch(err => {
+                    console.error('borispolukbb err 2 -> ', err);
+                    res.end(err)
+                })
+
+            /*const proxyRequest = http.request(opt);
             proxyRequest.on('response', function (proxyResponse: any) {
                 proxyResponse.on('data', function (chunk: any) {
                     res.write(chunk, 'binary');
@@ -49,10 +59,7 @@ export function borispolukbb (req: any, res: any, next: any) {
                 proxyResponse.on('end', function () {
                     res.end();
                 });
-                //proxyResponse.writeHead("Access-Control-Allow-Origin", "http://178.62.44.54");
                 res.writeHead(proxyResponse.statusCode, proxyResponse.headers);
-                // res.writeHead("Access-Control-Allow-Origin: http://178.62.44.54");
-                // res.header("Access-Control-Allow-Origin", "http://178.62.44.54");
             });
             proxyRequest.on('error', function (err: any) {
                 res.statusCode = 204;
@@ -63,7 +70,7 @@ export function borispolukbb (req: any, res: any, next: any) {
             });
             req.on('end', function () {
                 proxyRequest.end();
-            });
+            });*/
         })
         .catch(err => {
             console.error('borispolukbb err -> ', err);

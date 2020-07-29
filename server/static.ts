@@ -110,7 +110,7 @@ function sendFileSave(filePath, res, timeLong) {
         return;
     }
 
-    const errList = []
+    const errList = [];
     if (filePath.match(/^\/?(node_modules|bower_components|libs)/)) {
         res.set({
             'Cache-control': 'public, max-age=2629000;',

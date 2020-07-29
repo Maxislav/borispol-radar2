@@ -39,29 +39,34 @@ function borispolukbb(req, res, next) {
             // headers: req.headers
         };
         res.header("Access-Control-Allow-Origin", "*");
-        const proxyRequest = http.request(opt);
-        proxyRequest.on('response', function (proxyResponse) {
-            proxyResponse.on('data', function (chunk) {
+        httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
+            .then(data => {
+            res.end(data);
+        })
+            .catch(err => {
+            console.error('borispolukbb err 2 -> ', err);
+            res.end(err);
+        });
+        /*const proxyRequest = http.request(opt);
+        proxyRequest.on('response', function (proxyResponse: any) {
+            proxyResponse.on('data', function (chunk: any) {
                 res.write(chunk, 'binary');
             });
             proxyResponse.on('end', function () {
                 res.end();
             });
-            //proxyResponse.writeHead("Access-Control-Allow-Origin", "http://178.62.44.54");
             res.writeHead(proxyResponse.statusCode, proxyResponse.headers);
-            // res.writeHead("Access-Control-Allow-Origin: http://178.62.44.54");
-            // res.header("Access-Control-Allow-Origin", "http://178.62.44.54");
         });
-        proxyRequest.on('error', function (err) {
+        proxyRequest.on('error', function (err: any) {
             res.statusCode = 204;
             res.end('No connect');
         });
-        req.on('data', function (chunk) {
+        req.on('data', function (chunk: any) {
             proxyRequest.write(chunk, 'binary');
         });
         req.on('end', function () {
             proxyRequest.end();
-        });
+        });*/
     })
         .catch(err => {
         console.error('borispolukbb err -> ', err);
