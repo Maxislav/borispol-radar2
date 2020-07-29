@@ -185,18 +185,7 @@ const config = {
     }
 };
 if (mode == 'production') {
-    // config.plugins.unshift(new Version({}))
-    // config.plugins.push(new UglifyJsPlugin())
-    /* module.exports.plugins.push(
-         new Webpack.optimize.UglifyJsPlugin({
-             compress: {
-                 warnings: false,
-                 drop_console: false,
-                 unsafe: true
-
-             }
-         })
-     )*/
+    config.plugins.unshift(new Version({}));
 }
 exports.default = config;
 //# sourceMappingURL=webpack.config.js.map

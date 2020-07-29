@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const http = require("http");
 const DomParser = require('dom-parser');
-console.log('olooo');
 function httpGet(url, count = 0) {
     return new Promise((res, rej) => {
         http.get(url, (resp) => {
@@ -70,36 +69,6 @@ function borispolukbb(req, res, next, count = 25) {
         }
         ressss.end();
     });
-    /* httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
-         .then((data: any) => {
-             const body = data.toString();
-             const parser = new DomParser();
-             const xmlDoc = parser.parseFromString(body);
-             const rdr = xmlDoc.getElementById('rdr');
-             if (!rdr) {
-                 return res.end();
-             }
-             let imgUrl = rdr.getElementsByTagName('img')[0]
-                 .getAttribute('src');
-             imgUrl = imgUrl.replace(/^\.\//, '');
-             res.header("Access-Control-Allow-Origin", "*");
-             httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
-                 .then((data: Buffer) => {
-                     console.log('buf.length -> ', data.length);
-                     res.end(data)
-                 })
-                 .catch((err: Error) => {
-                     console.error('borispolukbb err 2 -> ', err);
-                     res.end(err)
-                 })
-
-         })
-         .catch((err: Error) => {
-             console.error('borispolukbb err -> ', err);
-         })
- */
-    //http://meteoinfo.by/radar/UKBB/UKBB_latest.png?v=288
 }
 exports.borispolukbb = borispolukbb;
-;
 //# sourceMappingURL=borispolukbb.js.map

@@ -191,19 +191,8 @@ const config = {
 
 
 if (mode == 'production') {
-    // config.plugins.unshift(new Version({}))
-   // config.plugins.push(new UglifyJsPlugin())
+    config.plugins.unshift(new Version({}))
 
-    /* module.exports.plugins.push(
-         new Webpack.optimize.UglifyJsPlugin({
-             compress: {
-                 warnings: false,
-                 drop_console: false,
-                 unsafe: true
-
-             }
-         })
-     )*/
 }
 
 export default config
