@@ -10,51 +10,7 @@ import {urlCron} from '../../config/congig-url'
 export class Player {
 
 
-	/**
-	 * @type {Node}
-	 */
-	stage;
 
-	/**
-	 * @type {string}
-	 */
-	prefix = '';
-	/**
-	 * @type {string}
-	 */
-	suffix = '';
-
-	/**
-	 * @type {Array.<string>}
-	 */
-	variables;
-
-	/**
-	 *
-	 * @type {Array.<HTMLElement>}
-	 */
-	images = [];
-
-	/**
-	 *
-	 * @type {Deferred}
-	 */
-	deferImages = new Deferred();
-
-
-
-	/**
-	 *
-	 * @type {Array.<string>}
-	 */
-	urls;
-
-    /**
-     *
-     * @type {boolean}
-     * @private
-     */
-    _process = false;
     /**
 	 *
      * @param {boolean}val
@@ -103,6 +59,55 @@ export class Player {
 	 */
 
 	constructor(component, d) {
+		/**
+		 * @type {Node}
+		 */
+		this.stage;
+
+		/**
+		 * @type {string}
+		 */
+		this.prefix = '';
+		/**
+		 * @type {string}
+		 */
+		this.suffix = '';
+
+		/**
+		 * @type {Array.<string>}
+		 */
+		this.variables;
+
+		/**
+		 *
+		 * @type {Array.<HTMLElement>}
+		 */
+		this.images = [];
+
+		/**
+		 *
+		 * @type {Deferred}
+		 */
+		this.deferImages = new Deferred();
+
+
+
+		/**
+		 *
+		 * @type {Array.<string>}
+		 */
+		this.urls;
+
+		/**
+		 *
+		 * @type {boolean}
+		 * @private
+		 */
+		this._process = false;
+
+
+
+
 		this._component = component;
         this._k = 0;
         this._load = 0;
@@ -278,15 +283,18 @@ export class Player {
 
 class Player2 extends Player{
 
-	/**
-	 *
-	 * @type {Deferred}
-	 * @private
-	 */
-	_deferHistory;
+
 
 	constructor(...args){
+
 		super(...args);
+		/**
+		 *
+		 * @type {Deferred}
+		 * @private
+		 */
+
+		this._deferHistory;
 
 
 	}

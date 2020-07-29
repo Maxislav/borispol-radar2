@@ -6,14 +6,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
-    "rootDir": "./server",
-    "outDir": "server/",
-    "typeRoots" : ["./typings"],
     "types": [
       "node"
     ]
 
   },
+  "files": ["webpack.config.ts"],
   "filesGlob": [
     "./src/types.d.ts",
     "!./node_modules/**/*.ts"

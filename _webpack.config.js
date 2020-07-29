@@ -1,23 +1,24 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const path = require("path");
-const Webpack = require("webpack");
+//const NODE_PATH="/usr/local/lib/node_modules"
+const NODE_ENV = process.env.NODE_ENV || "production";
+const Webpack = require('webpack');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+const dateFormat = require('dateformat');
+
 const Version = require('./plugin/version.js');
-const getConsoleKey = (key) => {
-    const regexp = new RegExp('\-\-'.concat(key).concat('$'));
-    const index = process.argv.findIndex((it) => !!it.match(regexp));
-    if (index == -1)
-        return;
-    const value = process.argv[index + 1];
-    if (!value || value.match(/^\-\-/))
-        return;
-    return value;
-};
-const mode = getConsoleKey('mode') || 'dev';
-const config = {
+//import Version from './plugin/version.js';
+
+//console.log('dddddddddddddddddddddddd',__dirname)
+//return;
+
+const ExtendDate = require('./src/plugin/DateExtendPlugin');
+
+console.log(NODE_ENV);
+module.exports = {
     entry: {
         //server: ['./server/index.js'],
         app: ["./src/extend/Math.js", "./src/extend/NodeFade.js", "./src/extend/DateExtend.js", "./src/init.js"]
@@ -26,17 +27,18 @@ const config = {
     output: {
         path: path.resolve(__dirname, "dist"),
         publicPath: "",
-        // filename: "borispol.radar.[name].[chunkhash].min.js",
-        filename: "borispol.radar.[name].min.js",
+        filename: "borispol.radar.[name].[chunkhash].min.js",
+        // chunkFilename: "borispol.radar.[name].[chunkhash].min.js"
     },
+    watch: NODE_ENV == 'dev',
     watchOptions: {
         aggregateTimeout: 100
     },
-    mode: mode == 'dev' ? 'development' : 'production',
-    devtool: mode === 'dev' && 'source-map',
+    devtool: NODE_ENV == 'dev' ? 'source-map' : false,
     plugins: [
+
         new Webpack.DefinePlugin({
-            NODE_ENV: JSON.stringify(mode),
+            NODE_ENV: JSON.stringify(NODE_ENV),
         }),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './index.pug')
@@ -61,32 +63,24 @@ const config = {
             {
                 from: './src/cron.sh'
             }
-        ], { copyUnmodified: true }),
+        ], {copyUnmodified: true}),
+
         new Webpack.WatchIgnorePlugin([
             path.resolve(__dirname, './src/img/'),
         ]),
     ],
-    resolve: {
-        extensions: ['.js'],
-        alias: {
-            'vue$': mode == 'dev' ? 'vue/dist/vue.js' : 'vue/dist/vue.min.js',
-            'vue-router$': 'vue-router/dist/vue-router.js'
-        }
-    },
     module: {
-        rules: [
+        loaders: [
             {
-                test: /\.html$/i,
-                loader: 'html-loader',
-                options: {
-                    preprocessor: (content, loaderContext) => {
-                        return '';
+                test: /\.(html)$/,
+                use: {
+                    loader: 'html-loader',
+                    options: {
+                        attrs: [':data-src']
                     }
-                    //  attributes: false,
-                    //  attrs: [':data-src']
                 }
             },
-            { test: /\.tsx?$/, loader: "ts-loader" },
+            {test: /\.tsx?$/, loader: "ts-loader"},
             {
                 test: /\.js$/,
                 //loader: 'babel-loader',
@@ -94,15 +88,8 @@ const config = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        //  presets: ['@babel/preset-env', "@babel/preset-stage-1"],
-                        plugins: ["@babel/plugin-proposal-export-default-from",
-                            "@babel/plugin-proposal-logical-assignment-operators",
-                            ["@babel/plugin-proposal-optional-chaining", { "loose": false }],
-                            ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }],
-                            ["@babel/plugin-proposal-nullish-coalescing-operator", { "loose": false }],
-                            "@babel/plugin-proposal-do-expressions",
-                            ["@babel/plugin-proposal-decorators", { "legacy": true }]
-                        ],
+                        presets: ['es2016', 'stage-1'],
+                        plugins: ['transform-decorators-legacy'],
                     }
                 }
             },
@@ -110,7 +97,7 @@ const config = {
                 test: /\.jade$/,
                 loader: 'jade-loader',
                 query: {
-                    pretty: mode == 'dev'
+                    pretty: NODE_ENV == 'dev'
                 }
             },
             {
@@ -124,7 +111,7 @@ const config = {
                 test: /[^loader]\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
                 loader: 'url-loader',
                 options: {
-                //limit: 10000
+                    //limit: 10000
                 }
             },
             {
@@ -138,7 +125,7 @@ const config = {
                         options: {
                             modules: false,
                             importLoaders: 1,
-                            sourceMap: mode == 'dev'
+                            sourceMap: NODE_ENV == 'dev'
                         },
                     },
                     {
@@ -146,10 +133,20 @@ const config = {
                     }
                 ]
             }
+
+
         ]
+    },
+    resolve: {
+        extensions: ['.js'],
+        alias: {
+            'vue$': NODE_ENV == 'dev' ? 'vue/dist/vue.js' : 'vue/dist/vue.min.js',
+            'vue-router$': 'vue-router/dist/vue-router.js'
+        }
     },
     devServer: {
         port: 9000,
+
         proxy: {
             '/ppp/**': {
                 target: 'http://localhost:8085',
@@ -182,11 +179,15 @@ const config = {
                 target: 'http://meteo-radar.info'
             }
         }
+
     }
+
 };
-if (mode == 'production') {
-    // config.plugins.unshift(new Version({}))
-    // config.plugins.push(new UglifyJsPlugin())
+
+if (NODE_ENV == 'production') {
+    module.exports.plugins.unshift(new Version({}))
+    module.exports.plugins.push(new UglifyJsPlugin())
+
     /* module.exports.plugins.push(
          new Webpack.optimize.UglifyJsPlugin({
              compress: {
@@ -198,5 +199,3 @@ if (mode == 'production') {
          })
      )*/
 }
-exports.default = config;
-//# sourceMappingURL=webpack.config.js.map

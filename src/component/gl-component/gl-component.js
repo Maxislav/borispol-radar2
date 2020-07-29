@@ -8,7 +8,7 @@ export const GLComponent = Vue.component('gl-component', {
     data() {
         return {}
     },
-    mounted(...args) {
+    mounted() {
         const h = this.$el.parentElement.clientHeight;
         const w = this.$el.parentElement.clientWidth;
         const canvas = this.$el.getElementsByTagName('canvas').item(0);

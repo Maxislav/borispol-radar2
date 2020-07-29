@@ -3,8 +3,9 @@ import { ToastComponent } from "./component/toast.component";
 export const ToastPlugin = {
     install: function (Vue, options) {
         class Toast {
-            toastList = [];
+
             constructor() {
+                this.toastList = [];
             }
         };
         const t = new Toast();

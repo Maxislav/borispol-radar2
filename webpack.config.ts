@@ -1,20 +1,20 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const path = require("path");
-const Webpack = require("webpack");
+import * as path from 'path';
+import * as Webpack from 'webpack';
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
 const Version = require('./plugin/version.js');
-const getConsoleKey = (key) => {
+
+declare const process: any;
+const getConsoleKey = (key: string): string | undefined => {
     const regexp = new RegExp('\-\-'.concat(key).concat('$'));
-    const index = process.argv.findIndex((it) => !!it.match(regexp));
-    if (index == -1)
-        return;
+    const index = process.argv.findIndex((it: string) => !!it.match(regexp));
+    if (index == -1) return;
     const value = process.argv[index + 1];
-    if (!value || value.match(/^\-\-/))
-        return;
-    return value;
+    if (!value || value.match(/^\-\-/)) return;
+    return value
 };
 const mode = getConsoleKey('mode') || 'dev';
 const config = {
@@ -26,13 +26,14 @@ const config = {
     output: {
         path: path.resolve(__dirname, "dist"),
         publicPath: "",
-        // filename: "borispol.radar.[name].[chunkhash].min.js",
+       // filename: "borispol.radar.[name].[chunkhash].min.js",
         filename: "borispol.radar.[name].min.js",
+        //chunkFilename: "borispol.radar.[name].[chunkhash].min.js"
     },
     watchOptions: {
         aggregateTimeout: 100
     },
-    mode: mode == 'dev' ? 'development' : 'production',
+    mode: mode  == 'dev' ? 'development' :'production',
     devtool: mode === 'dev' && 'source-map',
     plugins: [
         new Webpack.DefinePlugin({
@@ -62,6 +63,7 @@ const config = {
                 from: './src/cron.sh'
             }
         ], { copyUnmodified: true }),
+
         new Webpack.WatchIgnorePlugin([
             path.resolve(__dirname, './src/img/'),
         ]),
@@ -79,14 +81,14 @@ const config = {
                 test: /\.html$/i,
                 loader: 'html-loader',
                 options: {
-                    preprocessor: (content, loaderContext) => {
+                    preprocessor: (content: any, loaderContext: any) => {
                         return '';
                     }
-                    //  attributes: false,
-                    //  attrs: [':data-src']
+                  //  attributes: false,
+                   //  attrs: [':data-src']
                 }
             },
-            { test: /\.tsx?$/, loader: "ts-loader" },
+            {test: /\.tsx?$/, loader: "ts-loader"},
             {
                 test: /\.js$/,
                 //loader: 'babel-loader',
@@ -94,14 +96,14 @@ const config = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        //  presets: ['@babel/preset-env', "@babel/preset-stage-1"],
-                        plugins: ["@babel/plugin-proposal-export-default-from",
+                       //  presets: ['@babel/preset-env', "@babel/preset-stage-1"],
+                        plugins: [ "@babel/plugin-proposal-export-default-from",
                             "@babel/plugin-proposal-logical-assignment-operators",
                             ["@babel/plugin-proposal-optional-chaining", { "loose": false }],
                             ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }],
                             ["@babel/plugin-proposal-nullish-coalescing-operator", { "loose": false }],
                             "@babel/plugin-proposal-do-expressions",
-                            ["@babel/plugin-proposal-decorators", { "legacy": true }]
+                           [ "@babel/plugin-proposal-decorators",  { "legacy": true }]
                         ],
                     }
                 }
@@ -124,7 +126,7 @@ const config = {
                 test: /[^loader]\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
                 loader: 'url-loader',
                 options: {
-                //limit: 10000
+                    //limit: 10000
                 }
             },
             {
@@ -146,10 +148,11 @@ const config = {
                     }
                 ]
             }
-        ]
+        ] as any
     },
     devServer: {
         port: 9000,
+
         proxy: {
             '/ppp/**': {
                 target: 'http://localhost:8085',
@@ -182,11 +185,15 @@ const config = {
                 target: 'http://meteo-radar.info'
             }
         }
+
     }
 };
+
+
 if (mode == 'production') {
     // config.plugins.unshift(new Version({}))
-    // config.plugins.push(new UglifyJsPlugin())
+   // config.plugins.push(new UglifyJsPlugin())
+
     /* module.exports.plugins.push(
          new Webpack.optimize.UglifyJsPlugin({
              compress: {
@@ -198,5 +205,5 @@ if (mode == 'production') {
          })
      )*/
 }
-exports.default = config;
-//# sourceMappingURL=webpack.config.js.map
+
+export default config
