@@ -2,15 +2,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const http = require("http");
 const DomParser = require('dom-parser');
-function httpGet(url, count = 0) {
+function httpGet(opt, count = 0) {
     return new Promise((res, rej) => {
-        http.get(url, (resp) => {
+        http.get({
+            // path: url,
+            path: opt.path,
+            host: opt.host,
+            headers: {
+                Host: 'meteoinfo.by',
+                Referer: `http://${opt.host}${opt.path}`,
+                Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
+            }
+        }, (resp) => {
             const chunks = [];
             resp.on('data', (chunk) => {
                 chunks.push(chunk);
             });
             resp.on('end', () => {
-                url;
                 const response = Buffer.concat(chunks);
                 if (!response.length) {
                     return rej(new Error('empty body'));
@@ -24,7 +33,10 @@ function httpGet(url, count = 0) {
     });
 }
 function getUkbb(res) {
-    return httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
+    return httpGet({
+        host: 'meteoinfo.by',
+        path: '/radar/?q=UKBB&t=00'
+    })
         .then((data) => {
         const body = data.toString();
         const parser = new DomParser();
@@ -38,7 +50,11 @@ function getUkbb(res) {
         return imgUrl.replace(/^\.\//, '');
     })
         .then((imgUrl) => {
-        return httpGet(`http://meteoinfo.by/radar/${imgUrl}`);
+        //return httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
+        return httpGet({
+            host: 'meteoinfo.by',
+            path: `/radar/${imgUrl}`
+        });
     })
         .then(response => {
         res.end(response);

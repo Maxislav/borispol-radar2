@@ -2,16 +2,26 @@ import { IncomingMessage } from "http";
 
 const http = require("http");
 const DomParser = require('dom-parser');
-function httpGet<T>(url: string, count = 0) {
+
+function httpGet<T>(opt: {path: string, host: string}, count = 0) {
     return new Promise((res: any, rej: any) => {
-        http.get(url, (resp: IncomingMessage) => {
+        http.get({
+            // path: url,
+            path: opt.path,
+            host: opt.host,
+            headers: {
+                Host: 'meteoinfo.by',
+                Referer: `http://${opt.host}${opt.path}`,
+                Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
+            }
+        }, (resp: IncomingMessage) => {
             const chunks: Uint8Array[] = [];
             resp.on('data', (chunk: Uint8Array) => {
                 chunks.push(chunk)
             });
 
             resp.on('end', () => {
-                url;
                 const response = Buffer.concat(chunks);
                 if (!response.length) {
                     return rej(new Error('empty body'))
@@ -26,7 +36,10 @@ function httpGet<T>(url: string, count = 0) {
 }
 
 function getUkbb(res) {
-    return httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
+    return httpGet({
+        host: 'meteoinfo.by',
+        path: '/radar/?q=UKBB&t=00'
+    })
         .then((data: any) => {
             const body = data.toString();
             const parser = new DomParser();
@@ -40,7 +53,11 @@ function getUkbb(res) {
             return imgUrl.replace(/^\.\//, '');
         })
         .then((imgUrl: string) => {
-            return httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
+            //return httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
+            return httpGet({
+                host: 'meteoinfo.by',
+                path: `/radar/${imgUrl}`
+            })
         })
         .then(response => {
             res.end(response)
@@ -65,12 +82,12 @@ export function borispolukbb(req: any, res: any, next: any, count = 25) {
     getUkbb(res)
 
         .catch((err: any) => {
-            console.error('borispolukbb err 2 -> ',count, err);
+            console.error('borispolukbb err 2 -> ', count, err);
             if (count) {
                 count--;
-               return  timeoutPromise()
-                    .then(()=>{
-                       return  borispolukbb(req, res, next, count)
+                return timeoutPromise()
+                    .then(() => {
+                        return borispolukbb(req, res, next, count)
                     })
             }
             ressss.end()

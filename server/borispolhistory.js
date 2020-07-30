@@ -4,7 +4,10 @@ const http = require('http');
 const getBodyStr = (req, time) => {
     const options = {
         host: 'meteoinfo.by',
-        path: `/radar/?q=UKBB&t=${time}0`
+        path: `/radar/?q=UKBB&t=${time}0`,
+        headers: {
+            Host: 'meteoinfo.by'
+        }
     };
     return new Promise((resolve, reject) => {
         const proxyRequest = http.request(options);
