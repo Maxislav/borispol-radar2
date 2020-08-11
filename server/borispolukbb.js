@@ -15,10 +15,22 @@ function httpGet(opt, count = 0) {
         }, (resp) => {
             const chunks = [];
             resp.on('data', (chunk) => {
-                chunks.push(chunk);
+                try {
+                    chunks.push(chunk);
+                }
+                catch (err) {
+                    console.error('chunks err ', err);
+                    rej(err);
+                }
             });
             resp.on('end', () => {
-                const response = Buffer.concat(chunks);
+                let response = new Buffer(0);
+                try {
+                    response = Buffer.concat(chunks);
+                }
+                catch (err) {
+                    console.error('concat err ', err);
+                }
                 if (!response.length) {
                     return rej(new Error('empty body'));
                 }

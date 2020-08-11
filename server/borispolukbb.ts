@@ -3,7 +3,7 @@ import { IncomingMessage } from "http";
 const http = require("http");
 const DomParser = require('dom-parser');
 
-function httpGet<T>(opt: {path: string, host: string}, count = 0) {
+function httpGet<T>(opt: { path: string, host: string }, count = 0) {
     return new Promise((res: any, rej: any) => {
         http.get({
             // path: url,
@@ -12,17 +12,28 @@ function httpGet<T>(opt: {path: string, host: string}, count = 0) {
             headers: {
                 Host: 'meteoinfo.by',
                 Referer: `http://${opt.host}${opt.path}`,
-               // Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                // Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
                 //'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
             }
         }, (resp: IncomingMessage) => {
             const chunks: Uint8Array[] = [];
             resp.on('data', (chunk: Uint8Array) => {
-                chunks.push(chunk)
+                try {
+                    chunks.push(chunk)
+                } catch (err) {
+                    console.error('chunks err ', err)
+                    rej(err)
+                }
             });
 
             resp.on('end', () => {
-                const response = Buffer.concat(chunks);
+                let response = new Buffer(0);
+                try {
+                    response = Buffer.concat(chunks);
+                } catch (err) {
+                    console.error('concat err ', err)
+                }
+
                 if (!response.length) {
                     return rej(new Error('empty body'))
                 }
