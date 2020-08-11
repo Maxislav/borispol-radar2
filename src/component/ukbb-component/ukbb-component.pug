@@ -2,10 +2,12 @@
     .title {{'RADAR_TITLE' | translate}}
     .img-container
         .relative
-            .img-ukbb(v-img="vm")
+            //.img-ukbb(v-img="vm")
+            //.img-ukbb(v-img="vm")
+            img(:src="vm.src")
             //.err-mess {{err}}
-            strip-loader(:load="load")
-            player-component(:prefix="prefix", :suffix="suffix", :onload="onload", :type="2")
+            //strip-loader(:load="load")
+            //player-component(:prefix="prefix", :suffix="suffix", :onload="onload", :type="2")
 
 
 

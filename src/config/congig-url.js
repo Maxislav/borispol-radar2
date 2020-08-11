@@ -16,7 +16,8 @@ let url = {
         ir: 'img/ir/',
         vi: 'img/vi/',
         //ukbb: 'php/ukbb-latest.php',
-        ukbb: 'http://178.62.44.54:8084/borisbolukbb',
+        // ukbb: 'http://178.62.44.54:8084/borisbolukbb',
+        ukbb: 'http://meteoinfo.by/radar/UKBB/UKBB_latest.png',
         //"ukbb-history": "php/loadUkbbHistory.php",
         "ukbb-history": "http://178.62.44.54:8084/loadUkbbHistory",
         "upload": 'php/upload.php'

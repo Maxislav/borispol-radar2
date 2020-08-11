@@ -128,8 +128,8 @@ export default {
 
         this.toOriginal = () => {
             return {
-                x: (this.iam.x + 0) * (this.image.naturalWidth / this.image.width) - 1,
-                y: (this.iam.y + 22) * (this.image.naturalHeight / this.image.height)
+                x: this.image ? (this.iam.x + 0) * (this.image.naturalWidth / this.image.width) - 1 : 0,
+                y: this.image ? (this.iam.y + 22) * (this.image.naturalHeight / this.image.height): 0
             }
         };
 

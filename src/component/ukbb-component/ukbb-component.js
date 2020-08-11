@@ -13,7 +13,7 @@ const UkbbComponent = Vue.component('ukbb-component',	{
 					src: urlCron.ukbb,
 					callback: this.staticLoad,
 					onerror: (e) => {
-						console.log('dsjasduh')
+						console.error('onerror dsjasduh')
 					}
 				}
 			});
