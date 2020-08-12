@@ -4,10 +4,7 @@ const getBodyStr = (req, time) => {
 
     const options = {
         host: 'meteoinfo.by',
-        path: `/radar/?q=UKBB&t=${time}0`,
-        headers: {
-            Host: 'meteoinfo.by'
-        }
+        path: `/radar/?q=UKBB&t=${time}0`
     };
 
     return new Promise((resolve, reject) => {

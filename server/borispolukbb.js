@@ -2,35 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const http = require("http");
 const DomParser = require('dom-parser');
-function httpGet(opt, count = 0) {
+function httpGet(url, count = 0) {
     return new Promise((res, rej) => {
-        http.get({
-            // path: url,
-            path: opt.path,
-            host: opt.host,
-            headers: {
-                Host: 'meteoinfo.by',
-                Referer: `http://${opt.host}${opt.path}`,
-            }
-        }, (resp) => {
+        http.get(url, (resp) => {
             const chunks = [];
             resp.on('data', (chunk) => {
-                try {
-                    chunks.push(chunk);
-                }
-                catch (err) {
-                    console.error('chunks err ', err);
-                    rej(err);
-                }
+                chunks.push(chunk);
             });
             resp.on('end', () => {
-                let response = new Buffer(0);
-                try {
-                    response = Buffer.concat(chunks);
-                }
-                catch (err) {
-                    console.error('concat err ', err);
-                }
+                url;
+                const response = Buffer.concat(chunks);
                 if (!response.length) {
                     return rej(new Error('empty body'));
                 }
@@ -43,10 +24,7 @@ function httpGet(opt, count = 0) {
     });
 }
 function getUkbb(res) {
-    return httpGet({
-        host: 'meteoinfo.by',
-        path: '/radar/?q=UKBB&t=00'
-    })
+    return httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
         .then((data) => {
         const body = data.toString();
         const parser = new DomParser();
@@ -60,11 +38,7 @@ function getUkbb(res) {
         return imgUrl.replace(/^\.\//, '');
     })
         .then((imgUrl) => {
-        //return httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
-        return httpGet({
-            host: 'meteoinfo.by',
-            path: `/radar/${imgUrl}`
-        });
+        return httpGet(`http://meteoinfo.by/radar/${imgUrl}`);
     })
         .then(response => {
         res.end(response);
