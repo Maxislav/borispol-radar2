@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 
 const getBodyStr = (req, time) => {
 
@@ -8,7 +9,7 @@ const getBodyStr = (req, time) => {
     };
 
     return new Promise((resolve, reject) => {
-        const proxyRequest = http.request(options);
+        const proxyRequest = https.request(options);
 
         const chunks = [];
 

@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const http = require('http');
+const https = require('https');
 const getBodyStr = (req, time) => {
     const options = {
         host: 'meteoinfo.by',
         path: `/radar/?q=UKBB&t=${time}0`
     };
     return new Promise((resolve, reject) => {
-        const proxyRequest = http.request(options);
+        const proxyRequest = https.request(options);
         const chunks = [];
         proxyRequest.on('response', function (proxyResponse) {
             proxyResponse.on('data', function (chunk) {
