@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const http = require("http");
+const https = require('https');
 const DomParser = require('dom-parser');
 function httpGet(url, count = 0) {
     return new Promise((res, rej) => {
-        http.get(url, (resp) => {
+        https.get(url, (resp) => {
             const chunks = [];
             resp.on('data', (chunk) => {
                 chunks.push(chunk);
@@ -24,7 +25,7 @@ function httpGet(url, count = 0) {
     });
 }
 function getUkbb(res) {
-    return httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
+    return httpGet('https://meteoinfo.by/radar/?q=UKBB&t=0')
         .then((data) => {
         const body = data.toString();
         const parser = new DomParser();
@@ -38,7 +39,7 @@ function getUkbb(res) {
         return imgUrl.replace(/^\.\//, '');
     })
         .then((imgUrl) => {
-        return httpGet(`http://meteoinfo.by/radar/${imgUrl}`);
+        return httpGet(`https://meteoinfo.by/radar/${imgUrl}`);
     })
         .then(response => {
         res.end(response);

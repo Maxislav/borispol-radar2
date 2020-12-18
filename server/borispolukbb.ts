@@ -1,10 +1,11 @@
 import { IncomingMessage } from "http";
 
 const http = require("http");
+const https = require('https');
 const DomParser = require('dom-parser');
 function httpGet<T>(url: string, count = 0) {
     return new Promise((res: any, rej: any) => {
-        http.get(url, (resp: IncomingMessage) => {
+        https.get(url, (resp: IncomingMessage) => {
             const chunks: Uint8Array[] = [];
             resp.on('data', (chunk: Uint8Array) => {
                 chunks.push(chunk)
@@ -26,7 +27,7 @@ function httpGet<T>(url: string, count = 0) {
 }
 
 function getUkbb(res) {
-    return httpGet('http://meteoinfo.by/radar/?q=UKBB&t=0')
+    return httpGet('https://meteoinfo.by/radar/?q=UKBB&t=0')
         .then((data: any) => {
             const body = data.toString();
             const parser = new DomParser();
@@ -40,7 +41,7 @@ function getUkbb(res) {
             return imgUrl.replace(/^\.\//, '');
         })
         .then((imgUrl: string) => {
-            return httpGet(`http://meteoinfo.by/radar/${imgUrl}`)
+            return httpGet(`https://meteoinfo.by/radar/${imgUrl}`)
         })
         .then(response => {
             res.end(response)
