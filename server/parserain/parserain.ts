@@ -8,7 +8,7 @@ import {ImageColor} from './image-color.class'
 import {UrlWithParsedQuery} from "url";
 import {ParsedUrlQuery} from "querystring";
 
-const path = 'http://meteoinfo.by/radar/UKBB/UKBB_latest.png';
+const path = 'https://meteoinfo.by/radar/UKBB/UKBB_latest.png';
 const mathDate = new MathDate();
 interface HashDate{
     [hashCode: string]: Deferred<any>

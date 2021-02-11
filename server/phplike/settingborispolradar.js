@@ -5,7 +5,7 @@ function defaultSetting(req, res) {
         'title1': "Borispol",
         'title2': "Infrared",
         'title3': "Visible",
-        'url1': "http://meteoinfo.by/radar/UKBB/UKBB_latest.png",
+        'url1': "https://meteoinfo.by/radar/UKBB/UKBB_latest.png",
         'url2': "http://www.sat24.com/image2.ashx?region=eu&ir=true",
         'url3': "http://www.sat24.com/image2.ashx?region=eu"
     });
