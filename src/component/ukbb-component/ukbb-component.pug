@@ -2,6 +2,7 @@
     .title {{'RADAR_TITLE' | translate}}
     .img-container
         .relative
+            .text-info {{text}}
             .img-ukbb(v-img="vm")
             //.err-mess {{err}}
             strip-loader(:load="load")
