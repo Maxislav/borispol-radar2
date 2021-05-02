@@ -26,25 +26,16 @@ exports.map = (req, res, next) => {
                 res.send(buffer);
             })
                 .catch(err => {
-                res.sendError('ds');
+                console.error('err composite');
+                res.status(500);
+                res.render('error', { error: err });
             });
         });
-        // image.getBufferAsync(mime)
-        //res.header("Content-Type", "image/png");
-        /*img1.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
-            res.send(buffer)
-        });*/
-        /* res.write(rr,'binary');
-         res.end(null, 'binary');*/
-        /*joinImages([buf1, buf2])
-            .then((resp) => {
-                res.header("Access-Control-Allow-Origin", "*");
-                res.header("Content-Type", "image/png");
-                res.send(buf1)
-            })
-            .catch(err => {
-                console.error(err)
-            })*/
+    })
+        .catch(err => {
+        console.error('err composite', 'cartodb-basemaps-b.global');
+        res.status(500);
+        res.render('error', { error: err });
     });
 };
 //# sourceMappingURL=openweathermap.js.map
