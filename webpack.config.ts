@@ -81,11 +81,12 @@ const config = {
                 test: /\.html$/i,
                 loader: 'html-loader',
                 options: {
-                    preprocessor: (content: any, loaderContext: any) => {
+                    // attributes: false,
+                    /*preprocessor: (content: any, loaderContext: any) => {
                         return '';
-                    }
+                    },*/
                   //  attributes: false,
-                   //  attrs: [':data-src']
+                  //  attrs: [':data-src']
                 }
             },
             {test: /\.tsx?$/, loader: "ts-loader"},
@@ -179,10 +180,10 @@ const config = {
                 }
             },
             '/img/ir': {
-                target: 'http://meteo-radar.info'
+                target: 'http://www.borispol.kiev.ua'
             },
             '/img/vi': {
-                target: 'http://meteo-radar.info'
+                target: 'http://www.borispol.kiev.ua'
             }
         }
 

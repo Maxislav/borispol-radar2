@@ -36,8 +36,9 @@ import {DialogComponent} from './component/dialog-component/dialog-component'
 import {EarthComponent} from './component/earth-component/earth-component'
 import VueResource from 'vue-resource'
 import {SunshineComponent} from "./component/sunshine-component/sunshine-component";
-import { ToastPlugin } from "./plugin/ToastPlugin/toast.plugin";
-
+import {ToastPlugin} from "./plugin/ToastPlugin/toast.plugin";
+import './component/openweathermap-component/openweathermap.component.js'
+import {OpenWeatherMapComponent} from "./component/openweathermap-component/openweathermap.component";
 
 
 Vue.use(VueRouter);
@@ -50,64 +51,65 @@ Vue.use(ToastPlugin);
 
 
 const routes = [
-	{path: '/home', component: HomeComponent},
-	{path: '/radar', component: UkbbCalcComponent},
-	{path: '/ired', component: IredComponent},
-	{path: '/visible', component: VisibleComponent},
-	{path: '/meteosat', component: MeteosatComponent},
-	{path: '/android', component: AndroidComponent},
-	{path: '/fileupload', component: FileUploadComponent},
-	{path: '/infomometr', component: InfomometrComponent},
-	{path: '/earth', component: EarthComponent},
-	{path: '/sunshine', component: SunshineComponent},
-	{path: '/gl', component: GLComponent},
-	{
-		path: '/forecast-item/:index',
-		name: 'forecast-item',
-		canReuse: true,
-		component: ForecastItemComponent,
-		beforeEnter: (to, from, next) => {
-			// ...
-			console.log(to)
-			next()
-		}
-	},
-	{
-		path: '/forecast-hour/:index',
-		component: {
-			template: '<div>{{hh  }}</div>',
-			data: function () {
-				return {
-					list: list,
-					hh: {}
-				}
-			},
-			watch: {
-				list: function () {
-					console.log(this.list);
-					this.hh = this.list[this.$route.params['index']]
-				}
-			}
-		}
-	},
-	{
-		path: '/setting',
-		component: SettingComponent
-	}
+    {path: '/home', component: HomeComponent},
+    {path: '/radar', component: OpenWeatherMapComponent},
+    {path: '/ired', component: IredComponent},
+    {path: '/visible', component: VisibleComponent},
+    {path: '/meteosat', component: MeteosatComponent},
+    {path: '/android', component: AndroidComponent},
+    {path: '/fileupload', component: FileUploadComponent},
+    {path: '/infomometr', component: InfomometrComponent},
+    {path: '/earth', component: EarthComponent},
+    {path: '/sunshine', component: SunshineComponent},
+    {path: '/gl', component: GLComponent},
+    {path: '/openweathermap', component: OpenWeatherMapComponent},
+    {
+        path: '/forecast-item/:index',
+        name: 'forecast-item',
+        canReuse: true,
+        component: ForecastItemComponent,
+        beforeEnter: (to, from, next) => {
+            // ...
+            console.log(to)
+            next()
+        }
+    },
+    {
+        path: '/forecast-hour/:index',
+        component: {
+            template: '<div>{{hh  }}</div>',
+            data: function () {
+                return {
+                    list: list,
+                    hh: {}
+                }
+            },
+            watch: {
+                list: function () {
+                    console.log(this.list);
+                    this.hh = this.list[this.$route.params['index']]
+                }
+            }
+        }
+    },
+    {
+        path: '/setting',
+        component: SettingComponent
+    }
 ];
 
 
 const router = new VueRouter({
-	routes, // short for routes: routes,
-	canReuse: false,
-	hash: '#hghh!'
+    routes, // short for routes: routes,
+    canReuse: false,
+    hash: '#hghh!'
 });
 router.beforeEach((to, from, next) => {
-	if (to.path == '/') {
-		router.replace('/home', () => {
-		})
-	}
-	next()
+    if (to.path == '/') {
+        router.replace('/home', () => {
+        })
+    }
+    next()
 });
 
 console.log(NODE_ENV)
@@ -115,9 +117,9 @@ console.log(NODE_ENV)
 //const socketUrl =  NODE_ENV == 'dev' ? `${window.location.protocol}//${window.location.hostname}:${8085}` : 'http://178.62.44.54:8085';
 
 window.onload = function () {
-	const app = new Vue({
-		router
-	}).$mount('#app')
+    const app = new Vue({
+        router
+    }).$mount('#app')
 
     //socket.connect(socketUrl)
 
