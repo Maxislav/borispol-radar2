@@ -51,14 +51,14 @@ exports.rain = (req, res, next) => {
                 .catch(err => {
                 console.error('err composite');
                 res.status(500);
-                res.render('error', { error: err });
+                res.send('error', { error: err });
             });
         });
     })
         .catch(err => {
         console.error('err composite', 'c.sat.owm.io/maps/2.0/radar');
         res.status(500);
-        res.render('error', { error: err });
+        res.send('error', { error: err });
     });
 };
 //# sourceMappingURL=openweatherrain.js.map
