@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.borispolukbb = void 0;
 const http = require("http");
 const https = require('https');
 const DomParser = require('dom-parser');
@@ -51,7 +52,7 @@ function getUkbb(res) {
 const timeoutPromise = () => {
     return new Promise((res) => {
         setTimeout(() => {
-            res();
+            res(true);
         }, 500);
     });
 };

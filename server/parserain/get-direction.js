@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getDirection = void 0;
 const radar_center_const_1 = require("./radar-center.const");
 const my_math_1 = require("./my-math");
 /**

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.parserain = void 0;
 const math_date_class_1 = require("./math-date.class");
 const url = require("url");
 const deferred_class_1 = require("./deferred.class");
@@ -11,7 +12,7 @@ const path = 'https://meteoinfo.by/radar/UKBB/UKBB_latest.png';
 const mathDate = new math_date_class_1.MathDate();
 const hashDate = {};
 let I = 0;
-exports.parserain = (req, res, next) => {
+const parserain = (req, res, next) => {
     I++;
     const url_parts = url.parse(req.url, true);
     /**
@@ -84,4 +85,5 @@ exports.parserain = (req, res, next) => {
         res.status(500).send({ error: 'meteoinfo error' });
     });
 };
+exports.parserain = parserain;
 //# sourceMappingURL=parserain.js.map

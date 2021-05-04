@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.streamB = exports.streamA = void 0;
 /*declare const process: any;
 process.env.TZ = 'UTC';*/
 const http = require("http");
@@ -139,16 +140,18 @@ const buildImage = ({ srcDir, networkUrl }) => {
         return Promise.reject(err);
     });
 };
-exports.streamA = () => {
+const streamA = () => {
     buildImage({
         srcDir: irDir,
         networkUrl: 'http://www.sat24.com/image2.ashx?region=eu&ir=true'
     });
 };
-exports.streamB = () => {
+exports.streamA = streamA;
+const streamB = () => {
     buildImage({
         srcDir: viDir,
         networkUrl: 'https://en.sat24.com/image?type=visual&region=eu'
     });
 };
+exports.streamB = streamB;
 //# sourceMappingURL=save-image.cron.js.map

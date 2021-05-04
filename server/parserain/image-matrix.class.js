@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ImageMatrix = void 0;
 const color_const_1 = require("./color.const");
 const my_math_1 = require("./my-math");
 const get_direction_1 = require("./get-direction");

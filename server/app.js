@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.io = exports.app = void 0;
 const express = require("express");
 const http = require("http");
 const core_decorators_1 = require("../node_modules/core-decorators/lib/core-decorators");

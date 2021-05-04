@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 const keygen_1 = require("./keygen");
 const core_decorators_1 = require("core-decorators");
 const file_upload_1 = require("./file-upload");

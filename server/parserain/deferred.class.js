@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Deferred = void 0;
 class Deferred {
     constructor(i) {
         this._i = i;

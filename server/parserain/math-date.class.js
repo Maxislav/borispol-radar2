@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MathDate = void 0;
 class MathDate {
     getCurrentDate() {
         const d = new Date();

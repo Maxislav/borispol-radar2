@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.fileUpload = void 0;
 const path = require("path");
 //import * as Jimp from "jimp";
 const Jimp = require('jimp');
@@ -29,7 +30,7 @@ const getFileList = (p) => {
         });
     });
 };
-exports.fileUpload = ({ file }) => {
+const fileUpload = ({ file }) => {
     const pathToFile = path.resolve(__dirname, '../', rootDir, 'img/bg');
     return new es6_promise_1.Promise((resolve, reject) => {
         getFileList(pathToFile)
@@ -57,4 +58,5 @@ exports.fileUpload = ({ file }) => {
         });
     });
 };
+exports.fileUpload = fileUpload;
 //# sourceMappingURL=file-upload.js.map

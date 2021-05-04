@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Room = void 0;
 const app_1 = require("../app");
 const user_1 = require("./user");
 class Room extends Array {

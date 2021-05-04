@@ -54,7 +54,7 @@ function getUkbb(res) {
 const timeoutPromise = () => {
     return new Promise((res) => {
         setTimeout(() => {
-            res()
+            res(true)
         }, 500)
     })
 };

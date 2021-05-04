@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ImageColor = void 0;
 class ImageColor extends Array {
     /**
      * @param {...number} args

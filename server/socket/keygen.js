@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.hashGen = void 0;
 const getRandom = (min, max, int) => {
     var rand = min + Math.random() * (max - min);
     if (int) {
@@ -7,7 +8,7 @@ const getRandom = (min, max, int) => {
     }
     return rand;
 };
-exports.hashGen = () => {
+const hashGen = () => {
     const $possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let hash = '';
     for (let i = 0; i < 32; i++) {
@@ -15,4 +16,5 @@ exports.hashGen = () => {
     }
     return hash;
 };
+exports.hashGen = hashGen;
 //# sourceMappingURL=keygen.js.map

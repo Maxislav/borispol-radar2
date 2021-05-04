@@ -25,14 +25,17 @@ Download files from ~/dist/* to you work dir
 ~$ webpack --mode production
 ```
 
-### Debug   //localhost:8080
+### Run Debug   //localhost:8080
 
 ```
-~$ npm i webpack-dev-server -g
-~$ webpack-dev-server
+~$ webpack-dev-server --open
 ~$ node server/borispol-radar.ts --rootdir ../dist  --port 8090
+```
+#### Run dev npm command
+```
 ~$ npm run tsc-be:w
-
+~$ npm run build-dev-ui
+~$ npm run server-static-dev
 ```
 
 

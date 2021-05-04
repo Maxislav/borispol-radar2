@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.constantRadarColor = exports.ColorConstant = void 0;
 class ColorConstant extends Array {
     constructor() {
         super();

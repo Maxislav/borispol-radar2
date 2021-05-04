@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.appStatic = void 0;
 require("./constant/console-color");
 const console_key_1 = require("./utils/console-key");
 const fs = require("fs");

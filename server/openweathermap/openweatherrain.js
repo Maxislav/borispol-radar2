@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.rain = void 0;
 const Jimp = require("jimp");
 const dateFormat = require("dateformat");
+const es6_promise_1 = require("../../node_modules/es6-promise");
 const appid = '19e738728f18421f2074f369bdb54e81';
 const getMin = (date, offset) => {
     let m = new Date(date - 10 * 60 * 1000 - offset).getMinutes();
@@ -15,7 +17,7 @@ const getMin = (date, offset) => {
 };
 //https://b.sat.owm.io/maps/2.0/radar/7/75/43?appid=9de243494c0b295cca9337e1e96b00e2&day=2021-05-02T22:00
 function jimpCreate256() {
-    return new Promise((resolve) => {
+    return new es6_promise_1.Promise((resolve) => {
         new Jimp(512, 512, (err, image) => {
             resolve(image);
         });
@@ -38,25 +40,30 @@ function jimRead(url, count) {
     });
 }
 const loadRadar = () => {
-    return Promise.all([
+    return es6_promise_1.Promise.all([
+        jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/73/42`, 0),
         jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/74/42`, 0),
         jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/75/42`, 0),
+        jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/73/43`, 0),
         jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/74/43`, 0),
         jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/75/43`, 0),
     ])
         .catch(err => {
         console.error(err);
-        return Promise.reject(err);
+        return es6_promise_1.Promise.reject(err);
     });
 };
-exports.rain = (req, res, next) => {
-    loadRadar().then(([image1, image2, image3, image4]) => {
-        new Jimp(512, 512, (err, image) => {
+const rain = (req, res, next) => {
+    loadRadar().then(([image1, image2, image3, image4, image5, image6]) => {
+        new Jimp(768, 512, (err, image) => {
             // this image is 256 x 256, every pixel is set to 0x00000000
-            image.composite(image1, 0, 0)
+            image
+                .composite(image1, 0, 0)
                 .composite(image2, 256, 0)
-                .composite(image3, 0, 256)
-                .composite(image4, 256, 256)
+                .composite(image3, 512, 0)
+                .composite(image4, 0, 256)
+                .composite(image5, 256, 256)
+                .composite(image6, 512, 256)
                 .getBufferAsync(Jimp.MIME_PNG)
                 .then(buffer => {
                 res.header("Access-Control-Allow-Origin", "*");
@@ -76,4 +83,5 @@ exports.rain = (req, res, next) => {
         res.send('error', { error: err });
     });
 };
+exports.rain = rain;
 //# sourceMappingURL=openweatherrain.js.map
