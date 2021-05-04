@@ -14,5 +14,6 @@ app_1.app
     .get('/loadUkbbHistory', borispolhistory_1.history)
     .get('/parserain', parserain_1.parserain)
     .get('/openmap', openweathermap_1.map)
-    .get('/openrain', openweatherrain_1.rain);
+    .get('/openrain', openweatherrain_1.rain)
+    .get('/openrain/:step', openweatherrain_1.rain);
 //# sourceMappingURL=borispol-radar.js.map

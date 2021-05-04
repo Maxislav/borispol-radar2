@@ -41,6 +41,7 @@ export const map = (req: any, res: any, next: any) => {
                     .composite(image4, 0, 256)
                     .composite(image5, 256, 256)
                     .composite(image6, 512, 256)
+                    .crop(128, 0, 640, 512)
                     .getBufferAsync(Jimp.MIME_PNG)
                     .then((buffer: Buffer) => {
                         res.header("Access-Control-Allow-Origin", "*");

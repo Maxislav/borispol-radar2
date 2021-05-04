@@ -2,23 +2,25 @@
   width: 100%
   height 100%
   position relative
-  .layer-1, .layer-2{
-    left 0
-    top 0
-    position absolute
-    z-index 1
-    width 100%
+  .img-container.relative
+    width: 100%
     height 100%
-    padding 5px
-  }
-  .layer-2
-    z-index 2
-  .img-pen-map, .img-pen-rain
-
-    width 100%
-    height 100%
-
-    >img
+    position relative
+    .layer-1, .layer-2{
+      left 0
+      top 0
+      position absolute
+      z-index 1
       width 100%
       height 100%
+      padding 5px
+    }
+    .layer-2
+      z-index 2
+    .img-pen-map, .img-pen-rain
+      width 100%
+      height 100%
+      >img
+        width 100%
+        height 100%
 

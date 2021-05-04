@@ -14,6 +14,7 @@ app
     .get('/loadUkbbHistory', history)
     .get('/parserain', parserain)
     .get('/openmap', map)
-    .get('/openrain', rain);
+    .get('/openrain', rain)
+    .get('/openrain/:step', rain);
 
 

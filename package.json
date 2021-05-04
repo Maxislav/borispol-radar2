@@ -4,7 +4,7 @@
   "scripts": {
     "build-prod": "webpack --mode production",
     "build-dev-ui": "webpack-dev-server --open",
-    "server-static-dev": "node server/borispol-radar.js --rootdir ../dist --port 8090",
+    "server-static-dev": "node-dev server/borispol-radar.js --rootdir ../dist --port 8090",
     "tsc-be:w": "tsc -w --project tsconfig-be.json",
     "tsc-webpack-config:w": "tsc -w --project tsconfig-webpack.json"
   },
