@@ -39,6 +39,7 @@ import {SunshineComponent} from "./component/sunshine-component/sunshine-compone
 import {ToastPlugin} from "./plugin/ToastPlugin/toast.plugin";
 import './component/openweathermap-component/openweathermap.component.js'
 import {OpenWeatherMapComponent} from "./component/openweathermap-component/openweathermap.component";
+import {OpenweathermapPageComponent} from "./component/openweathermap-page.component/openweathermap-page.component";
 
 
 Vue.use(VueRouter);
@@ -52,7 +53,7 @@ Vue.use(ToastPlugin);
 
 const routes = [
     {path: '/home', component: HomeComponent},
-    {path: '/radar', component: OpenWeatherMapComponent},
+    {path: '/radar', component: OpenweathermapPageComponent},
     {path: '/ired', component: IredComponent},
     {path: '/visible', component: VisibleComponent},
     {path: '/meteosat', component: MeteosatComponent},
@@ -62,7 +63,7 @@ const routes = [
     {path: '/earth', component: EarthComponent},
     {path: '/sunshine', component: SunshineComponent},
     {path: '/gl', component: GLComponent},
-    {path: '/openweathermap', component: OpenWeatherMapComponent},
+    {path: '/openweathermap', component: OpenweathermapPageComponent},
     {
         path: '/forecast-item/:index',
         name: 'forecast-item',
