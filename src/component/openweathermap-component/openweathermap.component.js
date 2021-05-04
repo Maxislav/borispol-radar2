@@ -16,7 +16,7 @@ export const OpenWeatherMapComponent = Vue.component('openweathermap-component',
             suffix: '',
             variables: variables,
             mapUrl: urlCron.openmap,
-            rainUrl: urlCron.openrain,
+            rainUrl: `${urlCron.openrain}/1`,
             load: 0,
             onload: (val) => {
                 this.load = val
