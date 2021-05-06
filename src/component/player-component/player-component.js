@@ -176,6 +176,7 @@ export class Player {
 						this.process = false
 					}
 				})
+
 		}else{
 			this.k++
 		}
@@ -342,7 +343,7 @@ class Player2 extends Player{
 
 
 
-const dataComponent = {
+const palyerComponent = {
 	template: template(),
 	props: {
 		'prefix': String,
@@ -352,19 +353,18 @@ const dataComponent = {
 		'type': {
 			type: Number,
 			default: 1
-		}
+		},
+		'hideInitial':  HTMLElement
 	},
 	data: function (e, a) {
 
 		//console.log(this.type)
 		switch (this.type){
 			case 2:
-
 				this.player = new Player2(this, {
 					prefix: this.prefix,
 					suffix: this.suffix
 				});
-
 				break;
 			default :
 				this.player = new Player(this, {
@@ -376,10 +376,10 @@ const dataComponent = {
 		}
 
 		const player = this.player;
-
+		const this$ = this;
 		return {
 			process: player.process,
-			onPlay: player.play,
+			onPlay: player.play ,
 			onBack: player.back,
 			onForward: player.forward
 		}
@@ -403,4 +403,4 @@ const dataComponent = {
 };
 
 
-export default Vue.component('player-component', dataComponent)
+export default Vue.component('player-component', palyerComponent)
