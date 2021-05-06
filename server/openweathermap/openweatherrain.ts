@@ -28,8 +28,8 @@ function httpGet(url: string, count = 0): Promise<Buffer> {
     })
 }
 
-const getMin = (date: number, offset: number): string => {
-    let m = new Date(date - offset).getMinutes();
+const getMin = (date: number): string => {
+    let m = new Date(date).getMinutes();
     while (m % 10) {
         m -= 1
     }
@@ -54,7 +54,7 @@ function jimRead(url: string, count: number) {
     const offset = (count-1) * 10 * 60 * 1000 + 10 * 60 * 1000;
     const date = d.getTime() + d.getTimezoneOffset() * 60 * 1000 - offset;
 
-    const day = dateFormat(date, 'yyyy-mm-dd').concat('T').concat(dateFormat(date, 'HH')).concat(':', getMin(date, offset));
+    const day = dateFormat(date, 'yyyy-mm-dd').concat('T').concat(dateFormat(date, 'HH')).concat(':', getMin(date));
     const query = `appid=${appid}&day=${day}`;
     const path = `${url}?${query}`;
     return httpGet(path)

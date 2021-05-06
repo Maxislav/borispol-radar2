@@ -26,8 +26,8 @@ function httpGet(url, count = 0) {
         });
     });
 }
-const getMin = (date, offset) => {
-    let m = new Date(date - offset).getMinutes();
+const getMin = (date) => {
+    let m = new Date(date).getMinutes();
     while (m % 10) {
         m -= 1;
     }
@@ -48,7 +48,7 @@ function jimRead(url, count) {
     let d = new Date();
     const offset = (count - 1) * 10 * 60 * 1000 + 10 * 60 * 1000;
     const date = d.getTime() + d.getTimezoneOffset() * 60 * 1000 - offset;
-    const day = dateFormat(date, 'yyyy-mm-dd').concat('T').concat(dateFormat(date, 'HH')).concat(':', getMin(date, offset));
+    const day = dateFormat(date, 'yyyy-mm-dd').concat('T').concat(dateFormat(date, 'HH')).concat(':', getMin(date));
     const query = `appid=${appid}&day=${day}`;
     const path = `${url}?${query}`;
     return httpGet(path)
