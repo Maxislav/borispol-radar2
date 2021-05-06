@@ -51,7 +51,7 @@ function jimpCreate256() {
 
 function jimRead(url: string, count: number) {
     let d = new Date();
-    const offset = (count-1) * 10 * 60 * 1000 + 5 * 60 * 1000;
+    const offset = (count-1) * 10 * 60 * 1000 + 8 * 60 * 1000;
     const date = d.getTime() + d.getTimezoneOffset() * 60 * 1000 - offset;
 
     const day = dateFormat(date, 'yyyy-mm-dd').concat('T').concat(dateFormat(date, 'HH')).concat(':', getMin(date, offset));
