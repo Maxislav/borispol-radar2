@@ -4,6 +4,9 @@ import './player-component.styl'
 import {Deferred} from '../../util/deferred';
 import {autobind, enumerable, extendDescriptor, lazyInitialize} from 'core-decorators';
 import {urlCron} from '../../config/congig-url'
+import {f} from './player.ts'
+
+
 /**
  *  @class
  */

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/jimp": "^0.2.28",
+    "awesome-typescript-loader": "^5.2.1",
     "compression": "^1.7.2",
     "core-decorators": "^0.15.0",
     "dateformat": "^2.0.0",
@@ -18,6 +19,7 @@
     "jimp": "^0.16.1",
     "join-images": "^0.2.5",
     "socket.io": "^2.0.4",
+    "ts-loader": "^9.1.2",
     "ws": "^3.2.0"
   },
   "devDependencies": {

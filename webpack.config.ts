@@ -26,14 +26,14 @@ const config = {
     output: {
         path: path.resolve(__dirname, "dist"),
         publicPath: "",
-       // filename: "borispol.radar.[name].[chunkhash].min.js",
+        // filename: "borispol.radar.[name].[chunkhash].min.js",
         filename: "borispol.radar.[name].min.js",
         //chunkFilename: "borispol.radar.[name].[chunkhash].min.js"
     },
     watchOptions: {
         aggregateTimeout: 100
     },
-    mode: mode  == 'dev' ? 'development' :'production',
+    mode: mode == 'dev' ? 'development' : 'production',
     devtool: mode === 'dev' && 'source-map',
     plugins: [
         new Webpack.DefinePlugin({
@@ -62,7 +62,7 @@ const config = {
             {
                 from: './src/cron.sh'
             }
-        ], { copyUnmodified: true }),
+        ], {copyUnmodified: true}),
 
         new Webpack.WatchIgnorePlugin([
             path.resolve(__dirname, './src/img/'),
@@ -85,11 +85,15 @@ const config = {
                     /*preprocessor: (content: any, loaderContext: any) => {
                         return '';
                     },*/
-                  //  attributes: false,
-                  //  attrs: [':data-src']
+                    //  attributes: false,
+                    //  attrs: [':data-src']
                 }
             },
-            {test: /\.tsx?$/, loader: "ts-loader"},
+            {
+                test: /\.ts$/,
+                use: 'awesome-typescript-loader',
+                exclude: [ /node_modules/, /server/ ],
+            },
             {
                 test: /\.js$/,
                 //loader: 'babel-loader',
@@ -97,14 +101,14 @@ const config = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                       //  presets: ['@babel/preset-env', "@babel/preset-stage-1"],
-                        plugins: [ "@babel/plugin-proposal-export-default-from",
+                        //  presets: ['@babel/preset-env', "@babel/preset-stage-1"],
+                        plugins: ["@babel/plugin-proposal-export-default-from",
                             "@babel/plugin-proposal-logical-assignment-operators",
-                            ["@babel/plugin-proposal-optional-chaining", { "loose": false }],
-                            ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }],
-                            ["@babel/plugin-proposal-nullish-coalescing-operator", { "loose": false }],
+                            ["@babel/plugin-proposal-optional-chaining", {"loose": false}],
+                            ["@babel/plugin-proposal-pipeline-operator", {"proposal": "minimal"}],
+                            ["@babel/plugin-proposal-nullish-coalescing-operator", {"loose": false}],
                             "@babel/plugin-proposal-do-expressions",
-                           [ "@babel/plugin-proposal-decorators",  { "legacy": true }]
+                            ["@babel/plugin-proposal-decorators", {"legacy": true}]
                         ],
                     }
                 }

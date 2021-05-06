@@ -28,6 +28,7 @@ const config = {
         publicPath: "",
         // filename: "borispol.radar.[name].[chunkhash].min.js",
         filename: "borispol.radar.[name].min.js",
+        //chunkFilename: "borispol.radar.[name].[chunkhash].min.js"
     },
     watchOptions: {
         aggregateTimeout: 100
@@ -87,7 +88,11 @@ const config = {
                 //  attrs: [':data-src']
                 }
             },
-            { test: /\.tsx?$/, loader: "ts-loader" },
+            {
+                test: /\.ts$/,
+                use: 'awesome-typescript-loader',
+                exclude: [/node_modules/, /server/],
+            },
             {
                 test: /\.js$/,
                 //loader: 'babel-loader',
