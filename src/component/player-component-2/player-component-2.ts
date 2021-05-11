@@ -74,6 +74,7 @@ class Player {
 
     loadImageList() {
         const urls = this.getUrls()
+        debugger;
         return Promise.all(
             urls.map((url, i) => this.loadImage(url, i))
         )
