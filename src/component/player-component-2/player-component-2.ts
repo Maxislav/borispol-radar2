@@ -5,12 +5,11 @@ import style from './player-component-2.less';
 
 class Player {
     container: HTMLElement;
-    getUrls: () => string[];
     imageList: Array<MyHtmlElement> = [];
     private playing = false;
     loaded = false;
 
-    constructor() {
+    constructor(private getUrls: () => string[]) {
     }
 
     setContainer(c: HTMLElement) {
@@ -23,6 +22,7 @@ class Player {
         }
         if (!this.loaded) {
             // this.loading = true;
+            debugger
             return this.loadImageList()
                 .then(() => {
                     // this.loading = false;
@@ -105,8 +105,9 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
     data() {
         const $this = this;
 
-        const player = new Player();
-        player.getUrls = this.getUrlList;
+        const player = new Player( () => {
+            return this.getUrlList()
+        });
         return {
             scope: {
                 player: player
