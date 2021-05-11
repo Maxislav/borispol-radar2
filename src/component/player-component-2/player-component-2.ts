@@ -107,6 +107,7 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
         const $this = this;
 
         const player = new Player( () => {
+            console.log(this)
             return $this.getUrlList()
         });
         return {
