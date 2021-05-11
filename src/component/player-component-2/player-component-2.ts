@@ -108,7 +108,8 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
         console.log('sss->', this)
         const player = new Player( () => {
 
-            return $this.getUrlList()
+            // @ts-ignore
+            return $this.$attrs.getUrlList()
         });
         return {
             scope: {
