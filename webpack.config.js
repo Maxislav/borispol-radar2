@@ -35,7 +35,7 @@ const config = {
         aggregateTimeout: 100
     },
     mode: mode == 'dev' ? 'development' : 'production',
-    devtool: mode === 'dev' && 'source-map',
+    devtool: 'source-map',
     plugins: [
         new MiniCssExtractPlugin(),
         new Webpack.DefinePlugin({
