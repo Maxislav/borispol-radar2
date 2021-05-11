@@ -40,7 +40,7 @@ import {ToastPlugin} from "./plugin/ToastPlugin/toast.plugin";
 import './component/openweathermap-component/openweathermap.component.js'
 import {OpenWeatherMapComponent} from "./component/openweathermap-component/openweathermap.component";
 import {OpenweathermapPageComponent} from "./component/openweathermap-page.component/openweathermap-page.component";
-
+import {PlayerComponent2} from "./component/player-component-2/player-component-2"
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
@@ -63,6 +63,7 @@ const routes = [
     {path: '/earth', component: EarthComponent},
     {path: '/sunshine', component: SunshineComponent},
     {path: '/gl', component: GLComponent},
+    {path: '/test', component: PlayerComponent2},
     {path: '/openweathermap', component: OpenweathermapPageComponent},
     {
         path: '/forecast-item/:index',

@@ -7,11 +7,15 @@
             </div>
         </div>
         <div class="layer-2">
-            <div class="img-pen-rain" v-img="rainUrl">
-
+            <div class="img-pen-rain" v-img="rainUrl" ref="initialImage">
             </div>
-            <player-component :prefix="prefix" :suffix="suffix" :variables="variables"
-                              :onload="onload" ></player-component>
+            <div class="img-pen-rain" ref="container">
+            </div>
+            <player-component-2
+                    :container="container"
+                    :getUrlList="getUrlList"
+                    :start="start"
+            ></player-component-2>
         </div>
     </div>
 </div>

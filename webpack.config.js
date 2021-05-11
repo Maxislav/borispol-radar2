@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const Version = require('./plugin/version.js');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const getConsoleKey = (key) => {
     const regexp = new RegExp('\-\-'.concat(key).concat('$'));
     const index = process.argv.findIndex((it) => !!it.match(regexp));
@@ -36,6 +37,7 @@ const config = {
     mode: mode == 'dev' ? 'development' : 'production',
     devtool: mode === 'dev' && 'source-map',
     plugins: [
+        new MiniCssExtractPlugin(),
         new Webpack.DefinePlugin({
             NODE_ENV: JSON.stringify(mode),
         }),
@@ -68,7 +70,7 @@ const config = {
         ]),
     ],
     resolve: {
-        extensions: ['.js'],
+        extensions: ['.ts', '.js'],
         alias: {
             'vue$': mode == 'dev' ? 'vue/dist/vue.js' : 'vue/dist/vue.min.js',
             'vue-router$': 'vue-router/dist/vue-router.js'
@@ -132,6 +134,25 @@ const config = {
                 options: {
                 //limit: 10000
                 }
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                            importLoaders: 1,
+                            sourceMap: true
+                        },
+                    },
+                    {
+                        loader: 'less-loader',
+                    }
+                ],
             },
             {
                 test: /\.styl$/,
