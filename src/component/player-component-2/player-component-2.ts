@@ -98,7 +98,7 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
 
     props: [
         'container',
-        'getUrlList',
+        'geturllist',
         'start'
     ],
     template: template,
@@ -108,7 +108,7 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
         console.log('sss->', this)
         const player = new Player( () => {
 
-            return $this.getUrlList()
+            return $this.geturllist()
         });
         return {
             scope: {
