@@ -107,7 +107,7 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
         const $this = this;
 
         const player = new Player( () => {
-            return this.getUrlList()
+            return $this.getUrlList()
         });
         return {
             scope: {
