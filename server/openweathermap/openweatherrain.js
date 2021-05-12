@@ -100,6 +100,10 @@ const rain = (req, res, next) => {
                 const g = this.bitmap.data[idx + 1];
                 const b = this.bitmap.data[idx + 2];
                 const a = this.bitmap.data[idx + 3];
+                if (match(srcColor1, r, g, b)) {
+                    //   const c = Jimp.rgbaToInt(r, g, b, a)
+                    this.bitmap.data[idx + 3] = 100;
+                }
                 if (50 < g && r < 100) {
                     this.bitmap.data[idx + 1] = this.bitmap.data[idx + 1] - 80;
                     this.bitmap.data[idx + 2] = 255;

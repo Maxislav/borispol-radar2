@@ -117,10 +117,17 @@ export const rain = (req: any, res: any, next: any) => {
             const srcColor3 = Jimp.intToRGBA(0xBA00ff);
             srcImage.scan(0, 0, srcImage.bitmap.width, srcImage.bitmap.height, function (x, y, idx) {
                 // do your stuff..
+
+
                 const r = this.bitmap.data[idx + 0];
                 const g = this.bitmap.data[idx + 1];
                 const b = this.bitmap.data[idx + 2];
                 const a = this.bitmap.data[idx + 3];
+                if (match(srcColor1, r, g, b)) {
+                    //   const c = Jimp.rgbaToInt(r, g, b, a)
+
+                     this.bitmap.data[idx + 3] = 100;
+                }
                 if (50 < g && r < 100) {
                     this.bitmap.data[idx + 1] = this.bitmap.data[idx + 1] - 80;
                     this.bitmap.data[idx + 2] = 255
