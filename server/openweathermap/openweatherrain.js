@@ -100,16 +100,21 @@ const rain = (req, res, next) => {
                 const g = this.bitmap.data[idx + 1];
                 const b = this.bitmap.data[idx + 2];
                 const a = this.bitmap.data[idx + 3];
+                if (50 < g && r < 100) {
+                    this.bitmap.data[idx + 1] = this.bitmap.data[idx + 1] - 80;
+                    this.bitmap.data[idx + 2] = 255;
+                }
                 if (match(srcColor1, r, g, b)) {
                     //   const c = Jimp.rgbaToInt(r, g, b, a)
-                    this.bitmap.data[idx + 3] = 180;
+                    // this.bitmap.data[idx + 3] = 180;
                 }
                 if (match(srcColor3, r, g, b)) {
                     /*   this.bitmap.data[idx + 0] = 66;
                        this.bitmap.data[idx + 1] = 136;
                        this.bitmap.data[idx + 2] = 229;
                        this.bitmap.data[idx + 3] = 255;
-   */ }
+   */
+                }
             }, () => {
                 srcImage.getBufferAsync(Jimp.MIME_PNG)
                     .then(buffer => {
