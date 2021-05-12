@@ -8,10 +8,10 @@ interface IImage {
 }
 
 class Player {
-    container: HTMLElement;
-    imageList: Array<IImage> = [];
+    private container: HTMLElement;
+    private imageList: Array<IImage> = [];
     private playing = false;
-    loaded = false;
+    private loaded = false;
 
     constructor(private getUrls: () => string[]) {
     }
@@ -25,8 +25,6 @@ class Player {
             return
         }
         if (!this.loaded) {
-            // this.loading = true;
-            debugger
             return this.loadImageList()
                 .then(() => {
                     // this.loading = false;
@@ -65,9 +63,8 @@ class Player {
         this.imageList[index].img.$fadeTo(0, 1, 1200)
             .then(() => {
                 if (index !== 0) {
-                    this.imageList[index].img.$fadeTo(1, 0, 2000)
+                    this.imageList[index].img.$fadeTo(1, 0, 1200)
                 }
-
             })
     }
 
@@ -115,7 +112,7 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
     data() {
         const $this = this;
         console.log('sss->', this)
-        const player = new Player( () => {
+        const player = new Player(() => {
 
             return $this.geturllist()
         });
