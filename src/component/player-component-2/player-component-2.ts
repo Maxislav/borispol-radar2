@@ -2,10 +2,14 @@ import Vue from "vue";
 import template from './player-component-2.html';
 import style from './player-component-2.less';
 
+interface IImage {
+    index: number,
+    img: MyHtmlElement
+}
 
 class Player {
     container: HTMLElement;
-    imageList: Array<MyHtmlElement> = [];
+    imageList: Array<IImage> = [];
     private playing = false;
     loaded = false;
 
@@ -27,25 +31,28 @@ class Player {
                 .then(() => {
                     // this.loading = false;
                     this.loaded = true;
+                    this.imageList.sort((a, b) => {
+                        return a.index - b.index
+                    });
                     this.play()
                 })
         }
         this.playing = true;
         Promise.all(
-            this.imageList.map((img: MyHtmlElement, index) => {
+            this.imageList.map((iImage: IImage, index) => {
                 if (index === this.imageList.length - 1) {
-                    return img.$fadeTo(0, 1, 100)
+                    return iImage.img.$fadeTo(0, 1, 100)
                 }
-                return img.$fadeTo(1, 0, 100)
+                return iImage.img.$fadeTo(1, 0, 100)
             })
         )
             .then(() => {
                 let index = this.imageList.length;
                 const intervalId = setInterval(() => {
                     index--;
-                    this.fade(index)
+                    this.fade(index);
                     if (index < 1) {
-                        clearInterval(intervalId)
+                        clearInterval(intervalId);
                         this.playing = false;
                     }
 
@@ -55,10 +62,10 @@ class Player {
     }
 
     private fade(index: number) {
-        this.imageList[index].$fadeTo(0, 1, 1200)
+        this.imageList[index].img.$fadeTo(0, 1, 1200)
             .then(() => {
                 if (index !== 0) {
-                    this.imageList[index].$fadeTo(1, 0, 2000)
+                    this.imageList[index].img.$fadeTo(1, 0, 2000)
                 }
 
             })
@@ -73,8 +80,7 @@ class Player {
     }
 
     loadImageList() {
-        const urls = this.getUrls()
-        debugger;
+        const urls = this.getUrls();
         return Promise.all(
             urls.map((url, i) => this.loadImage(url, i))
         )
@@ -85,7 +91,10 @@ class Player {
         //  image.style.opacity = '0';
         return new Promise((resolve) => {
             image.onload = () => {
-                this.imageList.push(image as any)
+                this.imageList.push({
+                    index,
+                    img: image as any
+                });
                 resolve(image);
             };
             image.src = url;
