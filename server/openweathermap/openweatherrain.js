@@ -124,7 +124,12 @@ const rain = (req, res, next) => {
                        this.bitmap.data[idx + 3] = 255;
    */
                 }
-            }, () => {
+            }, (err) => {
+                if (err) {
+                    console.error('err scan ->>');
+                    res.status(500);
+                    res.send('error', { error: err });
+                }
                 srcImage.getBufferAsync(Jimp.MIME_PNG)
                     .then(buffer => {
                     res.header("Access-Control-Allow-Origin", "*");
@@ -132,7 +137,7 @@ const rain = (req, res, next) => {
                     res.send(buffer);
                 })
                     .catch(err => {
-                    console.error('err composite');
+                    console.error('err composite ->>');
                     res.status(500);
                     res.send('error', { error: err });
                 });
