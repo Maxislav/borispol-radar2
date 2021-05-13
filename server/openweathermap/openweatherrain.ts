@@ -155,6 +155,7 @@ export const rain = (req: any, res: any, next: any) => {
                     console.error('err scan ->>');
                     res.status(500);
                     res.send('error', {error: err});
+                    return;
                 }
                 srcImage.getBufferAsync(Jimp.MIME_PNG)
                     .then(buffer => {
