@@ -1,17 +1,20 @@
-<div class="openweathermap-component">
-    <div class="img-container relative">
-        <strip-loader v-bind:load="load"></strip-loader>
-        <div class="layer-1">
-            <div class="img-pen-map" v-img="mapUrl">
+<div class="openweathermap-component" v-bind:class="style['openweathermap-component']">
+    <div class="img-container relative" :class="style['img-container']">
+        <strip-loader v-bind:load="load" ></strip-loader>
+        <div class="layer-1" :class="style['layer-1']">
+            <div class="img-pen-map" v-img="mapUrl" :class="style['img-pen-rain']">
 
             </div>
         </div>
-        <div class="layer-2">
-            <div class="img-pen-rain" v-img="rainUrl" ref="initialImage">
+        <div class="layer-2"  :class="style['layer-2']">
+            <div class="img-pen-rain" v-img="rainUrl" :class="style['img-pen-rain']"  ref="initialImage" >
             </div>
-            <div class="img-pen-rain" ref="container">
+        </div>
+        <div class="layer-2"  :class="style['layer-2']">
+            <div class="img-pen-rain" ref="container" :class="style['img-pen-rain']">
             </div>
             <player-component-2
+                    :class="style['player-component-2']"
                     :container="container"
                     :geturllist="getUrlList"
                     :start="start"

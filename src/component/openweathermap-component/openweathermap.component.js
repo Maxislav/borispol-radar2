@@ -1,6 +1,6 @@
 import Vue from "vue";
 import template from './openweathermap.component.html';
-import './openweathermap.component.styl';
+import style from './openweathermap.component.less';
 import {urlCron} from '../../config/congig-url';
 
 export const OpenWeatherMapComponent = Vue.component('openweathermap-component', {
@@ -13,6 +13,7 @@ export const OpenWeatherMapComponent = Vue.component('openweathermap-component',
         const $this = this;
 
         return {
+            style,
             prefix: '',
             suffix: '',
             variables: variables,
