@@ -8,7 +8,7 @@ export const OpenWeatherMapComponent = Vue.component('openweathermap-component',
     data: function () {
         const arr = (() => {
             const a = [];
-            for(let i = 0 ; i< 24; i++){
+            for(let i = 1 ; i< 25; i++){
                 a.push(i)
             }
             return a
