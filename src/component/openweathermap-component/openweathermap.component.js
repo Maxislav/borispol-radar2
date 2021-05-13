@@ -6,17 +6,20 @@ import {urlCron} from '../../config/congig-url';
 export const OpenWeatherMapComponent = Vue.component('openweathermap-component', {
     template: template,
     data: function () {
-        const variables = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, val) => {
-            acc.push(urlCron.openrain.concat('/', val));
-            return acc
-        }, []);
+        const arr = (() => {
+            const a = [];
+            for(let i = 0 ; i< 24; i++){
+                a.push(i)
+            }
+            return a
+        })();
+
         const $this = this;
 
         return {
             style,
             prefix: '',
             suffix: '',
-            variables: variables,
             mapUrl: urlCron.openmap,
             rainUrl: `${urlCron.openrain}/1`,
             load: 0,
@@ -25,7 +28,7 @@ export const OpenWeatherMapComponent = Vue.component('openweathermap-component',
                 this.load = val
             },
             getUrlList(){
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, val) => {
+                return arr.reduce((acc, val) => {
                     acc.push(urlCron.openrain.concat('/', val));
                     return acc
                 }, [])
