@@ -82,6 +82,11 @@ const rain = (req, res, next) => {
     const stepBack = Number(req.params.step || 0);
     loadRadar(stepBack).then(([image1, image2, image3, image4, image5, image6]) => {
         new Jimp(768, 512, (err, image) => {
+            if (err) {
+                res.status(500);
+                res.send('error', { error: err });
+                return;
+            }
             // this image is 256 x 256, every pixel is set to 0x00000000
             const srcImage = image
                 .composite(image1, 0, 0)
