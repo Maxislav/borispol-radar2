@@ -63,7 +63,7 @@ class Player {
         this.imageList[index].img.$fadeTo(0, 1, 1200)
             .then(() => {
                 if (index !== 0) {
-                    this.imageList[index].img.$fadeTo(1, 0, 1200)
+                    this.imageList[index].img.$fadeTo(1, 0, 2000)
                 }
             })
     }
@@ -85,7 +85,7 @@ class Player {
 
     loadImage(url: string, index: number) {
         const image = new Image();
-        //  image.style.opacity = '0';
+          image.style.zIndex = String(100 - index);
         return new Promise((resolve) => {
             image.onload = () => {
                 this.imageList.push({
