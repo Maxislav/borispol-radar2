@@ -59,6 +59,10 @@ function jimRead(url: string, count: number) {
     const path = `${url}?${query}`;
     return httpGet(path)
         .then((buffer: Buffer) => {
+            if(!buffer?.length){
+                console.error('buffer null ->>>');
+                return  Promise.reject('err')
+            }
             return Jimp.read(buffer)
                 .then(img => {
                     console.info('success img will be for    ', path);
