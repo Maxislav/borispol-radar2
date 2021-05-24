@@ -6,15 +6,13 @@ export const RelocationWarning = Vue.component('relocation-warning', {
     data: function () {
         return {
             style,
-            display: true,
+            display: false,
             link: 'http://meteo-info.kiev.ua/#/home'
         }
     },
     mounted(){
         if(window.location.host.match(/borispol/)){
-            console.log(window.location.host);
             this.$set(this.$data, 'display', true)
         }
-
     }
 });
