@@ -41,6 +41,7 @@ import './component/openweathermap-component/openweathermap.component.js'
 import {OpenWeatherMapComponent} from "./component/openweathermap-component/openweathermap.component";
 import {OpenweathermapPageComponent} from "./component/openweathermap-page.component/openweathermap-page.component";
 import {PlayerComponent2} from "./component/player-component-2/player-component-2"
+import {RelocationWarning} from "./component/relocation-warning/relocation-warning";
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
