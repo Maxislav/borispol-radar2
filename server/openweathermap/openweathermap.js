@@ -41,7 +41,7 @@ const map = (req, res, next) => {
         });
     })
         .catch(err => {
-        console.error('err composite', 'cartodb-basemaps-b.global');
+        console.error('err composite', 'cartodb-basemaps-b.global', err);
         res.status(500);
         res.render('error', { error: err });
     });
