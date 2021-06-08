@@ -9,12 +9,12 @@ const Jimp = require('jimp');
 const map = (req, res, next) => {
     // httpGet('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/74/42.png')
     es6_promise_1.Promise.all([
-        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/73/42.png'),
-        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/74/42.png'),
-        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/75/42.png'),
-        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/73/43.png'),
-        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/74/43.png'),
-        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/75/43.png'),
+        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/73/42.png?appid=9de243494c0b295cca9337e1e96b00e2'),
+        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/74/42.png?appid=9de243494c0b295cca9337e1e96b00e2'),
+        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/75/42.png?appid=9de243494c0b295cca9337e1e96b00e2'),
+        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/73/43.png?appid=9de243494c0b295cca9337e1e96b00e2'),
+        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/74/43.png?appid=9de243494c0b295cca9337e1e96b00e2'),
+        Jimp.read('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/7/75/43.png?appid=9de243494c0b295cca9337e1e96b00e2'),
     ])
         .then(([image1, image2, image3, image4, image5, image6,]) => {
         new Jimp(768, 512, (err, image) => {
