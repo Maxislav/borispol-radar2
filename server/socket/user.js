@@ -13,6 +13,11 @@ exports.User = void 0;
 const keygen_1 = require("./keygen");
 const core_decorators_1 = require("core-decorators");
 const file_upload_1 = require("./file-upload");
+var A;
+(function (A) {
+    A[A["FIRST"] = 0] = "FIRST";
+    A[A["SECOND"] = 1] = "SECOND";
+})(A || (A = {}));
 var STATUS;
 (function (STATUS) {
     STATUS[STATUS["PENDING"] = 0] = "PENDING";
@@ -25,12 +30,12 @@ class User {
         this.room = room;
         this.id = socket.id;
         room.addUser(this);
-        console.log('connect', JSON.stringify(room.getUserList(), null));
+        console.log('connect', JSON.stringify(room.getUserList(), null, 4));
         this.socket.on('keygen', ({ key }) => {
             this.key = key || keygen_1.hashGen();
             this.emit('keygen', ({ key: this.key }));
             this.date = new Date();
-            console.log('keygen', JSON.stringify(room.getUserList(), null));
+            console.log('keygen', JSON.stringify(room.getUserList(), null, 4));
             room.defineUser(this);
             room.emitAll('uniq', ({
                 uniq: room.getUniqCount(),

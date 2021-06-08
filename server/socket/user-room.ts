@@ -1,14 +1,14 @@
 import { io } from '../app';
-import { User } from './user';
+import {IUser, User} from './user';
 //import { autobind } from '../../node_modules/core-decorators/lib/co';
 import { autobind } from '../../node_modules/core-decorators/src/core-decorators.js';
 
 
-export class Room<T> extends Array {
+export class Room extends Array<User> {
 
     today: Date;
     //defineTodayDate:
-    todayUserList: any; //Array<User> = [];
+    todayUserList: Array<User> = []; //Array<User> = [];
 
     constructor() {
         super();
@@ -32,17 +32,17 @@ export class Room<T> extends Array {
         return this.today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
     }
 
-    delUser(user: User): Room<any> {
+    delUser(user: User): Room {
         while (-1 < this.indexOf(user)) {
             const i = this.indexOf(user);
             this.splice(i, 1);
         }
-        return <Room<any>>this;
+        return this;
     }
 
 
     getUniqCount(): number {
-        const u: Array<number> = [];
+        const u: Array<string> = [];
         this.forEach(user => {
             if (user.key && u.indexOf(user.key) == -1) {
                 u.push(user.key);
@@ -78,8 +78,8 @@ export class Room<T> extends Array {
         }
     }
 
-    getUserList(userList: Room<any> | Array<any> = this): Array<any> {
-        return userList.map(user => ({
+    getUserList(userList: Array<User> = this): Array<IUser> {
+        return userList.map((user) => ({
             id: user.id,
             key: user.key,
             date: user.date
@@ -92,7 +92,7 @@ export class Room<T> extends Array {
 
 }
 
-const room: Room<User> = new Room();
+const room: Room = new Room();
 
 io.on('connect', (socket) => {
     new User(socket, room);

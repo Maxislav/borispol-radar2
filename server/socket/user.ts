@@ -2,7 +2,10 @@ import { Room } from './user-room';
 import { hashGen } from './keygen';
 import { autobind } from 'core-decorators';
 import { fileUpload } from './file-upload'
-
+enum A {
+    FIRST,
+    SECOND
+}
 type status = 1 | 2 | 3
 enum STATUS {
     PENDING = 0,
@@ -15,28 +18,34 @@ interface socketData{
     error: Error
     data: any
 }
-export class User{
+
+export interface IUser {
+    id: string;
+    key: string;
+    date: Date;
+}
+export class User implements IUser{
     public id: string;
     public key: string;
     public date: Date;
 
-    constructor(private socket, private room: Room<User>){
+    constructor(private socket, private room: Room){
         this.id = socket.id;
-        room.addUser(this)
-        console.log('connect', JSON.stringify(room.getUserList(), null))
+        room.addUser(this);
+        console.log('connect', JSON.stringify(room.getUserList(), null, 4));
 
         this.socket.on('keygen', ({key}) =>{
             this.key = key || hashGen();
             this.emit('keygen', ({key: this.key}));
             this.date = new Date();
-            console.log('keygen', JSON.stringify(room.getUserList(), null))
+            console.log('keygen', JSON.stringify(room.getUserList(), null, 4));
             room.defineUser(this);
             room.emitAll('uniq', ({
                 uniq: room.getUniqCount(),
                 connection: room.length,
                 today: room.getTodayUserList().length
             }))
-        })
+        });
         this.socket.on('file', (d) => {
             fileUpload(d)
                 .then(fileName => {
@@ -45,7 +54,7 @@ export class User{
                         hash: d.hash,
                         error: null,
                         data: fileName
-                    }
+                    };
 
                     socket.emit('file', resD)
                 })
@@ -58,7 +67,7 @@ export class User{
                         data: null
                     })
                 })
-        })
+        });
         this.on('disconnect', ()=>{
             room.delUser(this);
             console.log('disconnect', JSON.stringify(room.getUserList(), null));

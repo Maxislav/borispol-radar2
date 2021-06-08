@@ -6,6 +6,8 @@ const user_1 = require("./user");
 class Room extends Array {
     constructor() {
         super();
+        //defineTodayDate:
+        this.todayUserList = []; //Array<User> = [];
         // console.log(this.defineTodayDate)
         this.defineTodayDate();
         this.todayUserList = [];
@@ -62,7 +64,7 @@ class Room extends Array {
         }
     }
     getUserList(userList = this) {
-        return userList.map(user => ({
+        return userList.map((user) => ({
             id: user.id,
             key: user.key,
             date: user.date
