@@ -119,14 +119,14 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
         'container',
         'geturllist',
         'start',
-        'loadProgress'
+        'loadprogress'
     ],
     template: template,
 
     data() {
         const $this = this;
         console.log('sss->', this)
-        const player = new Player(this.geturllist, this.loadProgress);
+        const player = new Player(this.geturllist, this.loadprogress);
 
         return {
             scope: {
