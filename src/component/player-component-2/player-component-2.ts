@@ -8,12 +8,15 @@ interface IImage {
 }
 
 class Player {
+
     private container: HTMLElement;
     private imageList: Array<IImage> = [];
     private playing = false;
     private loaded = false;
+    private loadedCount = 0;
+    private urlList: Array<string>;
 
-    constructor(private getUrls: () => string[]) {
+    constructor(private getUrls: () => string[], private loadProgress: (progress: {loading: boolean, count: number}) => void) {
     }
 
     setContainer(c: HTMLElement) {
@@ -25,6 +28,10 @@ class Player {
             return
         }
         if (!this.loaded) {
+            this.loadProgress({
+                loading: true,
+                count: 0
+            });
             return this.loadImageList()
                 .then(() => {
                     // this.loading = false;
@@ -77,7 +84,7 @@ class Player {
     }
 
     loadImageList() {
-        const urls = this.getUrls();
+        const urls = this.urlList = this.getUrls();
         return Promise.all(
             urls.map((url, i) => this.loadImage(url, i))
         )
@@ -85,14 +92,20 @@ class Player {
 
     loadImage(url: string, index: number) {
         const image = new Image();
-          image.style.zIndex = String(100 - index);
+        image.style.zIndex = String(100 - index);
         return new Promise((resolve) => {
+
             image.onload = () => {
                 this.imageList.push({
                     index,
                     img: image as any
                 });
                 resolve(image);
+                this.loadedCount++;
+                this.loadProgress({
+                    loading: this.loadedCount < this.urlList.length,
+                    count: 100*this.loadedCount/this.urlList.length
+                })
             };
             image.src = url;
             this.container.appendChild(image)
@@ -105,17 +118,16 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
     props: [
         'container',
         'geturllist',
-        'start'
+        'start',
+        'loadProgress'
     ],
     template: template,
 
     data() {
         const $this = this;
         console.log('sss->', this)
-        const player = new Player(() => {
+        const player = new Player(this.geturllist, this.loadProgress);
 
-            return $this.geturllist()
-        });
         return {
             scope: {
                 player: player

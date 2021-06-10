@@ -2,7 +2,6 @@ import Vue from "vue";
 import template from './openweathermap.component.html';
 import style from './openweathermap.component.less';
 import {urlCron} from '../../config/congig-url';
-
 export const OpenWeatherMapComponent = Vue.component('openweathermap-component', {
     template: template,
     data: function () {
@@ -16,6 +15,7 @@ export const OpenWeatherMapComponent = Vue.component('openweathermap-component',
 
         const $this = this;
 
+
         return {
             style,
             prefix: '',
@@ -24,8 +24,12 @@ export const OpenWeatherMapComponent = Vue.component('openweathermap-component',
             rainUrl: `${urlCron.openrain}/1`,
             load: 0,
             container: null,
-            onload: (val) => {
-                this.load = val
+            stripVisible: false,
+            loadProgress:(val: {loading: boolean, count: number}) =>{
+               //  $this.load = val.count
+                this.$set(this.$data, 'load', val.count);
+                this.$set(this.$data, 'stripVisible', val.loading);
+                //console.log(val.loading)
             },
             getUrlList(){
                 return arr.reduce((acc, val) => {
@@ -34,13 +38,16 @@ export const OpenWeatherMapComponent = Vue.component('openweathermap-component',
                 }, [])
             },
             start(){
-                $this.$refs.initialImage.$fadeTo(1, 0, 500)
-            }
+                ($this.$refs.initialImage as any).$fadeTo(1, 0, 500)
+            },
+
         }
     },
 
     mounted () {
         this.$set(this.$data, 'container', this.$refs.container)
+
+
       //   console.log(this.$refs.container)
     },
 

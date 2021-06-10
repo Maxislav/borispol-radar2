@@ -11,6 +11,7 @@ import './directive/directive-img';
 import './directive/directive-random-background';
 import './component/forecast-component/forecast-day-component/forecast-day-component';
 import './directive/drag-and-drop.directive';
+import './directive/visible';
 
 import './component/ymetrika/ymetrika-component';
 import './filter/date'
@@ -37,7 +38,7 @@ import {EarthComponent} from './component/earth-component/earth-component'
 import VueResource from 'vue-resource'
 import {SunshineComponent} from "./component/sunshine-component/sunshine-component";
 import {ToastPlugin} from "./plugin/ToastPlugin/toast.plugin";
-import './component/openweathermap-component/openweathermap.component.js'
+import './component/openweathermap-component/openweathermap.component'
 import {OpenWeatherMapComponent} from "./component/openweathermap-component/openweathermap.component";
 import {OpenweathermapPageComponent} from "./component/openweathermap-page.component/openweathermap-page.component";
 import {PlayerComponent2} from "./component/player-component-2/player-component-2"

@@ -1,6 +1,6 @@
 <div class="openweathermap-component" v-bind:class="style['openweathermap-component']">
     <div class="img-container relative" :class="style['img-container']">
-        <strip-loader v-bind:load="load" ></strip-loader>
+        <strip-loader v-bind:load="load" v-visible="stripVisible" ></strip-loader>
         <div class="layer-1" :class="style['layer-1']">
             <div class="img-pen-map" v-img="mapUrl" :class="style['img-pen-rain']">
 
@@ -18,6 +18,7 @@
                     :container="container"
                     :geturllist="getUrlList"
                     :start="start"
+                    :loadProgress="loadProgress"
             ></player-component-2>
         </div>
     </div>

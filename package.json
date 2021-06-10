@@ -9,6 +9,7 @@
     "tsc-webpack-config:w": "tsc -w --project tsconfig-webpack.json"
   },
   "dependencies": {
+    "@reactivex/rxjs": "^6.6.7",
     "@types/jimp": "^0.2.28",
     "awesome-typescript-loader": "^5.2.1",
     "compression": "^1.7.2",
@@ -20,6 +21,7 @@
     "join-images": "^0.2.5",
     "less-loader": "7.3.0",
     "mini-css-extract-plugin": "^1.6.0",
+    "rxjs": "^7.1.0",
     "socket.io": "^2.0.4",
     "ts-loader": "^9.1.2",
     "vue-style-loader": "^4.1.3",
