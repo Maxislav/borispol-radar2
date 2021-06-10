@@ -46,9 +46,6 @@ export const OpenWeatherMapComponent = Vue.component('openweathermap-component',
 
     mounted () {
         this.$set(this.$data, 'container', this.$refs.container)
-
-
-      //   console.log(this.$refs.container)
     },
 
 });
