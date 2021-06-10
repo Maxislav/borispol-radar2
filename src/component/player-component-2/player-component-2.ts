@@ -16,7 +16,7 @@ class Player {
     private loadedCount = 0;
     private urlList: Array<string>;
 
-    constructor(private getUrls: () => string[], private loadProgress: (progress: {loading: boolean, count: number}) => void) {
+    constructor(private getUrls: () => string[], private loadProgress: (progress: {loading: boolean, value: number}) => void) {
     }
 
     setContainer(c: HTMLElement) {
@@ -30,7 +30,7 @@ class Player {
         if (!this.loaded) {
             this.loadProgress({
                 loading: true,
-                count: 0
+                value: 0
             });
             return this.loadImageList()
                 .then(() => {
@@ -104,7 +104,7 @@ class Player {
                 this.loadedCount++;
                 this.loadProgress({
                     loading: this.loadedCount < this.urlList.length,
-                    count: 100*this.loadedCount/this.urlList.length
+                    value: 100*this.loadedCount/this.urlList.length
                 })
             };
             image.src = url;

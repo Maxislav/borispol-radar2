@@ -25,10 +25,10 @@ export const OpenWeatherMapComponent = Vue.component('openweathermap-component',
             load: 0,
             container: null,
             stripVisible: false,
-            loadProgress:(val: {loading: boolean, count: number}) =>{
+            loadProgress:(progress: {loading: boolean, value: number}) =>{
                //  $this.load = val.count
-                this.$set(this.$data, 'load', val.count);
-                this.$set(this.$data, 'stripVisible', val.loading);
+                this.$set(this.$data, 'load', progress.value);
+                this.$set(this.$data, 'stripVisible', progress.loading);
                 //console.log(val.loading)
             },
             getUrlList(){
