@@ -31,8 +31,11 @@ export const parserain = (req, res, next) =>{
 
     const lat: string  =  query['lat'] ? query['lat'].toString() : '50.44701';
     const lng: string  = query['lng'] ? query['lng'].toString() : '30.49';
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify( {direction: 0, dist: 200, isRainy: false}, null, 3));
 
-    if (!hashDate[currentHash]) {
+    return ;
+    /*if (!hashDate[currentHash]) {
         hashDate[currentHash] = new Deferred(I);
 
         Jimp.read(path, function (err, image) {
@@ -57,9 +60,9 @@ export const parserain = (req, res, next) =>{
                 imageMatrix[x][y] = imageColor;
             });
 
-            /**
+            /!**
              * Удаление мусора
-             */
+             *!/
             for(let x = 20; x<26; x++){
                 for(let y = 460; y<480;y++){
                     imageMatrix[x][y] =  new ImageColor(204, 204, 204, 244);
@@ -99,5 +102,5 @@ export const parserain = (req, res, next) =>{
         .catch(err => {
             console.error('meteoinfo error', err);
             res.status(500).send({error: 'meteoinfo error'});
-        })
+        })*/
 };
