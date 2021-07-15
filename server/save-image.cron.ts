@@ -58,11 +58,9 @@ const creteDir = (path: string): Promise<string> => {
 
 const writeFile = (url: string, fileName: string): Promise<any> => {
     return new Promise((res, rej) => {
-        //fs.exists
         fs.stat(fileName, (err: ErrnoException, stat: Stats) => {
-            if (err == null){
-                rej('File exist')
-                    // file exist
+            if (err == null){ // file exist
+               return  rej('File exist')
             }
             else if (err.code == 'ENOENT') {
                 // file does not exist
@@ -120,6 +118,10 @@ const buildImage = ({
         })
         .then(fileName => {
             return writeFile(networkUrl, fileName)
+                .catch(e => {
+                    console.error(`Error write file -> ${fileName}`, e);
+                    return Promise.reject(e);
+                })
             // return writeFile("https://en.sat24.com/image?type=visual&region=eu", fileName)
         })
         .then((fileName) => {
@@ -131,9 +133,13 @@ const buildImage = ({
             return Promise.reject(err);
         })
         .then(()=>{
-            return new Promise((resolve)=>{
-                const filesForDel: string[] = []
+            return new Promise((resolve, reject)=>{
+                const filesForDel: string[] = [];
                 fs.readdir(viDir, (err, files) => {
+                    if(err){
+                        console.error('Error read dir->', err);
+                       return reject(err)
+                    }
                     files.forEach( (file: string) => {
                         const matches: number[] = file.match(new RegExp(patternDate)).slice(1).map(Number);
                         if(matches[1]) matches[1]--;
@@ -164,6 +170,9 @@ export const streamA = () => {
         srcDir: irDir,
         networkUrl: 'http://www.sat24.com/image2.ashx?region=eu&ir=true'
     })
+        .catch(e => {
+            console.error('Error save A -> ', e)
+        })
 };
 
 export const streamB = () => {
@@ -171,6 +180,9 @@ export const streamB = () => {
         srcDir: viDir,
         networkUrl: 'https://en.sat24.com/image?type=visual&region=eu'
     })
+        .catch(e => {
+            console.error('Error save B -> ', e)
+        })
 };
 
 
