@@ -120,13 +120,15 @@ const rain = (req, res, next) => {
                 res.header("Access-Control-Allow-Origin", "*");
                 res.header("Content-Type", "image/png");
                 res.send(buffer);
-                return es6_promise_1.Promise.resolve(null);
+                return promiseTimeout();
             })
                 .catch(err => {
                 console.error('err composite', 'c.sat.owm.io/maps/2.0/radar');
                 res.status(500);
                 res.send('error', { error: err });
-                return es6_promise_1.Promise.reject(err);
+                return promiseTimeout().then(() => {
+                    return es6_promise_1.Promise.reject(err);
+                });
             });
         };
         LOADERS.push({
@@ -137,6 +139,13 @@ const rain = (req, res, next) => {
     emit();
 };
 exports.rain = rain;
+function promiseTimeout() {
+    return new es6_promise_1.Promise((r) => {
+        setTimeout(() => {
+            r();
+        }, 1000);
+    });
+}
 function combineImage(image1, image2, image3, image4, image5, image6) {
     return new es6_promise_1.Promise((resolve, reject) => {
         new Jimp(768, 512, (err, image) => {
