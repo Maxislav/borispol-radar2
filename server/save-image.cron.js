@@ -56,8 +56,14 @@ const creteDir = (path) => {
 };
 const writeFile = (url, fileName) => {
     return new Promise((res, rej) => {
-        fs.exists(fileName, (bool) => {
-            if (!bool) {
+        //fs.exists
+        fs.stat(fileName, (err, stat) => {
+            if (err == null) {
+                rej('File exist');
+                // file exist
+            }
+            else if (err.code == 'ENOENT') {
+                // file does not exist
                 const file = fs.createWriteStream(fileName);
                 let client;
                 if (url.match(/^https/)) {
@@ -66,28 +72,35 @@ const writeFile = (url, fileName) => {
                 else {
                     client = http;
                 }
-                client.get(url, function (response) {
-                    console.log(response.statusCode);
-                    if (response.statusCode === 200) {
-                        response.pipe(file);
-                        file.on('close', function () {
-                            res(fileName); // close() is async, call cb after close completes.
-                        })
-                            .on('error', (err) => {
-                            rej(err);
-                        });
-                    }
-                    else {
-                        rej(`Error status code -> ${response.statusCode}`);
-                    }
-                })
-                    .on('error', (err) => {
-                    console.error('Error -> ', err);
-                    rej(err);
-                });
+                try {
+                    client.get(url, function (response) {
+                        console.log(response.statusCode);
+                        if (response.statusCode === 200) {
+                            response.pipe(file);
+                            file.on('close', function () {
+                                res(fileName); // close() is async, call cb after close completes.
+                            })
+                                .on('error', (err) => {
+                                rej(err);
+                            });
+                        }
+                        else {
+                            rej(`Error status code -> ${response.statusCode}`);
+                        }
+                    })
+                        .on('error', (err) => {
+                        console.error('Error -> ', err);
+                        rej(err);
+                    });
+                }
+                catch (e) {
+                    console.error('try catch we ->', e);
+                    rej(e);
+                }
             }
             else {
-                rej('File exist');
+                console.error(` ${JSON.stringify(err, null, 4)}`);
+                rej(`some error -> ${JSON.stringify(err, null, 4)}`);
             }
         });
     });
