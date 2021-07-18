@@ -116,7 +116,7 @@ class Wait {
                     setTimeout(() => {
                         this.isRunning = false;
                         this.run()
-                    }, 5000)
+                    }, 500)
                 })
         }
     }
