@@ -6,6 +6,7 @@ const dateFormat = require("dateformat");
 const es6_promise_1 = require("../../node_modules/es6-promise");
 const https = require("https");
 const appid = '19e738728f18421f2074f369bdb54e81';
+const SRC_COLOR_1 = Jimp.intToRGBA(0xFA64ff);
 function httpGet(url, count = 0) {
     return new es6_promise_1.Promise((res, rej) => {
         https.get(url, (resp) => {
@@ -82,19 +83,16 @@ const loadRadar = (step) => {
         return es6_promise_1.Promise.reject(err);
     });
 };
-const rain = (req, res, next) => {
-    const stepBack = Number(req.params.step || 0);
+const replaceColor = (imageList) => {
+    const [image1, image2, image3, image4, image5, image6] = imageList;
     const myImg = { img: null };
-    loadRadar(stepBack).then(([image1, image2, image3, image4, image5, image6]) => {
+    return new es6_promise_1.Promise((resolve, reject) => {
         new Jimp(768, 512, (err, image) => {
             if (err) {
-                res.status(500);
-                res.send('error', { error: err });
-                return;
+                return reject(err);
             }
             if (!image1 || !image2 || !image3 || !image4 || !image5 || !image6) {
-                res.send('error', { error: 'some image null' });
-                return;
+                return reject(new Error('some image null'));
             }
             // this image is 256 x 256, every pixel is set to 0x00000000
             myImg.img = image
@@ -105,58 +103,46 @@ const rain = (req, res, next) => {
                 .composite(image5, 256, 256)
                 .composite(image6, 512, 256)
                 .crop(128, 0, 640, 512);
-            const srcColor1 = Jimp.intToRGBA(0xFA64ff);
-            const srcColor2 = Jimp.intToRGBA(0xE600ff);
-            const srcColor3 = Jimp.intToRGBA(0xBA00ff);
             myImg.img.scan(0, 0, myImg.img.bitmap.width, myImg.img.bitmap.height, function (x, y, idx) {
-                // do your stuff..
                 const r = this.bitmap.data[idx + 0];
                 const g = this.bitmap.data[idx + 1];
                 const b = this.bitmap.data[idx + 2];
                 const a = this.bitmap.data[idx + 3];
-                if (match(srcColor1, r, g, b)) {
-                    //   const c = Jimp.rgbaToInt(r, g, b, a)
+                if (match(SRC_COLOR_1, r, g, b)) {
                     this.bitmap.data[idx + 3] = 100;
                 }
                 if (50 < g && r < 100) {
                     this.bitmap.data[idx + 1] = this.bitmap.data[idx + 1] - 80;
                     this.bitmap.data[idx + 2] = 255;
                 }
-                if (match(srcColor1, r, g, b)) {
-                    //   const c = Jimp.rgbaToInt(r, g, b, a)
-                    // this.bitmap.data[idx + 3] = 180;
-                }
-                if (match(srcColor3, r, g, b)) {
-                    /*   this.bitmap.data[idx + 0] = 66;
-                       this.bitmap.data[idx + 1] = 136;
-                       this.bitmap.data[idx + 2] = 229;
-                       this.bitmap.data[idx + 3] = 255;
-   */
-                }
             }, (err) => {
                 if (err) {
-                    console.error('err scan ->>');
-                    res.status(500);
-                    res.send('error', { error: err });
-                    return;
+                    return reject(new Error('err scan ->>'));
                 }
                 myImg.img.getBufferAsync(Jimp.MIME_PNG)
                     .then(buffer => {
-                    res.header("Access-Control-Allow-Origin", "*");
-                    res.header("Content-Type", "image/png");
-                    res.send(buffer);
-                    delete myImg.img;
+                    return resolve(buffer);
                 })
                     .catch(err => {
                     console.error('err composite ->>');
-                    res.status(500);
-                    res.send('error', { error: err });
+                    reject(new Error('err composite ->>'));
                 });
             });
         });
+    });
+};
+const rain = (req, res, next) => {
+    const stepBack = Number(req.params.step || 0);
+    const myImg = { img: null };
+    loadRadar(stepBack)
+        .then(replaceColor)
+        .then((buffer) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Content-Type", "image/png");
+        res.send(buffer);
     })
         .catch(err => {
-        console.error('err composite', 'c.sat.owm.io/maps/2.0/radar');
+        console.error(err);
         res.status(500);
         res.send('error', { error: err });
         delete myImg.img;
