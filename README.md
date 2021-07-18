@@ -51,4 +51,5 @@ node ./server/borispol-radar.js --rootdir ../dist --port 80
 ### prod pm2
 ```shell script
 pm2 start 'node /var/www/borispol-radar2/server/borispol-radar.js --rootdir ../dist' --name borispol  --max-memory-restart 5000M
+pm2 start "node /var/www/borispol-radar2/server/openweathermap/index.js" --name openrain
 ```

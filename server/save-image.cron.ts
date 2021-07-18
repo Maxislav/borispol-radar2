@@ -1,5 +1,6 @@
 /*declare const process: any;
 process.env.TZ = 'UTC';*/
+
 import * as http  from 'http';
 import * as fs from 'fs';
 import * as dateFormat from 'dateformat';
@@ -112,7 +113,7 @@ const buildImage = ({
     const viDir = srcDir
     return creteDir(viDir)
         .then(viDir => {
-            const d = new Date();
+            const d = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000);
             const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
             return path.resolve(viDir, dateFormat(dd, 'yyyymmddHH').concat('00.gif'))
         })

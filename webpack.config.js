@@ -46,6 +46,10 @@ const config = {
         }),
         new CopyWebpackPlugin([
             {
+                from: './dist/img/ir',
+                to: './img'
+            },
+            {
                 from: './src/img',
                 to: './img'
             },
@@ -203,10 +207,10 @@ const config = {
                 }
             },
             '/img/ir': {
-                target: 'http://www.borispol.kiev.ua'
+                target: 'http://localhost:8090'
             },
             '/img/vi': {
-                target: 'http://www.borispol.kiev.ua'
+                target: 'http://localhost:8090'
             }
         }
     }

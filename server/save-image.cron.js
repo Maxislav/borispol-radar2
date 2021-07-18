@@ -1,8 +1,8 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.streamB = exports.streamA = void 0;
 /*declare const process: any;
 process.env.TZ = 'UTC';*/
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.streamB = exports.streamA = void 0;
 const http = require("http");
 const fs = require("fs");
 const dateFormat = require("dateformat");
@@ -107,7 +107,7 @@ const buildImage = ({ srcDir, networkUrl }) => {
     const viDir = srcDir;
     return creteDir(viDir)
         .then(viDir => {
-        const d = new Date();
+        const d = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000);
         const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours());
         return path.resolve(viDir, dateFormat(dd, 'yyyymmddHH').concat('00.gif'));
     })

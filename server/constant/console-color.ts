@@ -49,6 +49,6 @@ Object.defineProperties(String.prototype, {
             return colors.FgRed.concat(this).concat(colors.Reset)
         }
     }
-})
+});
 
 export default colors;

@@ -1,12 +1,10 @@
 import * as Jimp from 'jimp'
 import * as dateFormat from 'dateformat';
-import {Promise} from 'es6-promise';
+import {Promise} from '../../node_modules/es6-promise';
 import {IncomingMessage} from "http";
 import * as https from "https";
 
 const appid = '19e738728f18421f2074f369bdb54e81';
-const LOADERS: {step: number, promise:() =>  Promise<Buffer>}[] = [];
-
 
 function httpGet(url: string, count = 0): Promise<Buffer> {
     return new Promise((res: any, rej: any) => {
@@ -61,17 +59,17 @@ function jimRead(url: string, count: number) {
     const path = `${url}?${query}`;
     return httpGet(path)
         .then((buffer: Buffer) => {
-            if (!buffer?.length) {
+            if(!buffer?.length){
                 console.error('buffer null ->>>');
-                return Promise.reject('err')
+                return  Promise.reject('err')
             }
             return Jimp.read(buffer)
                 .then(img => {
-                    // console.info('success img will be for    ', path);
+                    console.info('success img will be for    ', path);
                     return img;
                 })
                 .catch((err: Error) => {
-                    // console.warn('transparent img will be for', path);
+                    console.warn('transparent img will be for', path);
                     return jimpCreate256()
                 })
         })
@@ -96,98 +94,28 @@ const loadRadar = (step: number) => {
         })
 
 };
-let isWorking = false
-
-const emit = () => {
-    if(isWorking){
-        return;
-    }
-    if(LOADERS.length){
-        isWorking = true;
-        const [first] = LOADERS.splice(0, 1)
-        console.log(first.step)
-        first.promise()
-            .then(() => {
-                isWorking = false;
-                emit()
-            })
-            .catch(() => {
-                isWorking = false;
-                emit()
-            })
-    }else {
-        isWorking = false
-    }
-
-};
 
 export const rain = (req: any, res: any, next: any) => {
     const stepBack = Number(req.params.step || 0);
-    console.log('stepBack ->', stepBack);
+    loadRadar(stepBack).then(([
+                                  image1,
+                                  image2,
+                                  image3,
+                                  image4,
+                                  image5,
+                                  image6
+                              ]) => {
 
-    const loader = LOADERS.find(it => it.step === stepBack);
-    if(!loader){
-        const promise = (): Promise<Buffer> => {
-            return loadRadar(stepBack)
-                .then(([
-                           image1,
-                           image2,
-                           image3,
-                           image4,
-                           image5,
-                           image6
-                       ]) => {
-                    return combineImage(image1, image2, image3, image4, image5, image6)
-                })
-                .then((buffer: Buffer) => {
-                    res.header("Access-Control-Allow-Origin", "*");
-                    res.header("Content-Type", "image/png");
-                    res.send(buffer);
-                    return promiseTimeout();
-                })
-                .catch(err => {
-                    console.error('err composite', 'c.sat.owm.io/maps/2.0/radar');
-                    res.status(500);
-                    res.send('error', {error: err});
-                    return promiseTimeout().then(() => {
-                       return Promise.reject(err)
-                    })
-                })
-        };
-        LOADERS.push({
-            step: stepBack,
-            promise,
-        })
-    }
-    emit()
-};
 
-function promiseTimeout(): Promise<void> {
- return new Promise((r) => {
-     setTimeout(() => {
-         r()
-     }, 1000)
- })
-}
-
-function combineImage(image1, image2, image3, image4, image5, image6): Promise<Buffer> {
-
-    return new Promise((resolve, reject) => {
         new Jimp(768, 512, (err, image) => {
-            if (err) {
-                /* res.status(500);
-                 res.send('error', {error: err});*/
-                return reject({
-                    what: 0,
-                    error: err,
-                });
+            if(err){
+                res.status(500);
+                res.send('error', {error: err});
+                return;
             }
-            if (!image1 || !image2 || !image3 || !image4 || !image5 || !image6) {
-                //  res.send('error', {error: 'some image null'});
-                return reject({
-                    what: 1,
-                    error: 'some image null'
-                });
+            if(!image1 || !image2 || !image3 || !image4 || !image5 || !image6){
+                res.send('error', {error: 'some image null'});
+                return;
             }
             // this image is 256 x 256, every pixel is set to 0x00000000
             const srcImage = image
@@ -203,11 +131,16 @@ function combineImage(image1, image2, image3, image4, image5, image6): Promise<B
             const srcColor2 = Jimp.intToRGBA(0xE600ff);
             const srcColor3 = Jimp.intToRGBA(0xBA00ff);
             srcImage.scan(0, 0, srcImage.bitmap.width, srcImage.bitmap.height, function (x, y, idx) {
+                // do your stuff..
+
+
                 const r = this.bitmap.data[idx + 0];
                 const g = this.bitmap.data[idx + 1];
                 const b = this.bitmap.data[idx + 2];
                 const a = this.bitmap.data[idx + 3];
                 if (match(srcColor1, r, g, b)) {
+                    //   const c = Jimp.rgbaToInt(r, g, b, a)
+
                     this.bitmap.data[idx + 3] = 100;
                 }
                 if (50 < g && r < 100) {
@@ -216,6 +149,7 @@ function combineImage(image1, image2, image3, image4, image5, image6): Promise<B
                 }
                 if (match(srcColor1, r, g, b)) {
                     //   const c = Jimp.rgbaToInt(r, g, b, a)
+
                     // this.bitmap.data[idx + 3] = 180;
                 }
                 if (match(srcColor3, r, g, b)) {
@@ -223,40 +157,40 @@ function combineImage(image1, image2, image3, image4, image5, image6): Promise<B
                        this.bitmap.data[idx + 1] = 136;
                        this.bitmap.data[idx + 2] = 229;
                        this.bitmap.data[idx + 3] = 255;
-                     */
+   */
                 }
 
             }, (err) => {
-                if (err) {
+                if(err){
                     console.error('err scan ->>');
-                    // res.status(500);
-                    /// res.send('error', {error: err});
-                    return reject({
-                        what: 2,
-                        error: err
-                    });
+                    res.status(500);
+                    res.send('error', {error: err});
+                    return;
                 }
                 srcImage.getBufferAsync(Jimp.MIME_PNG)
                     .then(buffer => {
-
-                        resolve(buffer)
-                        /* res.header("Access-Control-Allow-Origin", "*");
-                         res.header("Content-Type", "image/png");
-                         res.send(buffer);*/
+                        res.header("Access-Control-Allow-Origin", "*");
+                        res.header("Content-Type", "image/png");
+                        res.send(buffer);
                     })
                     .catch(err => {
                         console.error('err composite ->>');
-                        reject({
-                            what: 3,
-                            error: err
-                        })
-
+                        res.status(500);
+                        res.send('error', {error: err});
                     });
             });
-        });
-    });
 
-}
+
+        });
+
+    })
+        .catch(err => {
+            console.error('err composite', 'c.sat.owm.io/maps/2.0/radar');
+            res.status(500);
+            res.send('error', {error: err});
+        })
+
+};
 
 
 function match(srcColor, r: number, g: number, b: number) {

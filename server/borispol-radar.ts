@@ -7,6 +7,7 @@ import './static';
 import './cron';
 import {map} from "./openweathermap/openweathermap";
 import {rain} from "./openweathermap/openweatherrain";
+import {proxyOpenRain} from "./openweathermap/proxy";
 
 
 app
@@ -15,6 +16,6 @@ app
     .get('/parserain', parserain)
     .get('/openmap', map)
     .get('/openrain', rain)
-    .get('/openrain/:step', rain);
+    .get('/openrain/:step', proxyOpenRain);
 
 

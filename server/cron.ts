@@ -10,7 +10,7 @@ class Alarmer {
     tick() {
 
         this.alarmDate = this.getAlarmDate();
-        this.timeout = this.getAlarmDate().getTime() -new Date().getTime();
+        this.timeout = this.getAlarmDate().getTime() - new Date().getTime();
         setTimeout(() => {
                 streamA();
                 streamB();
