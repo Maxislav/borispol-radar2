@@ -2,7 +2,7 @@ const pm2Config = {
     apps: [
         {
             name: 'openrain',
-            script: 'index.js',
+            script: './openweathermap/index.js',
             exec_mode: 'cluster_mode',
             instances: 1,
         },
