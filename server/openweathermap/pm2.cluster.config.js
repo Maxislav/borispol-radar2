@@ -4,6 +4,7 @@ const pm2Config = {
             name: 'openrain',
             script: './server/openweathermap/index.js',
             exec_mode: 'cluster_mode',
+            max_memory_restart: 100,
             instances: 1,
         },
     ],
