@@ -96,6 +96,34 @@ const loadRadar = (step: number) => {
 
 };
 
+class Wait {
+    public list = [];
+    private isRunning = false
+
+    public push(a: () => Promise<Buffer>) {
+        this.list.push(a);
+        this.run()
+    }
+    private run(){
+        if(this.isRunning){
+            return
+        }
+        if(this.list.length){
+            this.isRunning = true;
+            const [first] = this.list.splice(0, 1);
+            first()
+                .then(() => {
+                    setTimeout(() => {
+                        this.isRunning = false;
+                        this.run()
+                    }, 1000)
+                })
+        }
+    }
+}
+
+const wait = new Wait();
+
 const replaceColor = (imageList: Jimp[]) => {
     const [
         image1,
@@ -105,7 +133,7 @@ const replaceColor = (imageList: Jimp[]) => {
         image5,
         image6
     ] = imageList;
-    const myImg: {img?: Jimp} = {img: null};
+    const myImg: { img?: Jimp } = {img: null};
     return new Promise((resolve, reject) => {
         new Jimp(768, 512, (err, image: Jimp) => {
             if (err) {
@@ -143,7 +171,7 @@ const replaceColor = (imageList: Jimp[]) => {
                     return reject(new Error('err scan ->>'));
                 }
                 myImg.img.getBufferAsync(Jimp.MIME_PNG)
-                    .then(buffer => {
+                    .then((buffer: Buffer) => {
                         return resolve(buffer)
                     })
                     .catch(err => {
@@ -153,29 +181,38 @@ const replaceColor = (imageList: Jimp[]) => {
             });
         });
     })
-};
 
+
+};
 
 
 export const rain = (req: any, res: any, next: any) => {
     const stepBack = Number(req.params.step || 0);
     const myImg: { img?: Jimp } = {img: null};
-    loadRadar(stepBack)
-        .then(replaceColor)
-        .then((buffer) => {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Content-Type", "image/png");
-            res.send(buffer);
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500);
-            res.send('error', {error: err});
-            delete myImg.img
-        })
+
+    const a = (): Promise<any> => {
+        return loadRadar(stepBack)
+            .then((imgList: Jimp[]) => {
+                return replaceColor(imgList)
+            })
+            .then((buffer) => {
+                res.header("Access-Control-Allow-Origin", "*");
+                res.header("Content-Type", "image/png");
+                res.send(buffer);
+                return true
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500);
+                res.send('error', {error: err});
+                delete myImg.img
+            })
+    };
+    wait.push(a)
+
+
 
 };
-
 
 function match(srcColor, r: number, g: number, b: number) {
     return r < srcColor.r + 10 && srcColor.r - 10 < r && g < srcColor.g + 10 && srcColor.g - 10 < g && b < srcColor.b + 10 && srcColor.b - 10 < b

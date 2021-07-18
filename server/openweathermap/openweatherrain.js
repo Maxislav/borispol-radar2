@@ -83,6 +83,33 @@ const loadRadar = (step) => {
         return es6_promise_1.Promise.reject(err);
     });
 };
+class Wait {
+    constructor() {
+        this.list = [];
+        this.isRunning = false;
+    }
+    push(a) {
+        this.list.push(a);
+        this.run();
+    }
+    run() {
+        if (this.isRunning) {
+            return;
+        }
+        if (this.list.length) {
+            this.isRunning = true;
+            const [first] = this.list.splice(0, 1);
+            first()
+                .then(() => {
+                setTimeout(() => {
+                    this.isRunning = false;
+                    this.run();
+                }, 1000);
+            });
+        }
+    }
+}
+const wait = new Wait();
 const replaceColor = (imageList) => {
     const [image1, image2, image3, image4, image5, image6] = imageList;
     const myImg = { img: null };
@@ -120,7 +147,7 @@ const replaceColor = (imageList) => {
                     return reject(new Error('err scan ->>'));
                 }
                 myImg.img.getBufferAsync(Jimp.MIME_PNG)
-                    .then(buffer => {
+                    .then((buffer) => {
                     return resolve(buffer);
                 })
                     .catch(err => {
@@ -134,19 +161,25 @@ const replaceColor = (imageList) => {
 const rain = (req, res, next) => {
     const stepBack = Number(req.params.step || 0);
     const myImg = { img: null };
-    loadRadar(stepBack)
-        .then(replaceColor)
-        .then((buffer) => {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Content-Type", "image/png");
-        res.send(buffer);
-    })
-        .catch(err => {
-        console.error(err);
-        res.status(500);
-        res.send('error', { error: err });
-        delete myImg.img;
-    });
+    const a = () => {
+        return loadRadar(stepBack)
+            .then((imgList) => {
+            return replaceColor(imgList);
+        })
+            .then((buffer) => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Content-Type", "image/png");
+            res.send(buffer);
+            return true;
+        })
+            .catch(err => {
+            console.error(err);
+            res.status(500);
+            res.send('error', { error: err });
+            delete myImg.img;
+        });
+    };
+    wait.push(a);
 };
 exports.rain = rain;
 function match(srcColor, r, g, b) {
