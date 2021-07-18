@@ -84,6 +84,7 @@ const loadRadar = (step) => {
 };
 const rain = (req, res, next) => {
     const stepBack = Number(req.params.step || 0);
+    const myImg = { img: null };
     loadRadar(stepBack).then(([image1, image2, image3, image4, image5, image6]) => {
         new Jimp(768, 512, (err, image) => {
             if (err) {
@@ -96,7 +97,7 @@ const rain = (req, res, next) => {
                 return;
             }
             // this image is 256 x 256, every pixel is set to 0x00000000
-            const srcImage = image
+            myImg.img = image
                 .composite(image1, 0, 0)
                 .composite(image2, 256, 0)
                 .composite(image3, 512, 0)
@@ -107,7 +108,7 @@ const rain = (req, res, next) => {
             const srcColor1 = Jimp.intToRGBA(0xFA64ff);
             const srcColor2 = Jimp.intToRGBA(0xE600ff);
             const srcColor3 = Jimp.intToRGBA(0xBA00ff);
-            srcImage.scan(0, 0, srcImage.bitmap.width, srcImage.bitmap.height, function (x, y, idx) {
+            myImg.img.scan(0, 0, myImg.img.bitmap.width, myImg.img.bitmap.height, function (x, y, idx) {
                 // do your stuff..
                 const r = this.bitmap.data[idx + 0];
                 const g = this.bitmap.data[idx + 1];
@@ -139,11 +140,12 @@ const rain = (req, res, next) => {
                     res.send('error', { error: err });
                     return;
                 }
-                srcImage.getBufferAsync(Jimp.MIME_PNG)
+                myImg.img.getBufferAsync(Jimp.MIME_PNG)
                     .then(buffer => {
                     res.header("Access-Control-Allow-Origin", "*");
                     res.header("Content-Type", "image/png");
                     res.send(buffer);
+                    delete myImg.img;
                 })
                     .catch(err => {
                     console.error('err composite ->>');
@@ -157,6 +159,7 @@ const rain = (req, res, next) => {
         console.error('err composite', 'c.sat.owm.io/maps/2.0/radar');
         res.status(500);
         res.send('error', { error: err });
+        delete myImg.img;
     });
 };
 exports.rain = rain;

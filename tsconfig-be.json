@@ -8,7 +8,7 @@
     "removeComments": false,
     "rootDir": "./server",
     "outDir": "server/",
-    "typeRoots" : ["./typings"],
+    "typeRoots" : ["./typings", "./node_modules/jimp/types"],
     "types": [
       "node"
     ]

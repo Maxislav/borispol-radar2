@@ -3,7 +3,6 @@ import * as dateFormat from 'dateformat';
 import {Promise} from '../../node_modules/es6-promise';
 import {IncomingMessage} from "http";
 import * as https from "https";
-
 const appid = '19e738728f18421f2074f369bdb54e81';
 
 function httpGet(url: string, count = 0): Promise<Buffer> {
@@ -97,6 +96,7 @@ const loadRadar = (step: number) => {
 
 export const rain = (req: any, res: any, next: any) => {
     const stepBack = Number(req.params.step || 0);
+    const myImg: {img?: Jimp} = {img: null};
     loadRadar(stepBack).then(([
                                   image1,
                                   image2,
@@ -107,7 +107,7 @@ export const rain = (req: any, res: any, next: any) => {
                               ]) => {
 
 
-        new Jimp(768, 512, (err, image) => {
+        new Jimp(768, 512, (err, image: Jimp) => {
             if(err){
                 res.status(500);
                 res.send('error', {error: err});
@@ -118,7 +118,7 @@ export const rain = (req: any, res: any, next: any) => {
                 return;
             }
             // this image is 256 x 256, every pixel is set to 0x00000000
-            const srcImage = image
+            myImg.img = image
                 .composite(image1, 0, 0)
                 .composite(image2, 256, 0)
                 .composite(image3, 512, 0)
@@ -130,7 +130,7 @@ export const rain = (req: any, res: any, next: any) => {
             const srcColor1 = Jimp.intToRGBA(0xFA64ff);
             const srcColor2 = Jimp.intToRGBA(0xE600ff);
             const srcColor3 = Jimp.intToRGBA(0xBA00ff);
-            srcImage.scan(0, 0, srcImage.bitmap.width, srcImage.bitmap.height, function (x, y, idx) {
+            myImg.img.scan(0, 0, myImg.img.bitmap.width, myImg.img.bitmap.height, function (x, y, idx) {
                 // do your stuff..
 
 
@@ -167,11 +167,12 @@ export const rain = (req: any, res: any, next: any) => {
                     res.send('error', {error: err});
                     return;
                 }
-                srcImage.getBufferAsync(Jimp.MIME_PNG)
+                myImg.img.getBufferAsync(Jimp.MIME_PNG)
                     .then(buffer => {
                         res.header("Access-Control-Allow-Origin", "*");
                         res.header("Content-Type", "image/png");
                         res.send(buffer);
+                        delete myImg.img;
                     })
                     .catch(err => {
                         console.error('err composite ->>');
@@ -188,6 +189,7 @@ export const rain = (req: any, res: any, next: any) => {
             console.error('err composite', 'c.sat.owm.io/maps/2.0/radar');
             res.status(500);
             res.send('error', {error: err});
+            delete myImg.img
         })
 
 };
