@@ -170,13 +170,14 @@ const rain = (req, res, next) => {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Content-Type", "image/png");
             res.send(buffer);
-            return true;
+            return es6_promise_1.Promise.resolve(buffer);
         })
             .catch(err => {
             console.error(err);
             res.status(500);
             res.send('error', { error: err });
             delete myImg.img;
+            return null;
         });
     };
     wait.push(a);
