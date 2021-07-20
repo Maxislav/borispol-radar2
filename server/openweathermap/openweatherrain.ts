@@ -101,8 +101,10 @@ class Wait {
     private isRunning = false;
 
     public push(a: () => Promise<Buffer>) {
-        this.list.push(a);
-        this.run()
+
+        a()
+        /*this.list.push(a);
+        this.run()*/
     }
 
     private run() {
@@ -117,7 +119,7 @@ class Wait {
                     setTimeout(() => {
                         this.isRunning = false;
                         this.run()
-                    }, 500)
+                    }, 5)
                 })
         }
     }

@@ -89,8 +89,9 @@ class Wait {
         this.isRunning = false;
     }
     push(a) {
-        this.list.push(a);
-        this.run();
+        a();
+        /*this.list.push(a);
+        this.run()*/
     }
     run() {
         if (this.isRunning) {
@@ -104,7 +105,7 @@ class Wait {
                 setTimeout(() => {
                     this.isRunning = false;
                     this.run();
-                }, 500);
+                }, 5);
             });
         }
     }
