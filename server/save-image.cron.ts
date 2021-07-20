@@ -1,31 +1,39 @@
 /*declare const process: any;
 process.env.TZ = 'UTC';*/
 
-import * as http  from 'http';
+import * as http from 'http';
 import * as fs from 'fs';
 import * as dateFormat from 'dateformat';
 import * as path from "path";
 import * as  https from 'https'
-import { getConsoleKey } from './utils/console-key';
 import ErrnoException = NodeJS.ErrnoException;
 import {Stats} from "fs";
+import {deepCopy} from "./utils/deep-copy";
+
 const patternDate = '(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})';
 
-const rootDir = getConsoleKey('rootdir');
+const configFile = (process.env.NODE_ENV || 'prod').trim() == 'dev' ? 'server.config.dev.json' : 'server.config.prod.json';
+const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, configFile), 'utf8').toString());
+const port = config.port;
+const [rootDir] = deepCopy(config.rootDir);
+
 const irDir = path.resolve(__dirname, rootDir || './dist', 'img', 'ir');
 const viDir = path.resolve(__dirname, rootDir || './dist', 'img', 'vi');
+
 // 0 * * * * sh /home/max/www/borispol-radar2/server/cron.sh
 
 
-class FileSystem{
+class FileSystem {
     fs: any;
-    constructor(){
+
+    constructor() {
         this.fs = fs;
     }
-    unlink(filePath: string){
-       return new Promise((resolve, reject) => {
-            fs.unlink(filePath, (err) =>{
-                if(err) return reject(err);
+
+    unlink(filePath: string) {
+        return new Promise((resolve, reject) => {
+            fs.unlink(filePath, (err) => {
+                if (err) return reject(err);
                 resolve(filePath)
             })
         })
@@ -60,10 +68,9 @@ const creteDir = (path: string): Promise<string> => {
 const writeFile = (url: string, fileName: string): Promise<any> => {
     return new Promise((res, rej) => {
         fs.stat(fileName, (err: ErrnoException, stat: Stats) => {
-            if (err == null){ // file exist
-               return  rej('File exist')
-            }
-            else if (err.code == 'ENOENT') {
+            if (err == null) { // file exist
+                return rej('File exist')
+            } else if (err.code == 'ENOENT') {
                 // file does not exist
                 const file = fs.createWriteStream(fileName);
                 let client;
@@ -72,7 +79,7 @@ const writeFile = (url: string, fileName: string): Promise<any> => {
                 } else {
                     client = http
                 }
-                try{
+                try {
                     client.get(url, function (response) {
                         console.log(response.statusCode)
                         if (response.statusCode === 200) {
@@ -92,15 +99,14 @@ const writeFile = (url: string, fileName: string): Promise<any> => {
                             console.error('Error -> ', err);
                             rej(err)
                         });
-                }
-                catch (e) {
+                } catch (e) {
                     console.error('try catch we ->', e);
                     rej(e)
                 }
 
             } else {
                 console.error(` ${JSON.stringify(err, null, 4)}`);
-                rej(`some error -> ${JSON.stringify(err, null, 4)}` )
+                rej(`some error -> ${JSON.stringify(err, null, 4)}`)
             }
         })
     })
@@ -113,7 +119,7 @@ const buildImage = ({
     const viDir = srcDir
     return creteDir(viDir)
         .then(viDir => {
-            const d = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000);
+            const d = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000);
             const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
             return path.resolve(viDir, dateFormat(dd, 'yyyymmddHH').concat('00.gif'))
         })
@@ -133,19 +139,19 @@ const buildImage = ({
             console.log(err);
             return Promise.reject(err);
         })
-        .then(()=>{
-            return new Promise((resolve, reject)=>{
+        .then(() => {
+            return new Promise((resolve, reject) => {
                 const filesForDel: string[] = [];
                 fs.readdir(viDir, (err, files) => {
-                    if(err){
+                    if (err) {
                         console.error('Error read dir->', err);
-                       return reject(err)
+                        return reject(err)
                     }
-                    files.forEach( (file: string) => {
+                    files.forEach((file: string) => {
                         const matches: number[] = file.match(new RegExp(patternDate)).slice(1).map(Number);
-                        if(matches[1]) matches[1]--;
+                        if (matches[1]) matches[1]--;
                         const d: number = new Date(matches[0], matches[1], matches[2], matches[3], matches[4], matches[5], matches[6]).getTime();
-                        if((new Date().getTime() - d) > 24*3600*1000){
+                        if ((new Date().getTime() - d) > 24 * 3600 * 1000) {
                             filesForDel.push(file)
                         }
                         resolve(filesForDel)
@@ -154,13 +160,13 @@ const buildImage = ({
             })
 
         })
-        .then((filesForDel: string[])=>{
+        .then((filesForDel: string[]) => {
             console.log('filesForDel ->', filesForDel)
-            return Promise.all(filesForDel.map((file: string)=>{
+            return Promise.all(filesForDel.map((file: string) => {
                 return fileSystem.unlink(path.resolve(viDir, file))
             }))
         })
-        .catch(err=>{
+        .catch(err => {
             console.error(err);
             return Promise.reject(err)
         });

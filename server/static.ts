@@ -1,8 +1,9 @@
 import './constant/console-color'
-import { getConsoleKey } from './utils/console-key';
+// import { getConsoleKey } from './utils/console-key';
 import * as fs from 'fs';
 import * as path from 'path'
 import { defaultSetting } from './phplike/settingborispolradar';
+import {deepCopy} from "./utils/deep-copy";
 
 declare global {
     interface String {
@@ -24,9 +25,11 @@ let express = require('express'),
     https = require('https'),
     mime = require('mime'),
     compression = require('compression');
-const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'server.config.json'), 'utf8').toString());
-const port = getConsoleKey('port') || config.port;
-const rootDir = getConsoleKey('rootdir') ? [getConsoleKey('rootdir')] : deepCopy(config.rootPath);
+
+const configFile =  (process.env.NODE_ENV || 'prod').trim() == 'dev' ? 'server.config.dev.json' : 'server.config.prod.json';
+const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, configFile), 'utf8').toString());
+const port = config.port;
+const rootDir = deepCopy(config.rootDir);
 const app = express();
 app.set('port', port);
 app.use(compression({
@@ -35,6 +38,7 @@ app.use(compression({
     }
 }));
 
+console.log('process.env.NODE_ENV -> '.blue, process.env.NODE_ENV, config);
 
 http.createServer(app).listen(app.get('port'), () => {
     console.log((`>>>>>>>>>>>>>> Static Server start on port: ${port} <<<<<<<<<<<<<<<<`).blue);
@@ -261,15 +265,5 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function deepCopy(oldObj) {
-    let newObj = oldObj;
-    if (oldObj && typeof oldObj === 'object') {
-        newObj = Object.prototype.toString.call(oldObj) === '[object Array]' ? [] : {};
-        for (const i in oldObj) {
-            newObj[i] = deepCopy(oldObj[i]);
-        }
-    }
-    return newObj;
-}
 
 export { app as appStatic }

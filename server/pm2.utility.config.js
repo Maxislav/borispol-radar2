@@ -2,9 +2,13 @@ const pm2Config = {
     apps: [
         {
             name: 'borispol',
-            script: './server/borispol-radar.js --rootdir ../dist --port 80',
-            exec_mode: 'cluster_mode',
-            instances: 1,
+            script: './server/borispol-radar.js',
+            env_production: {
+                NODE_ENV: "prod"
+            },
+            env_development: {
+                NODE_ENV: "dev"
+            }
         },
     ],
 };

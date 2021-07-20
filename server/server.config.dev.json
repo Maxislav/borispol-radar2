@@ -1,0 +1,20 @@
+{
+  "port": 8090,
+  "rootDir": ["../dist"],
+  "proxies": [
+    {
+      "source": "^\/data.+",
+      "data": {
+        "hostname": "devdat.loyverse.com",
+        "port": 12739
+      }
+    },
+    {
+      "source": "^\/_tileloader.+",
+      "data": {
+        "hostname": "c.tile.openstreetmap.org",
+        "port": 80
+      }
+    }
+  ]
+}

@@ -2,15 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.appStatic = void 0;
 require("./constant/console-color");
-const console_key_1 = require("./utils/console-key");
+// import { getConsoleKey } from './utils/console-key';
 const fs = require("fs");
 const path = require("path");
 const settingborispolradar_1 = require("./phplike/settingborispolradar");
+const deep_copy_1 = require("./utils/deep-copy");
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 let express = require('express'), http = require('http'), url = require('url'), https = require('https'), mime = require('mime'), compression = require('compression');
-const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'server.config.json'), 'utf8').toString());
-const port = console_key_1.getConsoleKey('port') || config.port;
-const rootDir = console_key_1.getConsoleKey('rootdir') ? [console_key_1.getConsoleKey('rootdir')] : deepCopy(config.rootPath);
+const configFile = (process.env.NODE_ENV || 'prod').trim() == 'dev' ? 'server.config.dev.json' : 'server.config.prod.json';
+const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, configFile), 'utf8').toString());
+const port = config.port;
+const rootDir = deep_copy_1.deepCopy(config.rootDir);
 const app = express();
 exports.appStatic = app;
 app.set('port', port);
@@ -19,6 +21,7 @@ app.use(compression({
         return true;
     }
 }));
+console.log('process.env.NODE_ENV -> '.blue, process.env.NODE_ENV, config);
 http.createServer(app).listen(app.get('port'), () => {
     console.log((`>>>>>>>>>>>>>> Static Server start on port: ${port} <<<<<<<<<<<<<<<<`).blue);
 });
@@ -109,7 +112,7 @@ function sendFileSave(filePath, res, timeLong) {
             .catch(err => {
             console.log('Error 1326 - >', err);
         });
-    })(deepCopy(rootDir));
+    })(deep_copy_1.deepCopy(rootDir));
 }
 function isStat(filePath) {
     return new Promise((resolve, reject) => {
@@ -213,15 +216,5 @@ function proxiServ(request, response, _options, timeLong) {
 // использование Math.round() даст неравномерное распределение!
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function deepCopy(oldObj) {
-    let newObj = oldObj;
-    if (oldObj && typeof oldObj === 'object') {
-        newObj = Object.prototype.toString.call(oldObj) === '[object Array]' ? [] : {};
-        for (const i in oldObj) {
-            newObj[i] = deepCopy(oldObj[i]);
-        }
-    }
-    return newObj;
 }
 //# sourceMappingURL=static.js.map
