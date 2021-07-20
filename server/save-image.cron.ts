@@ -115,7 +115,7 @@ const buildImage = ({
                         networkUrl
                     }) => {
 
-    const viDir = srcDir
+    const viDir = srcDir;
     return creteDir(viDir)
         .then(viDir => {
             const d = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000);

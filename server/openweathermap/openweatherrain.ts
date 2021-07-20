@@ -104,11 +104,12 @@ class Wait {
         this.list.push(a);
         this.run()
     }
-    private run(){
-        if(this.isRunning){
+
+    private run() {
+        if (this.isRunning) {
             return
         }
-        if(this.list.length){
+        if (this.list.length) {
             this.isRunning = true;
             const [first] = this.list.splice(0, 1);
             first()
@@ -123,6 +124,8 @@ class Wait {
 }
 
 const wait = new Wait();
+
+console.log(   ffToRgb('#00a000'))
 
 const replaceColor = (imageList: Jimp[]) => {
     const [
@@ -158,15 +161,43 @@ const replaceColor = (imageList: Jimp[]) => {
                 const g = this.bitmap.data[idx + 1];
                 const b = this.bitmap.data[idx + 2];
                 const a = this.bitmap.data[idx + 3];
-                if (match(SRC_COLOR_1, r, g, b)) {
-                    this.bitmap.data[idx + 3] = 100;
+//#00E600 #00D300 #00BA00 #00A000 #008C00 #007800
+
+
+                const color1 = ffToRgb('#00FA64');
+                if (match(color1, [r,g,b,a])){
+                    this.bitmap.data[idx + 3] = 80
                 }
-                if (50 < g && r < 100) {
-                    this.bitmap.data[idx + 1] = this.bitmap.data[idx + 1] - 80;
-                    this.bitmap.data[idx + 2] = 255
+                if (match(ffToRgb('#00E600'), [r, g, b, a])) {
+                    this.bitmap.data[idx + 3] = 120
+                }
+                if (match(ffToRgb('#00D300'), [r, g, b, a])) {
+                   this.bitmap.data[idx + 3] = 130
+                }
+                if (match(ffToRgb('#00BA00'), [r, g, b, a])) {
+                   this.bitmap.data[idx + 3] = 180
+                }
+                if (match(ffToRgb('#00A000'), [r, g, b, a])) {
+                   this.bitmap.data[idx + 3] = 220
+                }
+                if (match(ffToRgb('#008C00'), [r, g, b, a])) {
+                   this.bitmap.data[idx + 3] = 230
+                }
+                if (match(ffToRgb('#007800'), [r, g, b, a])) {
+                    this.bitmap.data[idx + 3] = 250
                 }
 
-            }, (err) => {
+                    //#00FA64
+                    /*   if (match(SRC_COLOR_1, r, g, b)) {
+                           this.bitmap.data[idx + 3] = 100;
+                       }*/
+                    if (50 < g && r < 100) {
+                        this.bitmap.data[idx + 1] = this.bitmap.data[idx + 1] - 80;
+                        this.bitmap.data[idx + 2] = 255;
+                       // this.bitmap.data[idx + 3] = 180;
+                    }
+
+                    }, (err) => {
                 if (err) {
                     return reject(new Error('err scan ->>'));
                 }
@@ -210,9 +241,20 @@ export const rain = (req: any, res: any, next: any) => {
     wait.push(a)
 
 
-
 };
 
-function match(srcColor, r: number, g: number, b: number) {
+function ffToRgb(color: string) {
+    const [colorPars] = color.match(/[^#].+/g) || [null];
+    const colorArr = colorPars ? Array.from(colorPars) : [];
+    if (colorArr.length) {
+        const r = colorArr.splice(0, 2).join('');
+        const g = colorArr.splice(0, 2).join('');
+        const b = colorArr.splice(0, 2).join('');
+        return {r: parseInt(r, 16), g: parseInt(g, 16), b: parseInt(b, 16)}
+    } else return {r: 0, g: 0, b: 0}
+}
+
+function match(srcColor, data) {
+    const [r, g, b, a] = data
     return r < srcColor.r + 10 && srcColor.r - 10 < r && g < srcColor.g + 10 && srcColor.g - 10 < g && b < srcColor.b + 10 && srcColor.b - 10 < b
 }
