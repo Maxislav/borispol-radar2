@@ -1,6 +1,7 @@
 {
   "port": 80,
-  "rootDir": ["./"],
+  "rootDir": ["../"],
+  "saveImgDir": "./",
   "proxies": [
     {
       "source": "^\/data.+",

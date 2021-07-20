@@ -8,12 +8,10 @@ const fs = require("fs");
 const dateFormat = require("dateformat");
 const path = require("path");
 const https = require("https");
-const deep_copy_1 = require("./utils/deep-copy");
 const patternDate = '(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})';
 const configFile = (process.env.NODE_ENV || 'prod').trim() == 'dev' ? 'server.config.dev.json' : 'server.config.prod.json';
 const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, configFile), 'utf8').toString());
-const port = config.port;
-const [rootDir] = deep_copy_1.deepCopy(config.rootDir);
+const rootDir = config.saveImgDir;
 const irDir = path.resolve(__dirname, rootDir || './dist', 'img', 'ir');
 const viDir = path.resolve(__dirname, rootDir || './dist', 'img', 'vi');
 // 0 * * * * sh /home/max/www/borispol-radar2/server/cron.sh
