@@ -89,9 +89,8 @@ class Wait {
         this.isRunning = false;
     }
     push(a) {
-        a();
-        /*this.list.push(a);
-        this.run()*/
+        this.list.push(a);
+        this.run();
     }
     run() {
         if (this.isRunning) {

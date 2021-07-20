@@ -101,10 +101,8 @@ class Wait {
     private isRunning = false;
 
     public push(a: () => Promise<Buffer>) {
-
-        a()
-        /*this.list.push(a);
-        this.run()*/
+        this.list.push(a);
+        this.run()
     }
 
     private run() {
