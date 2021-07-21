@@ -110,6 +110,24 @@ class Wait {
     }
 }
 const wait = new Wait();
+const COLOR_LIST = [
+    ffToRgb('#00FA64'),
+    ffToRgb('#00E600'),
+    ffToRgb('#00D300'),
+    ffToRgb('#00BA00'),
+    ffToRgb('#00A000'),
+    ffToRgb('#008C00'),
+    ffToRgb('#007800')
+];
+const OPACITY_LIST = [
+    80,
+    120,
+    130,
+    180,
+    220,
+    230,
+    250,
+];
 console.log(ffToRgb('#00a000'));
 const replaceColor = (imageList) => {
     const [image1, image2, image3, image4, image5, image6] = imageList;
@@ -132,37 +150,14 @@ const replaceColor = (imageList) => {
                 .composite(image6, 512, 256)
                 .crop(128, 0, 640, 512);
             myImg.img.scan(0, 0, myImg.img.bitmap.width, myImg.img.bitmap.height, function (x, y, idx) {
-                const r = this.bitmap.data[idx + 0];
+                /*const r = this.bitmap.data[idx + 0];
                 const g = this.bitmap.data[idx + 1];
                 const b = this.bitmap.data[idx + 2];
-                const a = this.bitmap.data[idx + 3];
-                //#00E600 #00D300 #00BA00 #00A000 #008C00 #007800
-                const color1 = ffToRgb('#00FA64');
-                if (match(color1, [r, g, b, a])) {
-                    this.bitmap.data[idx + 3] = 80;
-                }
-                if (match(ffToRgb('#00E600'), [r, g, b, a])) {
-                    this.bitmap.data[idx + 3] = 120;
-                }
-                if (match(ffToRgb('#00D300'), [r, g, b, a])) {
-                    this.bitmap.data[idx + 3] = 130;
-                }
-                if (match(ffToRgb('#00BA00'), [r, g, b, a])) {
-                    this.bitmap.data[idx + 3] = 180;
-                }
-                if (match(ffToRgb('#00A000'), [r, g, b, a])) {
-                    this.bitmap.data[idx + 3] = 220;
-                }
-                if (match(ffToRgb('#008C00'), [r, g, b, a])) {
-                    this.bitmap.data[idx + 3] = 230;
-                }
-                if (match(ffToRgb('#007800'), [r, g, b, a])) {
-                    this.bitmap.data[idx + 3] = 250;
-                }
-                //#00FA64
-                /*   if (match(SRC_COLOR_1, r, g, b)) {
-                       this.bitmap.data[idx + 3] = 100;
-                   }*/
+                const a = this.bitmap.data[idx + 3];*/
+                const [r, g, b, a] = [0, 1, 2, 3].map((i) => {
+                    return this.bitmap.data[idx + i];
+                });
+                this.bitmap.data[idx + 3] = getOpacity([r, g, b, a]);
                 if (50 < g && r < 100) {
                     this.bitmap.data[idx + 1] = this.bitmap.data[idx + 1] - 80;
                     this.bitmap.data[idx + 2] = 255;
@@ -220,6 +215,18 @@ function ffToRgb(color) {
     }
     else
         return { r: 0, g: 0, b: 0 };
+}
+function getOpacity(data) {
+    const [r, g, b, a] = data;
+    let i = 255;
+    const m = COLOR_LIST.some((color, index) => {
+        i = index;
+        return match(color, [r, g, b]);
+    });
+    if (m) {
+        return OPACITY_LIST[i];
+    }
+    return a;
 }
 function match(srcColor, data) {
     const [r, g, b, a] = data;
