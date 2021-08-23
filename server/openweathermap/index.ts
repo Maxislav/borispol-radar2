@@ -7,6 +7,7 @@ const PORT = 8087;
 const server = express();
 new http.Server(server)
     .listen(PORT, () => {
+        console.log(`=== node version ${process.version}`.blue)
         console.log(`=== server open weather stated on port ${PORT} ===`.blue)
     });
 server

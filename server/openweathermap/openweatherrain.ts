@@ -2,14 +2,43 @@ import * as Jimp from 'jimp'
 import * as dateFormat from 'dateformat';
 import {Promise} from '../../node_modules/es6-promise';
 import {IncomingMessage} from "http";
-import * as https from "https";
+import * as http from "http";
 
 const appid = '19e738728f18421f2074f369bdb54e81';
 const SRC_COLOR_1 = Jimp.intToRGBA(0xFA64ff);
 
 function httpGet(url: string, count = 0): Promise<Buffer> {
     return new Promise((res: any, rej: any) => {
-        https.get(url, (resp: IncomingMessage) => {
+        const options = {
+            port: 80,
+            host: 'c.sat.owm.io',
+            path: url,
+            method: 'GET'
+        };
+        const proxyRequest = http.request(options);
+        const chunks = [];
+        proxyRequest.on('response', function (proxyResponse) {
+            proxyResponse.on('data', function (chunk) {
+                chunks.push(chunk)
+            });
+            proxyResponse.on('end', function () {
+                // res.send(Buffer.concat(chunks))
+                res(Buffer.concat(chunks))
+            });
+        });
+        proxyRequest.on('error', function (err) {
+            console.error('proxyOpenRain history err3 ->'.red, err);
+            rej(err)
+        });
+        proxyRequest.end();
+        /*req.on('data', function (chunk) {
+            proxyRequest.write(chunk, 'binary');
+        });
+        req.on('end', function () {
+            proxyRequest.end();
+        });*/
+
+        /*http.request(options, (resp: IncomingMessage) => {
             const chunks: Uint8Array[] = [];
             resp.on('data', (chunk: Uint8Array) => {
                 chunks.push(chunk)
@@ -25,7 +54,7 @@ function httpGet(url: string, count = 0): Promise<Buffer> {
             resp.on('error', function (err: Error) {
                 rej(err)
             });
-        })
+        })*/
     })
 }
 
@@ -81,12 +110,12 @@ const loadRadar = (step: number) => {
 
     return Promise.all(
         [
-            jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/73/42`, step),
-            jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/74/42`, step),
-            jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/75/42`, step),
-            jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/73/43`, step),
-            jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/74/43`, step),
-            jimRead(`https://c.sat.owm.io/maps/2.0/radar/7/75/43`, step),
+            jimRead(`/maps/2.0/radar/7/73/42`, step),
+            jimRead(`/maps/2.0/radar/7/74/42`, step),
+            jimRead(`/maps/2.0/radar/7/75/42`, step),
+            jimRead(`/maps/2.0/radar/7/73/43`, step),
+            jimRead(`/maps/2.0/radar/7/74/43`, step),
+            jimRead(`/maps/2.0/radar/7/75/43`, step),
         ]
     )
         .catch(err => {
