@@ -34,15 +34,14 @@ const httpGet = () => {
             });
         });
         proxyRequest.on('error', function (err) {
-            console.error('proxyOpenRain history err3 ->'.red, err);
+            console.error('meteo-gov-ua error ->'.red, err);
             rej(err);
         });
         proxyRequest.end();
     });
 };
 const meteoGovUa = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.hostname);
-    if (req.hostname.match(/(meteo-info\.kiev\.ua)|(localhost)/g)) {
+    if (req.hostname.match(/(178\.62\.44\.54)(meteo-info\.kiev\.ua)|(localhost)/g)) {
         res.header('Access-Control-Allow-Origin', '*');
         const d = (yield httpGet()).toString();
         const matchers = d.match(/time_radar\s?=\s?"(\d|\s|-)+/g);

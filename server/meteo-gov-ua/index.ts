@@ -21,16 +21,15 @@ const httpGet = () : Promise<Buffer> => {
             });
         });
         proxyRequest.on('error', function(err) {
-            console.error('proxyOpenRain history err3 ->'.red, err);
+            console.error('meteo-gov-ua error ->'.red, err);
             rej(err)
         });
         proxyRequest.end();
     })
-}
+};
 
 export const meteoGovUa = async (req: Request, res: Response, next: () => void) => {
-    console.log(req.hostname);
-    if (req.hostname.match(/(meteo-info\.kiev\.ua)|(localhost)/g)) {
+    if (req.hostname.match(/(178\.62\.44\.54)(meteo-info\.kiev\.ua)|(localhost)/g)) {
         res.header('Access-Control-Allow-Origin', '*');
         const d = (await httpGet()).toString();
         const matchers = d.match(/time_radar\s?=\s?"(\d|\s|-)+/g);
