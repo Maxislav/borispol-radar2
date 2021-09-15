@@ -29,6 +29,7 @@ const httpGet = () : Promise<Buffer> => {
 }
 
 export const meteoGovUa = async (req: Request, res: Response, next: () => void) => {
+    console.log(req.hostname);
     if (req.hostname.match(/(meteo-info\.kiev\.ua)|(localhost)/g)) {
         res.header('Access-Control-Allow-Origin', '*');
         const d = (await httpGet()).toString();
