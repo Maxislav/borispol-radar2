@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue from 'vue';
 import template from './openweathermap.component.html';
 import style from './openweathermap.component.less';
 import {urlCron} from '../../config/congig-url';

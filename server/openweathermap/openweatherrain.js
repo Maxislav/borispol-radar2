@@ -1,21 +1,24 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rain = void 0;
-const Jimp = require("jimp");
-const dateFormat = require("dateformat");
+const jimp_1 = __importDefault(require("jimp"));
+const dateformat_1 = __importDefault(require("dateformat"));
 const es6_promise_1 = require("../../node_modules/es6-promise");
-const http = require("http");
+const http_1 = __importDefault(require("http"));
 const appid = '19e738728f18421f2074f369bdb54e81';
-const SRC_COLOR_1 = Jimp.intToRGBA(0xFA64ff);
+const SRC_COLOR_1 = jimp_1.default.intToRGBA(0xFA64ff);
 function httpGet(url, count = 0) {
     return new es6_promise_1.Promise((res, rej) => {
         const options = {
             port: 80,
             host: 'c.sat.owm.io',
             path: url,
-            method: 'GET'
+            method: 'GET',
         };
-        const proxyRequest = http.request(options);
+        const proxyRequest = http_1.default.request(options);
         const chunks = [];
         proxyRequest.on('response', function (proxyResponse) {
             proxyResponse.on('data', function (chunk) {
@@ -69,7 +72,7 @@ const getMin = (date) => {
 //https://b.sat.owm.io/maps/2.0/radar/7/75/43?appid=9de243494c0b295cca9337e1e96b00e2&day=2021-05-02T22:00
 function jimpCreate256() {
     return new es6_promise_1.Promise((resolve) => {
-        new Jimp(512, 512, (err, image) => {
+        new jimp_1.default(512, 512, (err, image) => {
             resolve(image);
         });
     });
@@ -78,7 +81,7 @@ function jimRead(url, count) {
     let d = new Date();
     const offset = (count - 1) * 10 * 60 * 1000 + 10 * 60 * 1000;
     const date = d.getTime() + d.getTimezoneOffset() * 60 * 1000 - offset;
-    const day = dateFormat(date, 'yyyy-mm-dd').concat('T').concat(dateFormat(date, 'HH')).concat(':', getMin(date));
+    const day = dateformat_1.default(date, 'yyyy-mm-dd').concat('T').concat(dateformat_1.default(date, 'HH')).concat(':', getMin(date));
     const query = `appid=${appid}&day=${day}`;
     const path = `${url}?${query}`;
     return httpGet(path)
@@ -87,7 +90,7 @@ function jimRead(url, count) {
             console.error('buffer null ->>>');
             return es6_promise_1.Promise.reject('err');
         }
-        return Jimp.read(buffer)
+        return jimp_1.default.read(buffer)
             .then(img => {
             console.info('success img will be for    ', path);
             return img;
@@ -162,7 +165,7 @@ const replaceColor = (imageList) => {
     const [image1, image2, image3, image4, image5, image6] = imageList;
     const myImg = { img: null };
     return new es6_promise_1.Promise((resolve, reject) => {
-        new Jimp(768, 512, (err, image) => {
+        new jimp_1.default(768, 512, (err, image) => {
             if (err) {
                 return reject(err);
             }
@@ -196,7 +199,7 @@ const replaceColor = (imageList) => {
                 if (err) {
                     return reject(new Error('err scan ->>'));
                 }
-                myImg.img.getBufferAsync(Jimp.MIME_PNG)
+                myImg.img.getBufferAsync(jimp_1.default.MIME_PNG)
                     .then((buffer) => {
                     return resolve(buffer);
                 })

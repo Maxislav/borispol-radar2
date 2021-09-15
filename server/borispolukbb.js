@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.borispolukbb = void 0;
-const http = require("http");
+const http = require('http');
 const https = require('https');
 const DomParser = require('dom-parser');
 function httpGet(url, count = 0) {
@@ -58,7 +58,7 @@ const timeoutPromise = () => {
 };
 function borispolukbb(req, res, next, count = 25) {
     const ressss = res;
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Origin', '*');
     getUkbb(res)
         .catch((err) => {
         console.error('borispolukbb err 2 -> ', count, err);

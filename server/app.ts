@@ -1,28 +1,26 @@
-import * as express from 'express';
-import * as http from 'http';
-import {autobind} from '../node_modules/core-decorators/lib/core-decorators';
-import {Express} from "express";
-import * as socketIo from 'socket.io';
-
+import express from 'express';
+import {Express} from 'express';
+import  http from 'http';
+import socketIo from 'socket.io';
+import {autobind} from './utils/autobind';
 
 class App {
-    private readonly express: Express;
+    private readonly express: Express = express();
     private readonly server: any;
     public io: any;
 
     constructor(private port: number) {
-        this.express = express();
         this.server = new http.Server(this.express);
         this.io = socketIo(this.server);
         this.server.listen(port, this.serverStart)
     }
 
-    @autobind
+    @autobind()
     serverStart(): void {
         console.log(`->>>>>>>>>>>>>>>>>>>>> node server start on port: ${this.port} <<<<<<<<<<<<<<<<<<<<<<`.blue);
     }
 
-    public get(url, callback): App {
+    public get(url: string, callback: (req: any, res: any, next?: any) => any): App {
         this.express.get(url, callback);
         return this
     }

@@ -8,18 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.io = exports.app = void 0;
-const express = require("express");
-const http = require("http");
-const core_decorators_1 = require("../node_modules/core-decorators/lib/core-decorators");
-const socketIo = require("socket.io");
+const express_1 = __importDefault(require("express"));
+const http_1 = __importDefault(require("http"));
+const socket_io_1 = __importDefault(require("socket.io"));
+const autobind_1 = require("./utils/autobind");
 class App {
     constructor(port) {
         this.port = port;
-        this.express = express();
-        this.server = new http.Server(this.express);
-        this.io = socketIo(this.server);
+        this.express = express_1.default();
+        this.server = new http_1.default.Server(this.express);
+        this.io = socket_io_1.default(this.server);
         this.server.listen(port, this.serverStart);
     }
     serverStart() {
@@ -31,7 +34,7 @@ class App {
     }
 }
 __decorate([
-    core_decorators_1.autobind,
+    autobind_1.autobind(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)

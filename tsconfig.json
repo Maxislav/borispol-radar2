@@ -14,11 +14,13 @@
       "scripthost",
       "dom"
     ],
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types", "node_modules/vue/types"],
+    "skipLibCheck": true
   },
+  "skipLibCheck": true,
   "include": [
     "src/**/*",
     "declaration.d.ts"
   ],
-  "exclude": [     "node_modules" , "server"  ]
+  "exclude": ["node_modules" , "server" , "node_modules/@types/vue" ]
 }

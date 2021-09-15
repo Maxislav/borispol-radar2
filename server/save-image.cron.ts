@@ -1,14 +1,14 @@
 /*declare const process: any;
 process.env.TZ = 'UTC';*/
 
-import * as http from 'http';
-import * as fs from 'fs';
-import * as dateFormat from 'dateformat';
-import * as path from "path";
-import * as  https from 'https'
+import  http from 'http';
+import  fs from 'fs';
+import  dateFormat from 'dateformat';
+import  path from 'path';
+import  https from 'https'
 import ErrnoException = NodeJS.ErrnoException;
-import {Stats} from "fs";
-import {deepCopy} from "./utils/deep-copy";
+import {Stats} from 'fs';
+import {deepCopy} from './utils/deep-copy';
 
 const patternDate = '(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})';
 
@@ -57,7 +57,7 @@ function ensureExists(path, mask: any, cb): void {
 
 const creteDir = (path: string): Promise<string> => {
     return new Promise<string>((res, rej) => {
-        ensureExists(path, parseInt("0777", 8), (err) => {
+        ensureExists(path, parseInt('0777', 8), (err) => {
             if (err) return rej(err);
             res(path)
         })

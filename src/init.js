@@ -43,6 +43,8 @@ import {OpenWeatherMapComponent} from "./component/openweathermap-component/open
 import {OpenweathermapPageComponent} from "./component/openweathermap-page.component/openweathermap-page.component";
 import {PlayerComponent2} from "./component/player-component-2/player-component-2"
 import {RelocationWarning} from "./component/relocation-warning/relocation-warning";
+import {MeteoGovUaPageComponent} from './component/meteo-gov-ua-page-component/meteo-gov-ua-page-component';
+import './component/meteo-gov-ua-page-component/meteo-gov-ua-component/meteo-gov-ua-component.ts';
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
@@ -66,6 +68,10 @@ const routes = [
     {path: '/sunshine', component: SunshineComponent},
     {path: '/gl', component: GLComponent},
     {path: '/test', component: PlayerComponent2},
+    {
+        path: '/borispol',
+        component: MeteoGovUaPageComponent
+    },
     {path: '/openweathermap', component: OpenweathermapPageComponent},
     {
         path: '/forecast-item/:index',

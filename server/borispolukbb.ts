@@ -1,8 +1,9 @@
-import { IncomingMessage } from "http";
+import {IncomingMessage} from "http";
 
-const http = require("http");
+const http = require('http');
 const https = require('https');
 const DomParser = require('dom-parser');
+
 function httpGet<T>(url: string, count = 0) {
     return new Promise((res: any, rej: any) => {
         https.get(url, (resp: IncomingMessage) => {
@@ -62,16 +63,16 @@ const timeoutPromise = () => {
 export function borispolukbb(req: any, res: any, next: any, count = 25) {
 
     const ressss = res;
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Origin', '*');
     getUkbb(res)
 
         .catch((err: any) => {
-            console.error('borispolukbb err 2 -> ',count, err);
+            console.error('borispolukbb err 2 -> ', count, err);
             if (count) {
                 count--;
-               return  timeoutPromise()
-                    .then(()=>{
-                       return  borispolukbb(req, res, next, count)
+                return timeoutPromise()
+                    .then(() => {
+                        return borispolukbb(req, res, next, count)
                     })
             }
             ressss.end()

@@ -1,27 +1,30 @@
 "use strict";
 /*declare const process: any;
 process.env.TZ = 'UTC';*/
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.streamB = exports.streamA = void 0;
-const http = require("http");
-const fs = require("fs");
-const dateFormat = require("dateformat");
-const path = require("path");
-const https = require("https");
+const http_1 = __importDefault(require("http"));
+const fs_1 = __importDefault(require("fs"));
+const dateformat_1 = __importDefault(require("dateformat"));
+const path_1 = __importDefault(require("path"));
+const https_1 = __importDefault(require("https"));
 const patternDate = '(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})';
 const configFile = (process.env.NODE_ENV || 'prod').trim() == 'dev' ? 'server.config.dev.json' : 'server.config.prod.json';
-const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, configFile), 'utf8').toString());
+const config = JSON.parse(fs_1.default.readFileSync(path_1.default.resolve(__dirname, configFile), 'utf8').toString());
 const rootDir = config.saveImgDir;
-const irDir = path.resolve(__dirname, rootDir, './dist', 'img', 'ir');
-const viDir = path.resolve(__dirname, rootDir, './dist', 'img', 'vi');
+const irDir = path_1.default.resolve(__dirname, rootDir, './dist', 'img', 'ir');
+const viDir = path_1.default.resolve(__dirname, rootDir, './dist', 'img', 'vi');
 // 0 * * * * sh /home/max/www/borispol-radar2/server/cron.sh
 class FileSystem {
     constructor() {
-        this.fs = fs;
+        this.fs = fs_1.default;
     }
     unlink(filePath) {
         return new Promise((resolve, reject) => {
-            fs.unlink(filePath, (err) => {
+            fs_1.default.unlink(filePath, (err) => {
                 if (err)
                     return reject(err);
                 resolve(filePath);
@@ -35,7 +38,7 @@ function ensureExists(path, mask, cb) {
         cb = mask;
         mask = parseInt("0777", 8);
     }
-    fs.mkdir(path, mask, function (err) {
+    fs_1.default.mkdir(path, mask, function (err) {
         if (err) {
             if (err.code == 'EEXIST')
                 cb(null); // ignore the error if the folder already exists
@@ -48,7 +51,7 @@ function ensureExists(path, mask, cb) {
 }
 const creteDir = (path) => {
     return new Promise((res, rej) => {
-        ensureExists(path, parseInt("0777", 8), (err) => {
+        ensureExists(path, parseInt('0777', 8), (err) => {
             if (err)
                 return rej(err);
             res(path);
@@ -57,19 +60,19 @@ const creteDir = (path) => {
 };
 const writeFile = (url, fileName) => {
     return new Promise((res, rej) => {
-        fs.stat(fileName, (err, stat) => {
+        fs_1.default.stat(fileName, (err, stat) => {
             if (err == null) { // file exist
                 return rej('File exist');
             }
             else if (err.code == 'ENOENT') {
                 // file does not exist
-                const file = fs.createWriteStream(fileName);
+                const file = fs_1.default.createWriteStream(fileName);
                 let client;
                 if (url.match(/^https/)) {
-                    client = https;
+                    client = https_1.default;
                 }
                 else {
-                    client = http;
+                    client = http_1.default;
                 }
                 try {
                     client.get(url, function (response) {
@@ -110,7 +113,7 @@ const buildImage = ({ srcDir, networkUrl }) => {
         .then(viDir => {
         const d = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000);
         const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours());
-        return path.resolve(viDir, dateFormat(dd, 'yyyymmddHH').concat('00.gif'));
+        return path_1.default.resolve(viDir, dateformat_1.default(dd, 'yyyymmddHH').concat('00.gif'));
     })
         .then(fileName => {
         return writeFile(networkUrl, fileName)
@@ -131,7 +134,7 @@ const buildImage = ({ srcDir, networkUrl }) => {
         .then(() => {
         return new Promise((resolve, reject) => {
             const filesForDel = [];
-            fs.readdir(viDir, (err, files) => {
+            fs_1.default.readdir(viDir, (err, files) => {
                 if (err) {
                     console.error('Error read dir->', err);
                     return reject(err);
@@ -152,7 +155,7 @@ const buildImage = ({ srcDir, networkUrl }) => {
         .then((filesForDel) => {
         console.log('filesForDel ->', filesForDel);
         return Promise.all(filesForDel.map((file) => {
-            return fileSystem.unlink(path.resolve(viDir, file));
+            return fileSystem.unlink(path_1.default.resolve(viDir, file));
         }));
     })
         .catch(err => {

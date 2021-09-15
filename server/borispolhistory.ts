@@ -50,7 +50,7 @@ const getImgUrl = (bodyStr, t) => {
 };
 
 
-export function history (req, res) {
+export function history (req: any, res: any) {
     console.log('load history');
     const imgList = ((i) => {
         const a = [];
@@ -86,4 +86,5 @@ export function history (req, res) {
             console.error('borispol history err2 ->', err);
             res.end(err.toString());
         });
+    return;
 }

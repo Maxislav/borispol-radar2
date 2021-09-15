@@ -1,8 +1,8 @@
-import * as Jimp from 'jimp'
-import * as dateFormat from 'dateformat';
+import Jimp from 'jimp'
+import dateFormat from 'dateformat';
 import {Promise} from '../../node_modules/es6-promise';
-import {IncomingMessage} from "http";
-import * as http from "http";
+import {IncomingMessage} from 'http';
+import http from 'http';
 
 const appid = '19e738728f18421f2074f369bdb54e81';
 const SRC_COLOR_1 = Jimp.intToRGBA(0xFA64ff);
@@ -13,12 +13,12 @@ function httpGet(url: string, count = 0): Promise<Buffer> {
             port: 80,
             host: 'c.sat.owm.io',
             path: url,
-            method: 'GET'
+            method: 'GET',
         };
         const proxyRequest = http.request(options);
-        const chunks = [];
+        const chunks: Buffer[] = [];
         proxyRequest.on('response', function (proxyResponse) {
-            proxyResponse.on('data', function (chunk) {
+            proxyResponse.on('data', function (chunk: Buffer) {
                 chunks.push(chunk)
             });
             proxyResponse.on('end', function () {
@@ -126,7 +126,7 @@ const loadRadar = (step: number) => {
 };
 
 class Wait {
-    public list = [];
+    public list: any[] = [];
     private isRunning = false;
 
     public push(a: () => Promise<Buffer>) {

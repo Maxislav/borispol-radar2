@@ -1,5 +1,5 @@
-import * as express from 'express';
-import * as http from "http";
+import  express from 'express';
+import  http from "http";
 import '../constant/console-color'
 import {rain} from "./openweatherrain";
 

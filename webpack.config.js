@@ -95,10 +95,15 @@ const config = {
                 }
             },
             {
-                test: /\.ts$/,
-                use: 'awesome-typescript-loader',
+                test: /\.tsx?$/,
+                use: 'ts-loader',
                 exclude: [/node_modules/, /server/],
             },
+            /* {
+                 test: /\.ts$/,
+                 use: 'awesome-typescript-loader',
+                 exclude: [/node_modules/, /server/],
+             },*/
             {
                 test: /\.js$/,
                 //loader: 'babel-loader',
@@ -143,19 +148,19 @@ const config = {
                 test: /\.less$/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: 'style-loader',
                     },
                     {
                         loader: 'css-loader',
                         options: {
-                            modules: true,
+                            modules: { auto: true },
                             importLoaders: 1,
-                            sourceMap: true
+                            sourceMap: true,
                         },
                     },
                     {
                         loader: 'less-loader',
-                    }
+                    },
                 ],
             },
             {

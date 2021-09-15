@@ -1,6 +1,6 @@
 import { app } from './app';
-import * as borispolukbb from './borispolukbb';
-import * as history from './borispolhistory.js';
+import { borispolukbb}  from './borispolukbb';
+import { history}  from './borispolhistory.js';
 import { parserain } from './parserain/parserain';
 
 

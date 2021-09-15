@@ -78,6 +78,7 @@ function history(req, res) {
         console.error('borispol history err2 ->', err);
         res.end(err.toString());
     });
+    return;
 }
 exports.history = history;
 //# sourceMappingURL=borispolhistory.js.map
