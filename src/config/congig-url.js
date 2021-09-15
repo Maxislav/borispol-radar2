@@ -12,7 +12,8 @@ let url = {
         "ukbb-history": "http://178.62.44.54:8084/loadUkbbHistory",
         "upload": '/upload.php',
         "openmap": "http://localhost:8084/openmap",
-        "openrain": "http://localhost:8084/openrain"
+        "openrain": "http://localhost:8084/openrain",
+        "meteo-gov-ua": "http://localhost:8084/meteo-gov-ua"
     },
     production: {
         ir: 'img/ir/',
@@ -24,7 +25,8 @@ let url = {
         "ukbb-history": "http://178.62.44.54:8084/loadUkbbHistory",
         "upload": 'php/upload.php',
         "openmap": "http://178.62.44.54:8084/openmap",
-        "openrain": "http://178.62.44.54:8084/openrain"
+        "openrain": "http://178.62.44.54:8084/openrain",
+        "meteo-gov-ua": "http://178.62.44.54:8084/meteo-gov-ua"
     }
 };
 

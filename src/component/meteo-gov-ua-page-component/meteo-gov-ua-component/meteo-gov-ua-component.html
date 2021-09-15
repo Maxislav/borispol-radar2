@@ -1,5 +1,5 @@
 <div v-bind:class="style['meteo-gov-ua-component']">
     <div :class="style['img-container']">
-            <img :src="src">
+            <img v-if="!!src" :src="src" :class="style['img']">
     </div>
 </div>
