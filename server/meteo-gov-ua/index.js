@@ -41,6 +41,7 @@ const httpGet = () => {
     });
 };
 const meteoGovUa = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('req.hostname ->>', req.hostname);
     if (req.hostname.match(/(178\.62\.44\.54)(meteo-info\.kiev\.ua)|(localhost)/g)) {
         res.header('Access-Control-Allow-Origin', '*');
         const d = (yield httpGet()).toString();
