@@ -12,13 +12,15 @@ const getDate = (...args: number[]) => {
 export const MeteoGovUaComponent = Vue.component('meteo-gov-ua', {
     template: template,
     data() {
+        let initialTime: Date = null;
         http.get<{
             result: number[],
-        }>(urlCron['meteo-gov-ua'])
+        }>(urlCron['meteo-gov-ua-local'])
             .then((d) => {
                 const {result} = d;
-                const datestring = dateFormat(getDate(...result), 'yyyy-mm-dd HH-MM-00');
-                this.$set(this.$data, 'src', `https://meteo.gov.ua/radars/Ukr_J ${datestring}.jpg`)
+                initialTime = getDate(...result);
+                const datestring = dateFormat(initialTime, 'yyyy-mm-dd HH-MM-00');
+                this.$set(this.$data, 'src', `${urlCron['meteo-gov-ua']}/Ukr_J ${datestring}.jpg`)
 
             }).catch(e => {
             console.log(e)
@@ -35,11 +37,40 @@ export const MeteoGovUaComponent = Vue.component('meteo-gov-ua', {
         console.log(datestring)
         //  const parsedDate =  new Date(currentDate.getFullYear(), )
         // console.log(this.data)
-
+        const $this = this;
 
         return {
             style,
             src: null,
+            container: null,
+            load: 0,
+            stripVisible: false,
+            getUrlList() {
+                const arr = new Array(8);
+                arr.fill(null);
+                initialTime
+                const result = arr.reduce((acc, val, index) => {
+                    const t = initialTime.valueOf() - index * 10 * 60 * 1000;
+                    const d = dateFormat(t, 'yyyy-mm-dd HH-MM-00');
+                    const link = `${urlCron['meteo-gov-ua']}/Ukr_J ${d}.jpg`;
+                    acc.push(link);
+                    return acc
+                }, []);
+                console.log(result);
+                return result
+            },
+            loadProgress(progress: { loading: boolean, value: number }) {
+                //  $this.load = val.count
+                $this.$set($this.$data, 'load', progress.value);
+                $this.$set($this.$data, 'stripVisible', progress.loading);
+                //console.log(val.loading)
+            },
+            start() {
+                ($this.$refs.initialImage as any).$fadeTo(1, 0, 500)
+            },
         }
+    },
+    mounted() {
+        this.$set(this.$data, 'container', this.$refs.container)
     },
 });

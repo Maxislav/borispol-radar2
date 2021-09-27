@@ -13,7 +13,8 @@ let url = {
         "upload": '/upload.php',
         "openmap": "http://localhost:8084/openmap",
         "openrain": "http://localhost:8084/openrain",
-        "meteo-gov-ua": "http://localhost:8084/meteo-gov-ua"
+        "meteo-gov-ua-local": "http://localhost:8084/meteo-gov-ua",
+        "meteo-gov-ua": "https://meteo.gov.ua/radars"
     },
     production: {
         ir: 'img/ir/',
@@ -26,7 +27,8 @@ let url = {
         "upload": 'php/upload.php',
         "openmap": "http://178.62.44.54:8084/openmap",
         "openrain": "http://178.62.44.54:8084/openrain",
-        "meteo-gov-ua": "http://178.62.44.54:8084/meteo-gov-ua"
+        "meteo-gov-ua-local": "http://178.62.44.54:8084/meteo-gov-ua",
+        "meteo-gov-ua": "https://meteo.gov.ua/radars"
     }
 };
 
