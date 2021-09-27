@@ -21,7 +21,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.appStatic = void 0;
 require("./constant/console-color");
-// import { getConsoleKey } from './utils/console-key';
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const settingborispolradar_1 = require("./phplike/settingborispolradar");

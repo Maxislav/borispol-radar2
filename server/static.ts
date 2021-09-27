@@ -1,9 +1,8 @@
 import './constant/console-color'
-// import { getConsoleKey } from './utils/console-key';
 import * as fs from 'fs';
 import * as path from 'path'
 import { defaultSetting } from './phplike/settingborispolradar';
-import {deepCopy} from "./utils/deep-copy";
+import {deepCopy} from './utils/deep-copy';
 
 declare global {
     interface String {

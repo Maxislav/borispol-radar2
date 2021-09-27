@@ -26,25 +26,28 @@ const Jimp = require('jimp');
 const fs = __importStar(require("fs"));
 const console_key_1 = require("../utils/console-key");
 const es6_promise_1 = require("es6-promise");
-const rootDir = console_key_1.getConsoleKey('rootdir') || '../';
+const rootDir = console_key_1.getConsoleKey('rootdir') || '../dist';
 const getFileList = (p) => {
-    return new es6_promise_1.Promise((resolve, reject) => {
+    return new es6_promise_1.Promise((resolve1, reject1) => {
         fs.readdir(p, (err, fileList) => {
             if (err) {
-                return reject(err);
+                return reject1(err);
             }
             es6_promise_1.Promise.all(fileList.map(f => {
                 return new es6_promise_1.Promise((resolve, reject) => {
-                    fs.lstat(path.resolve(p, f), (err, stat) => {
+                    fs.lstat(path.resolve(p, f), (error2, stat) => {
                         const resObj = { filename: f };
                         Object.setPrototypeOf(resObj, Object.getPrototypeOf(stat));
                         resolve(Object.assign(resObj, stat));
                     });
                 });
             }))
-                .then(resolve)
-                .catch(err => {
-                console.error('getFileList 1 err', err);
+                .then((r) => {
+                resolve1(r);
+            })
+                .catch((error1) => {
+                console.error('getFileList 1 err', error1);
+                reject1(error1);
             });
         });
     });
@@ -61,10 +64,10 @@ const fileUpload = ({ file }) => {
             Jimp.read(file, function (err, image) {
                 if (err)
                     return reject(err);
-                image.write(path.resolve(pathToFile, replaceFile), (err => {
-                    if (err) {
-                        console.error('getFileList error 3', err);
-                        return reject(err);
+                image.write(path.resolve(pathToFile, replaceFile), ((err4) => {
+                    if (err4) {
+                        console.error('getFileList error 3', err4);
+                        return reject(err4);
                     }
                     console.log(`file save at -> ${path.resolve(pathToFile, replaceFile)}`);
                     resolve(replaceFile);
