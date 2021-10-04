@@ -4,6 +4,13 @@ import style from './meteo-gov-ua-component.less';
 import dateFormat from 'dateformat';
 import {urlCron} from '../../../config/congig-url';
 import {http} from '../../../util/http';
+import Timer = NodeJS.Timer;
+
+const getImg = async () => {
+    return http.get<{
+        result: number[],
+    }>(urlCron['meteo-gov-ua-local'])
+};
 
 const getDate = (...args: number[]) => {
     const [a, b, c, d, e, i, f] = args.map(v => Number(v));
@@ -13,33 +20,40 @@ export const MeteoGovUaComponent = Vue.component('meteo-gov-ua', {
     template: template,
     data() {
         let initialTime: Date = null;
-        http.get<{
-            result: number[],
-        }>(urlCron['meteo-gov-ua-local'])
-            .then((d) => {
-                const {result} = d;
-                initialTime = getDate(...result);
-                const datestring = dateFormat(initialTime, 'yyyy-mm-dd HH-MM-00');
-                this.$set(this.$data, 'src', `${urlCron['meteo-gov-ua']}/Ukr_J ${datestring}.jpg`)
 
-            }).catch(e => {
-            console.log(e)
-        });
-
+        const setUpdateImage = async () => {
+            const {result} = await getImg();
+            initialTime = getDate(...result);
+            const datestring = dateFormat(initialTime, 'yyyy-mm-dd HH-MM-00');
+            this.$set(this.$data, 'src', `${urlCron['meteo-gov-ua']}/Ukr_J ${datestring}.jpg`);
+            return result;
+        };
+        setUpdateImage();
+        const intervalId: any = setInterval(() => {
+            setUpdateImage()
+        }, 2 * 60 * 1000);
 
         const currentDate = new Date(new Date().valueOf() + new Date().getTimezoneOffset() * 60 * 1000);
         currentDate.setMilliseconds(0);
         currentDate.setSeconds(0);
         const minutes = Math.floor((currentDate.getMinutes() - 1) / 10) * 10 + 9;
         currentDate.setMinutes(minutes);
-        // console.log(currentDate);
         const datestring = dateFormat(currentDate, 'yyyy-mm-dd HH-MM-00')
-        console.log(datestring)
-        //  const parsedDate =  new Date(currentDate.getFullYear(), )
-        // console.log(this.data)
+        console.log(datestring);
         const $this = this;
 
-        return {
+        const cData: {
+            style: any,
+            src: string,
+            container: any,
+            load: number,
+            stripVisible: boolean,
+            getUrlList: () => string[],
+            loadProgress: (progress: {loading: boolean, value: number}) => void,
+            start: () => void,
+            intervalId: any,
+        } = {
+            intervalId,
             style,
             src: null,
             container: null,
@@ -48,29 +62,29 @@ export const MeteoGovUaComponent = Vue.component('meteo-gov-ua', {
             getUrlList() {
                 const arr = new Array(8);
                 arr.fill(null);
-                initialTime
                 const result = arr.reduce((acc, val, index) => {
                     const t = initialTime.valueOf() - index * 10 * 60 * 1000;
-                    const d = dateFormat(t, 'yyyy-mm-dd HH-MM-00');
-                    const link = `${urlCron['meteo-gov-ua']}/Ukr_J ${d}.jpg`;
+                    const df = dateFormat(t, 'yyyy-mm-dd HH-MM-00');
+                    const link = `${urlCron['meteo-gov-ua']}/Ukr_J ${df}.jpg`;
                     acc.push(link);
                     return acc
                 }, []);
-                console.log(result);
                 return result
             },
             loadProgress(progress: { loading: boolean, value: number }) {
-                //  $this.load = val.count
                 $this.$set($this.$data, 'load', progress.value);
                 $this.$set($this.$data, 'stripVisible', progress.loading);
-                //console.log(val.loading)
             },
             start() {
                 ($this.$refs.initialImage as any).$fadeTo(1, 0, 500)
             },
-        }
+        };
+        return cData;
     },
     mounted() {
         this.$set(this.$data, 'container', this.$refs.container)
+    },
+    beforeDestroy() {
+        this.$data.intervalId && clearInterval(this.$data.intervalId);
     },
 });

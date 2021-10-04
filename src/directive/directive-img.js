@@ -14,6 +14,9 @@ function removeStyle(name) {
 }
 
 export default Vue.directive('img', {
+    update(el, binding) {
+        el.querySelector('img').src = binding.value;
+    },
     inserted: function (el, binding) {
         const loaderDiv = document.createElement('div');
         loaderDiv.innerHTML = templateLoader({loader: img64loader});
@@ -26,7 +29,7 @@ export default Vue.directive('img', {
         imgLoader.style.top = '0';
         imgLoader.style.left = '0';
         imgLoader.style.zIndex = '1';
-        imgLoader.classList.toggle ('loaderddd', true);
+        imgLoader.classList.toggle('loaderddd', true);
         el.appendChild(imgLoader);
         imgLoader.$fadeTo(0, 1, 222);
 
