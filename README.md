@@ -59,3 +59,8 @@ pm2 start "node /var/www/borispol-radar2/server/openweathermap/index.js" --name 
 pm2 start 'node /var/www/borispol-radar2/server/borispol-radar.js --rootdir ../dist' --name borispol
 pm2 start server/openweathermap/pm2.cluster.config.js 
 ```
+
+### prod pm2
+```cmd
+ pm2 start server/pm2.utility.config.js --env production 
+```
