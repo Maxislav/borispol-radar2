@@ -12,6 +12,14 @@ const getImg = async () => {
     }>(urlCron['meteo-gov-ua-local'])
 };
 
+const awaitTimeout = (time: number): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(true)
+        }, time)
+    })
+}
+
 const getDate = (...args: number[]) => {
     const [a, b, c, d, e, i, f] = args.map(v => Number(v));
     return new Date(a || 0, b ? b - 1 : 0, c || 0, d || 0, e || 0, i || 0, f || 0)
@@ -25,7 +33,12 @@ export const MeteoGovUaComponent = Vue.component('meteo-gov-ua', {
             const {result} = await getImg();
             initialTime = getDate(...result);
             const datestring = dateFormat(initialTime, 'yyyy-mm-dd HH-MM-00');
-            this.$set(this.$data, 'src', `${urlCron['meteo-gov-ua']}/Ukr_J ${datestring}.jpg`);
+            const newSrc = `${urlCron['meteo-gov-ua']}/Ukr_J ${datestring}.jpg`;
+            if (newSrc !== this.$data['src']) {
+                this.$set(this.$data, 'src', null);
+                await awaitTimeout(1);
+                this.$set(this.$data, 'src', `${urlCron['meteo-gov-ua']}/Ukr_J ${datestring}.jpg`);
+            }
             return result;
         };
         setUpdateImage();
@@ -49,7 +62,7 @@ export const MeteoGovUaComponent = Vue.component('meteo-gov-ua', {
             load: number,
             stripVisible: boolean,
             getUrlList: () => string[],
-            loadProgress: (progress: {loading: boolean, value: number}) => void,
+            loadProgress: (progress: { loading: boolean, value: number }) => void,
             start: () => void,
             intervalId: any,
         } = {
@@ -76,6 +89,7 @@ export const MeteoGovUaComponent = Vue.component('meteo-gov-ua', {
                 $this.$set($this.$data, 'stripVisible', progress.loading);
             },
             start() {
+                $this.$data.intervalId && clearInterval($this.$data.intervalId);
                 ($this.$refs.initialImage as any).$fadeTo(1, 0, 500)
             },
         };

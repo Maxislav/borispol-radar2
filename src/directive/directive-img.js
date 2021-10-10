@@ -14,9 +14,7 @@ function removeStyle(name) {
 }
 
 export default Vue.directive('img', {
-    update(el, binding) {
-        el.querySelector('img').src = binding.value;
-    },
+
     inserted: function (el, binding) {
         const loaderDiv = document.createElement('div');
         loaderDiv.innerHTML = templateLoader({loader: img64loader});
