@@ -21,18 +21,18 @@ const mode = getConsoleKey('mode') || 'dev';
 const config = {
     entry: {
         //server: ['./server/index.js'],
-        app: ["./src/extend/Math.js", "./src/extend/NodeFade.js", "./src/extend/DateExtend.js", "./src/init.js"]
+        app: ['./src/extend/Math.js', './src/extend/NodeFade.js', './src/extend/DateExtend.js', './src/init.js'],
         //init:['webpack-dev-server/client',__dirname+"/src/init.js"]
     },
     output: {
-        path: path.resolve(__dirname, "dist"),
-        publicPath: "",
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: '',
         // filename: "borispol.radar.[name].[chunkhash].min.js",
-        filename: "borispol.radar.[name].min.js",
+        filename: 'borispol.radar.[name].min.js',
         //chunkFilename: "borispol.radar.[name].[chunkhash].min.js"
     },
     watchOptions: {
-        aggregateTimeout: 100
+        aggregateTimeout: 100,
     },
     mode: mode == 'dev' ? 'development' : 'production',
     devtool: 'source-map',
@@ -42,32 +42,32 @@ const config = {
             NODE_ENV: JSON.stringify(mode),
         }),
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, './index.pug')
+            template: path.resolve(__dirname, './index.pug'),
         }),
         new CopyWebpackPlugin([
             {
                 from: './dist/img/ir',
-                to: './img'
+                to: './img',
             },
             {
                 from: './src/img',
-                to: './img'
+                to: './img',
             },
             {
                 from: './src/php',
-                to: './php'
+                to: './php',
             },
             {
                 from: './node_modules/three/build/three.js',
-                to: './lib'
+                to: './lib',
             },
             {
                 from: './src/util/load-image.worker.js',
-                to: './worker'
+                to: './worker',
             },
             {
-                from: './src/cron.sh'
-            }
+                from: './src/cron.sh',
+            },
         ], { copyUnmodified: true }),
         new Webpack.WatchIgnorePlugin([
             path.resolve(__dirname, './src/img/'),
@@ -76,9 +76,9 @@ const config = {
     resolve: {
         extensions: ['.ts', '.js'],
         alias: {
-            'vue$': mode == 'dev' ? 'vue/dist/vue.js' : 'vue/dist/vue.min.js',
-            'vue-router$': 'vue-router/dist/vue-router.js'
-        }
+            vue$: mode == 'dev' ? 'vue/dist/vue.js' : 'vue/dist/vue.min.js',
+            'vue-router$': 'vue-router/dist/vue-router.js',
+        },
     },
     module: {
         rules: [
@@ -92,7 +92,7 @@ const config = {
                 },*/
                 //  attributes: false,
                 //  attrs: [':data-src']
-                }
+                },
             },
             {
                 test: /\.tsx?$/,
@@ -112,37 +112,37 @@ const config = {
                     loader: 'babel-loader',
                     options: {
                         //  presets: ['@babel/preset-env', "@babel/preset-stage-1"],
-                        plugins: ["@babel/plugin-proposal-export-default-from",
-                            "@babel/plugin-proposal-logical-assignment-operators",
-                            ["@babel/plugin-proposal-optional-chaining", { "loose": false }],
-                            ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }],
-                            ["@babel/plugin-proposal-nullish-coalescing-operator", { "loose": false }],
-                            "@babel/plugin-proposal-do-expressions",
-                            ["@babel/plugin-proposal-decorators", { "legacy": true }]
+                        plugins: ['@babel/plugin-proposal-export-default-from',
+                            '@babel/plugin-proposal-logical-assignment-operators',
+                            ['@babel/plugin-proposal-optional-chaining', { loose: false }],
+                            ['@babel/plugin-proposal-pipeline-operator', { proposal: 'minimal' }],
+                            ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: false }],
+                            '@babel/plugin-proposal-do-expressions',
+                            ['@babel/plugin-proposal-decorators', { legacy: true }],
                         ],
-                    }
-                }
+                    },
+                },
             },
             {
                 test: /\.jade$/,
                 loader: 'jade-loader',
                 query: {
-                    pretty: mode == 'dev'
-                }
+                    pretty: mode == 'dev',
+                },
             },
             {
                 test: /\.pug/,
                 loader: 'pug-loader',
                 query: {
-                    pretty: true
-                }
+                    pretty: true,
+                },
             },
             {
                 test: /[^loader]\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
                 loader: 'url-loader',
                 options: {
                 //limit: 10000
-                }
+                },
             },
             {
                 test: /\.less$/,
@@ -167,58 +167,58 @@ const config = {
                 test: /\.styl$/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: 'style-loader',
                     },
                     {
                         loader: 'css-loader',
                         options: {
                             modules: false,
                             importLoaders: 1,
-                            sourceMap: mode == 'dev'
+                            sourceMap: mode === 'dev',
                         },
                     },
                     {
-                        loader: 'stylus-loader'
-                    }
-                ]
-            }
-        ]
+                        loader: 'stylus-loader',
+                    },
+                ],
+            },
+        ],
     },
     devServer: {
-        port: 9000,
+        port: 8000,
         proxy: {
             '/ppp/**': {
                 target: 'http://localhost:8085',
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/ppp': ''
-                }
+                    '^/ppp': '',
+                },
             },
             '/proxy-history/**': {
                 target: 'http://localhost/all/borispol-radar2/dist/php/',
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/proxy\-history': ''
-                }
+                    '^/proxy\-history': '',
+                },
             },
             '/upload.php': {
                 target: 'http://localhost/all/borispol-radar2/src/php/upload.php',
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
-                    'upload.php': ''
-                }
+                    'upload.php': '',
+                },
             },
             '/img/ir': {
-                target: 'http://localhost:8090'
+                target: 'http://localhost:8090',
             },
             '/img/vi': {
-                target: 'http://localhost:8090'
-            }
-        }
-    }
+                target: 'http://localhost:8090',
+            },
+        },
+    },
 };
 if (mode == 'production') {
     config.plugins.unshift(new Version({}));

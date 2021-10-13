@@ -1,0 +1,40 @@
+.home-component {
+  background: #fff;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+
+  .flex {
+    display: flex;
+    height: 100%;
+  }
+
+  .meteo-gov-ua-component {
+    margin: 0 auto;
+    width: 100%;
+    flex-basis: 670px;
+    height: 100%;
+
+  }
+  .ired-visible{
+    flex-basis: ~"calc(100% - 670px)";
+  }
+
+  .container-ir-vi {
+    height: 50%;
+  }
+
+  .container-ir-vi {
+    &>*:nth-child(2){
+      height: ~"calc(100% - 34px)";
+      width: 100%;
+    }
+  }
+
+  .container-ir-vi .title {
+    padding: 10px;
+    height: 34px;
+    text-align: center;
+  }
+}
+
