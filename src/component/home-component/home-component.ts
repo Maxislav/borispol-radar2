@@ -1,14 +1,12 @@
-import Vue from 'vue';
 import template from './home-component.html'
 import style from './home-component.less'
 
-console.log(style);
-const HomeComponent = Vue.component('sds', {
+const HomeComponent = {
     template: template,
     data() {
         return {
             style,
         }
     },
-});
+}
 export default HomeComponent;
