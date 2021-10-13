@@ -26,6 +26,7 @@
     "mini-css-extract-plugin": "^1.6.0",
     "rxjs": "^7.1.0",
     "socket.io": "^2.0.4",
+    "string-template-parser": "^1.2.6",
     "ts-loader": "^8.3.0",
     "vue-style-loader": "^4.1.3",
     "vue-template-compiler": "^2.6.12",

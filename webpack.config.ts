@@ -190,7 +190,6 @@ const config = {
     },
     devServer: {
         port: 8000,
-
         proxy: {
             '/ppp/**': {
                 target: 'http://localhost:8085',

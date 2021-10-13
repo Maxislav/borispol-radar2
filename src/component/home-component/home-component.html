@@ -1,13 +1,13 @@
-<div :class="style['home-component']">
-    <div :class="style.flex">
-        <meteo-gov-ua :class="style['meteo-gov-ua-component']"></meteo-gov-ua>
-        <div :class="style['ired-visible']">
-            <div :class="style['container-ir-vi']">
-                <div :class="style.title">Infrared</div>
+<div class="${home-component}">
+    <div class="${flex}">
+        <meteo-gov-ua class="${meteo-gov-ua-component}"></meteo-gov-ua>
+        <div class="${ired-visible}">
+            <div class="${container-ir-vi}">
+                <div class="${title}">Infrared</div>
                 <ired-component></ired-component>
             </div>
-            <div :class="style['container-ir-vi']">
-                <div :class="style.title">Visible</div>
+            <div class="${container-ir-vi}">
+                <div class="${title}">Visible</div>
                 <visible-component></visible-component>
             </div>
         </div>
