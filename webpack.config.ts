@@ -17,7 +17,7 @@ const getConsoleKey = (key: string): string | undefined => {
     return value
 };
 const mode = getConsoleKey('mode') || 'dev';
-const config = {
+const config: any = {
     entry: {
         //server: ['./server/index.js'],
         app: ['./src/extend/Math.js', './src/extend/NodeFade.js', './src/extend/DateExtend.js', './src/init.js'],
@@ -34,7 +34,7 @@ const config = {
         aggregateTimeout: 100,
     },
     mode: mode == 'dev' ? 'development' : 'production',
-    devtool: 'source-map',
+   // devtool: 'source-map',
     plugins: [
         new MiniCssExtractPlugin(),
         new Webpack.DefinePlugin({
@@ -157,7 +157,7 @@ const config = {
                             options: {
                                 modules: {auto: true},
                                 importLoaders: 1,
-                                sourceMap: true,
+                                sourceMap: mode === 'dev',
                             },
                         },
                         {
@@ -229,6 +229,8 @@ const config = {
 if (mode == 'production') {
     config.plugins.unshift(new Version({}))
 
+} else {
+    config.devtool = 'source-map'
 }
 
 export default config

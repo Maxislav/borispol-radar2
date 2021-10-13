@@ -35,7 +35,7 @@ const config = {
         aggregateTimeout: 100,
     },
     mode: mode == 'dev' ? 'development' : 'production',
-    devtool: 'source-map',
+    // devtool: 'source-map',
     plugins: [
         new MiniCssExtractPlugin(),
         new Webpack.DefinePlugin({
@@ -155,7 +155,7 @@ const config = {
                         options: {
                             modules: { auto: true },
                             importLoaders: 1,
-                            sourceMap: true,
+                            sourceMap: mode === 'dev',
                         },
                     },
                     {
@@ -222,6 +222,9 @@ const config = {
 };
 if (mode == 'production') {
     config.plugins.unshift(new Version({}));
+}
+else {
+    config.devtool = 'source-map';
 }
 exports.default = config;
 //# sourceMappingURL=webpack.config.js.map
