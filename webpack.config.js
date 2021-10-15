@@ -86,7 +86,10 @@ const config = {
                 test: /\.html$/i,
                 loader: 'html-loader',
                 options: {
-                    minimize: false,
+                    minimize: {
+                        removeComments: true,
+                        collapseWhitespace: true,
+                    },
                     // attributes: false,
                     /*preprocessor: (content: any, loaderContext: any) => {
                         return '';

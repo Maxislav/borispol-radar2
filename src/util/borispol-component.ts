@@ -1,11 +1,10 @@
 import {ComponentOptions} from 'vue';
 import Vue from 'vue';
-import {parseStringTemplateGenerator} from 'string-template-parser';
+import {parseStringTemplateGenerator} from '../lib/index';
 import {evaluateParsedString} from 'string-template-parser';
 export interface BorispolComponentData<V extends Vue = Vue> extends ComponentOptions<V> {
     style: { [key: string]: any },
 }
-
 const parseTemplate = parseStringTemplateGenerator({
     VARIABLE_START: /^class="\s*/,
     VARIABLE_END: /^\s*"/,
