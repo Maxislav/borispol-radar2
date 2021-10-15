@@ -1,16 +1,16 @@
-<div v-bind:class="style['meteo-gov-ua-component']">
-    <div :class="style['img-container']">
+<div class="meteo-gov-ua-component">
+    <div class="img-container">
         <strip-loader v-bind:load="load" v-visible="stripVisible" ></strip-loader>
-        <div :class="style['layer-1']">
-            <div :class="style['img-pen-rain']" v-if="!!src"  v-img="src"  ref="initialImage" >
+        <div class="layer-1">
+            <div class="img-pen-rain"  v-if="!!src"  v-img="src"  ref="initialImage" >
 
             </div>
         </div>
-        <div class="layer-2"  :class="style['layer-2']">
-            <div ref="container" :class="style['img-pen-rain']">
+        <div class="layer-2">
+            <div ref="container" class="img-pen-rain">
             </div>
             <player-component-2
-                    :class="style['player-component-2']"
+                    class="player-component-2"
                     :container="container"
                     :geturllist="getUrlList"
                     :start="start"

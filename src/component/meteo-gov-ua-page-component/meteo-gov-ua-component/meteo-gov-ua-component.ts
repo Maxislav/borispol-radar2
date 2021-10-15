@@ -1,10 +1,9 @@
-import Vue from 'vue';
 import template from './meteo-gov-ua-component.html';
 import style from './meteo-gov-ua-component.less';
 import dateFormat from 'dateformat';
 import {urlCron} from '../../../config/congig-url';
 import {http} from '../../../util/http';
-import Timer = NodeJS.Timer;
+import {borispolComponent} from '../../../util/borispol-component';
 
 const getImg = async () => {
     return http.get<{
@@ -18,14 +17,16 @@ const awaitTimeout = (time: number): Promise<boolean> => {
             resolve(true)
         }, time)
     })
-}
+};
 
 const getDate = (...args: number[]) => {
     const [a, b, c, d, e, i, f] = args.map(v => Number(v));
     return new Date(a || 0, b ? b - 1 : 0, c || 0, d || 0, e || 0, i || 0, f || 0)
 };
-export const MeteoGovUaComponent = Vue.component('meteo-gov-ua', {
+
+export const MeteoGovUaComponent = borispolComponent('meteo-gov-ua', {
     template: template,
+    style,
     data() {
         let initialTime: Date = null;
 
