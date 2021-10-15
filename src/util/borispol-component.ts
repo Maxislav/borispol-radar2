@@ -1,7 +1,6 @@
 import {ComponentOptions} from 'vue';
 import Vue from 'vue';
-import {parseStringTemplateGenerator} from '../lib/index';
-import {evaluateParsedString} from 'string-template-parser';
+import {evaluateParsedString, parseStringTemplateGenerator} from 'string-template-parser';
 export interface BorispolComponentData<V extends Vue = Vue> extends ComponentOptions<V> {
     style: { [key: string]: any },
 }

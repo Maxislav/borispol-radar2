@@ -30,7 +30,6 @@ import UkbbComponent from './component/ukbb-component/ukbb-component'
 import UkbbCalcComponent from './component/ukbb-calc-component/ukbb-calc-component'
 import {AndroidComponent} from './component/android-component/android-component'
 import {FileUploadComponent} from './component/file-upload-component/file-upload-component'
-import {InfomometrComponent} from './component/infomometr-component/infomometr-component'
 import {ForecastItemComponent} from './component/forecast-item-component/forecast-item-component'
 import {GLComponent} from './component/gl-component/gl-component';
 import {DialogComponent} from './component/dialog-component/dialog-component'
@@ -45,6 +44,7 @@ import {PlayerComponent2} from "./component/player-component-2/player-component-
 import {RelocationWarning} from "./component/relocation-warning/relocation-warning";
 import {MeteoGovUaPageComponent} from './component/meteo-gov-ua-page-component/meteo-gov-ua-page-component';
 import './component/meteo-gov-ua-page-component/meteo-gov-ua-component/meteo-gov-ua-component.ts';
+import {informerComponent} from "./component/informer-component/informer-component";
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
@@ -63,7 +63,7 @@ const routes = [
     {path: '/meteosat', component: MeteosatComponent},
     {path: '/android', component: AndroidComponent},
     {path: '/fileupload', component: FileUploadComponent},
-    {path: '/infomometr', component: InfomometrComponent},
+    {path: '/informer', component: informerComponent},
     {path: '/earth', component: EarthComponent},
     {path: '/sunshine', component: SunshineComponent},
     {path: '/gl', component: GLComponent},

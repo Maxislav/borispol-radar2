@@ -10,3 +10,8 @@ declare module '*.less' {
 declare interface MyHtmlElement extends HTMLElement {
     $fadeTo(from: number, to: number, duration: number, promiseResolveTime?: number): Promise<this>
 }
+
+
+interface Window {
+    GmI: any
+}
