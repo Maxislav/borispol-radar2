@@ -86,12 +86,13 @@ const config = {
                 test: /\.html$/i,
                 loader: 'html-loader',
                 options: {
-                // attributes: false,
-                /*preprocessor: (content: any, loaderContext: any) => {
-                    return '';
-                },*/
-                //  attributes: false,
-                //  attrs: [':data-src']
+                    minimize: false,
+                    // attributes: false,
+                    /*preprocessor: (content: any, loaderContext: any) => {
+                        return '';
+                    },*/
+                    //  attributes: false,
+                    //  attrs: [':data-src']
                 },
             },
             {

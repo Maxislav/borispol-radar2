@@ -86,6 +86,7 @@ const config: any = {
                 test: /\.html$/i,
                 loader: 'html-loader',
                 options: {
+                    minimize: false,
                     // attributes: false,
                     /*preprocessor: (content: any, loaderContext: any) => {
                         return '';
@@ -232,5 +233,4 @@ if (mode == 'production') {
 } else {
     config.devtool = 'source-map'
 }
-
 export default config
