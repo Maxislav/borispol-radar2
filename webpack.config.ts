@@ -41,7 +41,7 @@ const config: any = {
             NODE_ENV: JSON.stringify(mode),
         }),
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, './index.pug'),
+            template: path.resolve(__dirname, './src/index.html'),
         }),
         new CopyWebpackPlugin([
             {

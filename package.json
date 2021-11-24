@@ -7,7 +7,8 @@
     "server-static-dev": "set NODE_ENV=dev && node-dev server/borispol-radar.js",
     "server-open-weather-dev": "node-dev server/openweathermap/index.js",
     "tsc-be:w": "tsc -w --project tsconfig-be.json",
-    "tsc-webpack-config:w": "tsc -w --project tsconfig-webpack.json"
+    "tsc-webpack-config:w": "tsc -w --project tsconfig-webpack.json",
+    "start:dev": "concurrently \"npm run server-static-dev\"  \"npm run tsc-be:w\"  \"npm run build-dev-ui\" \"npm run tsc-webpack-config:w\" "
   },
   "dependencies": {
     "@reactivex/rxjs": "^6.6.7",
