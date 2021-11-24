@@ -14,6 +14,12 @@
       "scripthost",
       "dom"
     ],
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": [
+        "src/app/*"
+      ]
+    },
     "typeRoots": ["node_modules/@types", "node_modules/vue/types"],
     "skipLibCheck": true
   },

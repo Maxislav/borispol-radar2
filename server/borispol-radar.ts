@@ -8,7 +8,7 @@ import './cron';
 import {map} from './openweathermap/openweathermap';
 import {rain} from './openweathermap/openweatherrain';
 import {proxyOpenRain} from './openweathermap/proxy';
-import {meteoGovUa} from './meteo-gov-ua';
+import {meteoGovUa, meteoGovUaImage} from './meteo-gov-ua';
 
 app
     .get('/borisbolukbb', borispolukbb)
@@ -17,4 +17,5 @@ app
     .get('/openmap', map)
     .get('/openrain', rain)
     .get('/openrain/:step', proxyOpenRain)
-    .get('/meteo-gov-ua', meteoGovUa);
+    .get('/meteo-gov-ua', meteoGovUa)
+    .get('/meteo-gov-ua/:step', meteoGovUaImage);

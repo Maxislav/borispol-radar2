@@ -18,5 +18,6 @@ app_1.app
     .get('/openmap', openweathermap_1.map)
     .get('/openrain', openweatherrain_1.rain)
     .get('/openrain/:step', proxy_1.proxyOpenRain)
-    .get('/meteo-gov-ua', meteo_gov_ua_1.meteoGovUa);
+    .get('/meteo-gov-ua', meteo_gov_ua_1.meteoGovUa)
+    .get('/meteo-gov-ua/:step', meteo_gov_ua_1.meteoGovUaImage);
 //# sourceMappingURL=borispol-radar.js.map
