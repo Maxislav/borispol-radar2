@@ -90,10 +90,10 @@ class Player {
         )
     }
 
-    loadImage(url: string, index: number) {
+    loadImage(url: string, index: number): Promise<any> {
         const image = new Image();
         image.style.zIndex = String(100 - index);
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
 
             const onLoad = (img: HTMLImageElement) => {
                 this.imageList.push({
@@ -105,18 +105,24 @@ class Player {
                     loading: this.loadedCount < this.urlList.length,
                     value: 100*this.loadedCount/this.urlList.length,
                 });
+                this.container.appendChild(image);
                 resolve(img);
             };
 
             image.onerror = () => {
-                onLoad(image)
+                reject(index)
             };
 
             image.onload = () => {
-                onLoad(image)
+                // reject(index)
+                 onLoad(image)
             };
             image.src = url;
-            this.container.appendChild(image)
+            //image.src = 'img/borispol-blank.jpg';
+
+        }).catch( i => {
+
+            return this.loadImage(document.createElement('canvas').toDataURL(), i)
         })
     }
 }
