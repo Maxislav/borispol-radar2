@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue from 'vue';
 import template from './player-component-2.html';
 import style from './player-component-2.less';
 
@@ -30,7 +30,7 @@ class Player {
         if (!this.loaded) {
             this.loadProgress({
                 loading: true,
-                value: 0
+                value: 0,
             });
             return this.loadImageList()
                 .then(() => {
@@ -49,7 +49,7 @@ class Player {
                     return iImage.img.$fadeTo(0, 1, 100)
                 }
                 return iImage.img.$fadeTo(1, 0, 100)
-            })
+            }),
         )
             .then(() => {
                 let index = this.imageList.length;
@@ -86,7 +86,7 @@ class Player {
     loadImageList() {
         const urls = this.urlList = this.getUrls();
         return Promise.all(
-            urls.map((url, i) => this.loadImage(url, i))
+            urls.map((url, i) => this.loadImage(url, i)),
         )
     }
 
@@ -95,17 +95,25 @@ class Player {
         image.style.zIndex = String(100 - index);
         return new Promise((resolve) => {
 
-            image.onload = () => {
+            const onLoad = (img: HTMLImageElement) => {
                 this.imageList.push({
                     index,
-                    img: image as any
+                    img: img as any,
                 });
-                resolve(image);
                 this.loadedCount++;
                 this.loadProgress({
                     loading: this.loadedCount < this.urlList.length,
-                    value: 100*this.loadedCount/this.urlList.length
-                })
+                    value: 100*this.loadedCount/this.urlList.length,
+                });
+                resolve(img);
+            };
+
+            image.onerror = () => {
+                onLoad(image)
+            };
+
+            image.onload = () => {
+                onLoad(image)
             };
             image.src = url;
             this.container.appendChild(image)
@@ -119,7 +127,7 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
         'container',
         'geturllist',
         'start',
-        'loadprogress'
+        'loadprogress',
     ],
     template: template,
 
@@ -130,7 +138,7 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
 
         return {
             scope: {
-                player: player
+                player: player,
             },
             style: style,
             onBack: () => {
@@ -142,7 +150,7 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
             },
             onForward() {
 
-            }
+            },
         }
     },
     watch: {
@@ -150,14 +158,11 @@ export const PlayerComponent2 = Vue.component('player-component-2', {
             if (val) {
                 this.$data.scope.player.setContainer(val)
             }
-        }
+        },
     },
     created(): void {
         // this.$data.scope.container =
 
         console.log(this.$props.container)
-    }
-
-
-})
-
+    },
+});
